@@ -91,6 +91,13 @@ function fmtDate(iso) {
   return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
     ' · ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 }
+// short axis label for charts — "Sep 9" rather than a full ISO timestamp
+function fmtDay(value) {
+  if (!value) return '';
+  const d = value instanceof Date ? value : new Date(String(value).replace(' ', 'T'));
+  if (isNaN(d)) return String(value);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
 function escapeHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }

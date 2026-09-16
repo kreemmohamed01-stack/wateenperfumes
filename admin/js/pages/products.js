@@ -14,10 +14,18 @@ window.PageProducts = async function (param) {
   [productsCategories, productsBrands] = await Promise.all([api.get('/categories'), api.get('/brands')]);
 
   el.innerHTML = `
-    <div class="pageHead">
-      <div><h2 class="pageHead__title">Products</h2><p class="pageHead__sub">${productsCategories.reduce((s,c)=>s+c.productCount,0) ? '' : ''}Manage your full catalog — pricing, images, sizes, categories, and placement.</p></div>
-      <div class="pageHead__acts"><a href="#/products/new" class="btn btn--primary">+ Add Product</a></div>
+    <div class="hero">
+      <div class="hero__txt">
+        <h2 class="hero__title">Products</h2>
+        <p class="hero__sub">Manage your fragrance collection</p>
+      </div>
+      <div class="hero__mark">SCENTS<br>SHAPE<br>STORIES</div>
     </div>
+
+    <div class="statRow" id="prodStats">
+      ${Array.from({length:4}).map(()=>'<div class="skeleton" style="height:78px;border-radius:14px"></div>').join('')}
+    </div>
+
     <div class="panel">
       <div class="toolbar">
         <div class="toolbar__search">
@@ -43,9 +51,9 @@ window.PageProducts = async function (param) {
         <table class="dt">
           <thead><tr>
             <th style="width:32px"><input type="checkbox" class="dt__checkbox" id="prodSelectAll"></th>
-            <th>Product</th><th>Brand</th><th>Category</th><th>Price</th><th>Stock</th><th>Flags</th><th>Status</th><th></th>
+            <th>Product</th><th>SKU</th><th>Category</th><th>Brand</th><th>Price</th><th>Stock</th><th>Status</th><th>Featured</th><th>Actions</th>
           </tr></thead>
-          <tbody id="prodBody"><tr><td colspan="8">${skeletonRows(8)}</td></tr></tbody>
+          <tbody id="prodBody"><tr><td colspan="10">${skeletonRows(8)}</td></tr></tbody>
         </table>
       </div>
       <div class="pager" id="prodPager"></div>
@@ -62,19 +70,60 @@ window.PageProducts = async function (param) {
   document.querySelectorAll('[data-bulk]').forEach(btn => btn.addEventListener('click', () => applyProductBulk(btn.dataset.bulk)));
 
   productsState.selected = new Set();
-  await loadProducts();
+  await Promise.all([loadProducts(), loadProductStats()]);
 };
+
+// the four counters above the table — each is a real query, not a derived
+// count of the current page, so they don't change as you page through
+async function loadProductStats() {
+  const box = document.getElementById('prodStats');
+  if (!box) return;
+  try {
+    const [all, published, drafts, low] = await Promise.all([
+      api.get('/products?pageSize=1'),
+      api.get('/products?pageSize=1&status=published'),
+      api.get('/products?pageSize=1&status=draft'),
+      api.get('/products?pageSize=1&lowStock=true')
+    ]);
+    box.innerHTML = `
+      ${prodStat('box', all.total, 'Total Products')}
+      ${prodStat('tag', published.total, 'Published')}
+      ${prodStat('file', drafts.total, 'Drafts')}
+      <div class="statTile statTile--action">
+        <div class="hstack" style="gap:14px">
+          <span class="statTile__icon" style="color:var(--danger);background:var(--danger-bg)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 4 2.5 20h19L12 4Z" stroke-linejoin="round"/><path d="M12 10v4M12 17v.01" stroke-linecap="round"/></svg>
+          </span>
+          <span class="statTile__txt"><b>${fmtNumber(low.total)}</b><i>Low Stock</i></span>
+        </div>
+        <a href="#/products/new" class="btn btn--primary btn--sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+          Add Product
+        </a>
+      </div>`;
+  } catch (e) {
+    box.innerHTML = '';
+  }
+}
+
+function prodStat(icon, value, label) {
+  return `
+    <div class="statTile">
+      <span class="statTile__icon">${iconSvg(icon)}</span>
+      <span class="statTile__txt"><b>${fmtNumber(value)}</b><i>${escapeHtml(label)}</i></span>
+    </div>`;
+}
 
 async function loadProducts() {
   const body = document.getElementById('prodBody');
-  body.innerHTML = `<tr><td colspan="8">${skeletonRows(8)}</td></tr>`;
+  body.innerHTML = `<tr><td colspan="10">${skeletonRows(8)}</td></tr>`;
   const data = await api.get('/products' + qs({
     q: productsState.q, status: productsState.status, category: productsState.category,
     brand: productsState.brand, page: productsState.page, pageSize: 15
   }));
 
   if (!data.items.length) {
-    body.innerHTML = `<tr><td colspan="8">${emptyState('', 'No products found', 'Try adjusting your filters, or add a new product.')}</td></tr>`;
+    body.innerHTML = `<tr><td colspan="10">${emptyState('', 'No products found', 'Try adjusting your filters, or add a new product.')}</td></tr>`;
     document.getElementById('prodPager').innerHTML = '';
     return;
   }
@@ -83,29 +132,58 @@ async function loadProducts() {
     const prices = p.variants.map(v => v.price);
     const priceLabel = prices.length > 1 && Math.min(...prices) !== Math.max(...prices)
       ? `${fmtMoney(Math.min(...prices))} – ${fmtMoney(Math.max(...prices))}` : fmtMoney(prices[0] || 0);
-    const totalStock = p.variants.reduce((s,v) => s + v.available, 0);
+    // show the pre-discount price struck through when this product is on sale
+    const compareAt = p.variants.map(v => v.compareAtPrice).find(v => v != null);
+    const showCompare = compareAt != null && Number(compareAt) > (prices[0] || 0);
+
+    const totalStock = p.variants.reduce((s, v) => s + v.available, 0);
+    const threshold = p.lowStockThreshold != null ? p.lowStockThreshold : 5;
+    const stockClass = totalStock <= 0 ? 'is-crit' : (totalStock <= threshold ? 'is-low' : '');
+
     const cats = p.categories.map(c => c.name).join(', ') || '—';
+    const size = p.variants.length === 1 ? (p.variants[0].size || '') : `${p.variants.length} sizes`;
+
     return `
       <tr>
         <td><input type="checkbox" class="dt__checkbox prodRowCheck" value="${p.id}"></td>
-        <td class="hstack">
-          <img class="dt__thumb" src="${p.images[0] ? resolveImageUrl(p.images[0].url) : ''}" onerror="this.style.visibility='hidden'">
-          <span><a href="#/products/edit/${p.id}" class="dt__name" style="color:var(--ink)">${escapeHtml(p.name)}</a><span class="dt__meta">${escapeHtml(p.sku||'')}</span></span>
+        <td>
+          <div class="prodCell">
+            <img class="prodCell__img" src="${p.images[0] ? resolveImageUrl(p.images[0].url) : ''}" onerror="this.style.visibility='hidden'">
+            <div class="prodCell__txt">
+              <a href="#/products/edit/${p.id}" class="prodCell__name">${escapeHtml(p.name)}</a>
+              ${size ? `<span class="prodCell__meta">${escapeHtml(size)}</span>` : ''}
+            </div>
+          </div>
         </td>
-        <td>${p.brand ? escapeHtml(p.brand.name) : '—'}</td>
+        <td class="muted">${escapeHtml(p.sku || '—')}</td>
         <td>${escapeHtml(cats)}</td>
-        <td>${priceLabel}</td>
-        <td>${totalStock <= 0 ? '<span class="pill pill--danger">Out</span>' : (totalStock <= 10 ? `<span class="pill pill--warn">${totalStock} low</span>` : totalStock)}</td>
-        <td class="hstack" style="flex-wrap:wrap;gap:4px">
-          ${p.bestSeller ? '<span class="pill pill--gold">Best Seller</span>' : ''}
-          ${p.newArrival ? '<span class="pill pill--info">New</span>' : ''}
-          ${p.discountActive ? `<span class="pill pill--danger">-${p.discountPercent}%</span>` : ''}
+        <td>${p.brand ? escapeHtml(p.brand.name) : '—'}</td>
+        <td>
+          <div class="priceCell">
+            <b>${priceLabel}</b>
+            ${showCompare ? `<s>${fmtMoney(compareAt)}</s>` : ''}
+          </div>
         </td>
+        <td><span class="stockCell ${stockClass}">${totalStock <= 0 ? 'Out' : fmtNumber(totalStock)}</span></td>
         <td><span class="pill pill--${p.status==='published'?'success':p.status==='draft'?'neutral':'warn'}">${p.status}</span></td>
+        <td>
+          <button class="starBtn ${p.featured ? 'is-on' : ''}" data-star="${p.id}" title="Featured on the storefront">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m12 3 2.9 6 6.6.7-5 4.5 1.4 6.5-5.9-3.4-5.9 3.4L7.5 14 2.5 9.7l6.6-.7L12 3Z" stroke-linejoin="round"/></svg>
+          </button>
+        </td>
         <td class="dt__actions">
-          <a href="#/products/edit/${p.id}" class="btn btn--ghost btn--sm">Edit</a>
-          <button class="btn btn--ghost btn--sm" data-dup="${p.id}">⧉</button>
-          <button class="btn btn--danger btn--sm" data-del="${p.id}">Delete</button>
+          <a href="#/products/edit/${p.id}" class="btn btn--ghost btn--sm btn--icon" title="Edit">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17v3Z" stroke-linejoin="round"/></svg>
+          </a>
+          <button class="btn btn--ghost btn--sm btn--icon" data-dup="${p.id}" title="Duplicate">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9" stroke-linecap="round"/></svg>
+          </button>
+          <a href="/product.html?id=${encodeURIComponent(p.slug || '')}" target="_blank" rel="noopener" class="btn btn--ghost btn--sm btn--icon" title="View on the store">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z" stroke-linejoin="round"/><circle cx="12" cy="12" r="3"/></svg>
+          </a>
+          <button class="btn btn--danger btn--sm btn--icon" data-del="${p.id}" title="Delete">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 7h14M10 7V5.5A1.5 1.5 0 0 1 11.5 4h1A1.5 1.5 0 0 1 14 5.5V7m-7 0 .8 12a1.5 1.5 0 0 0 1.5 1.4h5.4a1.5 1.5 0 0 0 1.5-1.4L18 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
         </td>
       </tr>`;
   }).join('');
@@ -113,6 +191,7 @@ async function loadProducts() {
   document.querySelectorAll('.prodRowCheck').forEach(cb => cb.addEventListener('change', e => toggleProdSelect(e.target.value, e.target.checked)));
   document.querySelectorAll('[data-dup]').forEach(btn => btn.addEventListener('click', () => duplicateProduct(btn.dataset.dup)));
   document.querySelectorAll('[data-del]').forEach(btn => btn.addEventListener('click', () => deleteProduct(btn.dataset.del)));
+  document.querySelectorAll('[data-star]').forEach(btn => btn.addEventListener('click', () => toggleFeatured(btn)));
 
   renderPager('prodPager', data, p => { productsState.page = p; loadProducts(); });
 }
@@ -142,6 +221,20 @@ async function applyProductBulk(action) {
 async function duplicateProduct(id) {
   try { await api.post(`/products/${id}/duplicate`); toast('Product duplicated.', 'success'); loadProducts(); }
   catch (e) { toast(e.message, 'error'); }
+}
+
+// star column — flips `featured` straight from the list, no round trip to the editor
+async function toggleFeatured(btn) {
+  const id = btn.dataset.star;
+  const next = !btn.classList.contains('is-on');
+  btn.classList.toggle('is-on', next); // optimistic, reverted below if it fails
+  try {
+    await api.put(`/products/${id}`, { featured: next });
+    toast(next ? 'Featured on the storefront.' : 'Removed from featured.', 'success');
+  } catch (e) {
+    btn.classList.toggle('is-on', !next);
+    toast(e.message, 'error');
+  }
 }
 
 async function deleteProduct(id) {

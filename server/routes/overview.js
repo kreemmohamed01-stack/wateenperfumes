@@ -63,7 +63,7 @@ router.get('/kpis', requireAuth, async (req, res, next) => {
 router.get('/revenue-series', requireAuth, async (req, res, next) => {
   try {
     const { range = '30d' } = req.query;
-    const daysMap = { today: 1, '7d': 7, '30d': 30, '3m': 90, '12m': 365 };
+    const daysMap = { today: 1, '7d': 7, '30d': 30, '3m': 90, '90d': 90, '12m': 365, '365d': 365 };
     const days = daysMap[range] || 30;
 
     const rows = await db.prepare(`
@@ -121,13 +121,25 @@ router.get('/sales-by-brand', requireAuth, async (req, res, next) => {
 router.get('/recent-orders', requireAuth, async (req, res, next) => {
   try {
     const rows = await db.prepare(`
-      SELECT id, order_number, customer_name, total, status, payment_status, created_at
-      FROM orders ORDER BY created_at DESC LIMIT 8
+      SELECT o.id, o.order_number, o.customer_name, o.total, o.status, o.payment_status, o.created_at,
+        (SELECT COALESCE(SUM(qty),0) FROM order_items WHERE order_id = o.id) item_count
+      FROM orders o ORDER BY o.created_at DESC LIMIT 8
     `).all();
     res.json(rows.map(o => ({
       id: o.id, orderNumber: o.order_number, customerName: o.customer_name,
-      total: o.total, status: o.status, paymentStatus: o.payment_status, createdAt: o.created_at
+      total: o.total, status: o.status, paymentStatus: o.payment_status, createdAt: o.created_at,
+      itemCount: Number(o.item_count)
     })));
+  } catch (e) { next(e); }
+});
+
+// donut breakdown for the overview page — every status that has at least one order
+router.get('/status-counts', requireAuth, async (req, res, next) => {
+  try {
+    const rows = await db.prepare(`
+      SELECT status, COUNT(*) count FROM orders GROUP BY status ORDER BY COUNT(*) DESC
+    `).all();
+    res.json(rows.map(r => ({ status: r.status, count: Number(r.count) })));
   } catch (e) { next(e); }
 });
 
@@ -141,7 +153,8 @@ router.get('/recent-customers', requireAuth, async (req, res, next) => {
 router.get('/low-stock', requireAuth, async (req, res, next) => {
   try {
     const rows = await db.prepare(`
-      SELECT p.id, p.name, v.size, v.stock, v.reserved, p.low_stock_threshold
+      SELECT p.id, p.name, v.size, v.stock, v.reserved, p.low_stock_threshold,
+        (SELECT url FROM product_images WHERE product_id = p.id ORDER BY is_main DESC LIMIT 1) image
       FROM products p JOIN product_variants v ON v.product_id = p.id
       WHERE (v.stock - v.reserved) <= p.low_stock_threshold
       ORDER BY (v.stock - v.reserved) ASC LIMIT 10

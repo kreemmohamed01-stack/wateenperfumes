@@ -17,9 +17,18 @@ const NAV_SECTIONS = [
   {
     label: 'GROWTH',
     items: [
-      { id: 'discounts', label: 'Discounts & Coupons', icon: 'percent', permission: 'discounts' },
+      { id: 'discounts', label: 'Discounts', icon: 'percent', permission: 'discounts' },
       { id: 'reviews', label: 'Reviews', icon: 'star', permission: 'reviews' },
-      { id: 'analytics', label: 'Analytics', icon: 'chart', permission: 'analytics' }
+      { id: 'analytics', label: 'Analytics', icon: 'chart', permission: 'analytics' },
+      { id: 'marketing', label: 'Marketing', icon: 'megaphone', permission: 'discounts' },
+      { id: 'content', label: 'Content', icon: 'file', permission: 'settings' }
+    ]
+  },
+  {
+    label: 'OPERATIONS',
+    items: [
+      { id: 'shipping', label: 'Shipping', icon: 'truck', permission: 'settings' },
+      { id: 'payments', label: 'Payments', icon: 'card', permission: 'settings' }
     ]
   },
   {
@@ -47,7 +56,11 @@ const NAV_ICONS = {
   bell: '<path d="M6 9a6 6 0 0 1 12 0v5l2 3H4l2-3V9Z" stroke-linejoin="round"/><path d="M9.5 20a2.5 2.5 0 0 0 5 0"/>',
   shield: '<path d="M12 3 20 6v6c0 5-3.4 8.7-8 9.9C7.4 20.7 4 17 4 12V6Z" stroke-linejoin="round"/>',
   settings: '<circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.9 2.9l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V20a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.9-2.9l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H4a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.9-2.9l.1.1a1.7 1.7 0 0 0 1.9.3H10.5a1.7 1.7 0 0 0 1-1.6V4a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.9 2.9l-.1.1a1.7 1.7 0 0 0-.3 1.9V10.5a1.7 1.7 0 0 0 1.6 1H20a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.6 1Z"/>',
-  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2" stroke-linecap="round"/>'
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2" stroke-linecap="round"/>',
+  megaphone: '<path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1Z" stroke-linejoin="round"/><path d="M16 8.5a4 4 0 0 1 0 7" stroke-linecap="round"/><path d="M19 6a7.5 7.5 0 0 1 0 12" stroke-linecap="round"/>',
+  file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" stroke-linejoin="round"/><path d="M14 3v5h5" stroke-linejoin="round"/><path d="M9 13h6M9 17h4" stroke-linecap="round"/>',
+  truck: '<path d="M3 7a1 1 0 0 1 1-1h9v10H4a1 1 0 0 1-1-1V7Z" stroke-linejoin="round"/><path d="M13 10h4l3 3v3h-7v-6Z" stroke-linejoin="round"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/>',
+  card: '<rect x="2.5" y="5" width="19" height="14" rx="2.2"/><path d="M2.5 9.5h19" stroke-linecap="round"/><path d="M6.5 15h3" stroke-linecap="round"/>'
 };
 
 function iconSvg(name) {

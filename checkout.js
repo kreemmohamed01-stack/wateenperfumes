@@ -14,6 +14,8 @@
   // that varies by governorate — see shipping_rates_by_governorate in Settings.
   var GOV_RATES    = SETTINGS.shippingRatesByGovernorate || {};
   var DEFAULT_SHIP = SETTINGS.defaultShippingFee || 80;
+  // toggled from the dashboard's Shipping page; defaults on when unset
+  var WATCHES_FREE = SETTINGS.watchesFreeShipping !== false;
 
   function isWatch(p) {
     return p && (p.cat === 'watches' || (p.extraCats || []).indexOf('watches') !== -1);
@@ -104,10 +106,12 @@
       if (!isWatch(p)) hasNonWatch = true;
     });
 
-    // watches ship free; if the cart has any non-watch item (perfume), the
-    // whole order ships at the perfume rate for the selected governorate —
-    // there's a single delivery, so it doesn't make sense to charge per line.
-    var shipping = (count === 0) ? 0 : (hasNonWatch ? perfumeShippingFee() : 0);
+    // watches ship free (while that rule is enabled); if the cart has any
+    // non-watch item (perfume), the whole order ships at the perfume rate for
+    // the selected governorate — there's a single delivery, so it doesn't make
+    // sense to charge per line.
+    var chargeShipping = hasNonWatch || !WATCHES_FREE;
+    var shipping = (count === 0) ? 0 : (chargeShipping ? perfumeShippingFee() : 0);
     var discount = 0;
 
     if (promo) {

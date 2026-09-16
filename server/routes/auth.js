@@ -25,17 +25,20 @@ function clearAttempts(ip) { attempts.delete(ip); }
 
 router.post('/login', async (req, res, next) => {
   try {
-    const { email, password } = req.body || {};
-    if (!email || !password) return res.status(400).json({ error: 'Email and password are required.' });
+    // accepts either a username or an email in the same field, so the login
+    // form can ask for whichever the store owner finds easier to remember
+    const { username, email, password } = req.body || {};
+    const identifier = String(username || email || '').trim().toLowerCase();
+    if (!identifier || !password) return res.status(400).json({ error: 'Username and password are required.' });
 
     if (tooManyAttempts(req.ip)) {
       return res.status(429).json({ error: 'Too many attempts. Try again in a few minutes.' });
     }
 
-    const user = await db.prepare('SELECT * FROM users WHERE email = ?').get(String(email).trim().toLowerCase());
+    const user = await db.prepare('SELECT * FROM users WHERE username = ? OR email = ?').get(identifier, identifier);
     if (!user || !user.is_active || !bcrypt.compareSync(password, user.password_hash)) {
       recordAttempt(req.ip);
-      return res.status(401).json({ error: 'Invalid email or password.' });
+      return res.status(401).json({ error: 'Invalid username or password.' });
     }
 
     clearAttempts(req.ip);

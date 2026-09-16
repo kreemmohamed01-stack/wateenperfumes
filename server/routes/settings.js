@@ -39,7 +39,7 @@ router.publicSettings = async (req, res, next) => {
     res.json({
       storeName: s.store_name, currency: s.store_currency,
       freeShippingThreshold: Number(s.free_shipping_threshold || 1000),
-      defaultShippingFee: Number(s.default_shipping_fee || 90),
+      defaultShippingFee: Number(s.default_shipping_fee || 80),
       globalSaleEnabled: s.global_sale_enabled === 'true',
       globalSalePercent: Number(s.global_sale_percent || 0),
       codEnabled: s.cod_enabled !== 'false',
@@ -47,6 +47,11 @@ router.publicSettings = async (req, res, next) => {
       cardEnabled: s.card_enabled !== 'false',
       instapayNumber: s.instapay_number,
       shippingRatesByGovernorate: JSON.parse(s.shipping_rates_by_governorate || '{}'),
+      watchesFreeShipping: s.watches_free_shipping !== 'false',
+      announcementText: s.announcement_text || '',
+      announcementEnabled: s.announcement_enabled !== 'false',
+      heroTitle: s.hero_title || '',
+      heroSubtitle: s.hero_subtitle || '',
       social: {
         instagram: s.social_instagram, facebook: s.social_facebook,
         whatsapp: s.social_whatsapp, tiktok: s.social_tiktok

@@ -9,7 +9,8 @@ const PAGE_TITLES = {
   overview: 'Overview', orders: 'Orders', products: 'Products', categories: 'Categories',
   brands: 'Brands', customers: 'Customers', inventory: 'Inventory', discounts: 'Discounts & Coupons',
   reviews: 'Reviews', analytics: 'Analytics', notifications: 'Notifications',
-  staff: 'Staff & Permissions', settings: 'Settings', activity: 'Activity Log'
+  staff: 'Staff & Permissions', settings: 'Settings', activity: 'Activity Log',
+  marketing: 'Marketing', content: 'Content', shipping: 'Shipping', payments: 'Payments'
 };
 
 function currentRoute() {
@@ -24,7 +25,7 @@ function renderShell() {
     <aside class="sidebar ${SIDEBAR_COLLAPSED ? 'is-collapsed' : ''}" id="sidebar">
       <div class="sidebar__brand">
         <img src="/assets/logo.png" alt="Wateen Perfumes">
-        <div class="sidebar__brandTxt"><b>WATEEN</b><i>PERFUMES</i></div>
+        <div class="sidebar__brandTxt"><b>WATEEN</b><i>PERFUMES</i><em>&#10022;</em></div>
       </div>
       <nav class="sidebar__nav" id="sidebarNav"></nav>
       <div class="sidebar__foot">
@@ -47,7 +48,6 @@ function renderShell() {
         <button class="topbar__menuBtn" id="menuBtn" aria-label="Menu">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
         </button>
-        <h1 class="topbar__title" id="pageTitle">Overview</h1>
         <div class="topbar__search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
           <input type="text" id="globalSearch" placeholder="Search orders, products, customers…">
@@ -56,6 +56,11 @@ function renderShell() {
           <button class="iconBtn" id="notifBtn" aria-label="Notifications">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 9a6 6 0 0 1 12 0v5l2 3H4l2-3V9Z" stroke-linejoin="round"/><path d="M9.5 20a2.5 2.5 0 0 0 5 0"/></svg>
             <span class="iconBtn__dot" id="notifDot" style="display:none">0</span>
+          </button>
+          <button class="topbar__user" id="topbarUser">
+            <span class="topbar__userAvatar"><img src="/assets/logo.png" alt=""></span>
+            <span class="topbar__userTxt"><b>WATEEN PERFUMES</b><i id="topbarUserRole">Admin</i></span>
+            <svg class="topbar__userCaret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </div>
       </header>
@@ -118,6 +123,10 @@ function wireShellEvents() {
     window.location.hash = '#/notifications';
   });
 
+  document.getElementById('topbarUser').addEventListener('click', () => {
+    window.location.hash = '#/settings';
+  });
+
   document.getElementById('globalSearch').addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && e.target.value.trim()) {
       window.location.hash = '#/orders?q=' + encodeURIComponent(e.target.value.trim());
@@ -137,7 +146,6 @@ async function refreshNotifBadge() {
 
 function setActiveNav(page) {
   document.querySelectorAll('.sidebar__link').forEach(a => a.classList.toggle('is-active', a.dataset.page === page));
-  document.getElementById('pageTitle').textContent = PAGE_TITLES[page] || 'Overview';
   document.title = (PAGE_TITLES[page] || 'Dashboard') + ' — Wateen Admin';
   document.getElementById('sidebar').classList.remove('is-open');
   document.getElementById('sidebarScrim').classList.remove('is-on');
@@ -157,7 +165,11 @@ const PAGE_RENDERERS = {
   notifications: () => window.PageNotifications(),
   staff: () => window.PageStaff(),
   settings: () => window.PageSettings(),
-  activity: () => window.PageActivity()
+  activity: () => window.PageActivity(),
+  marketing: () => window.PageMarketing(),
+  content: () => window.PageContent(),
+  shipping: () => window.PageShipping(),
+  payments: () => window.PagePayments()
 };
 
 async function route() {
@@ -189,6 +201,8 @@ async function initApp() {
   renderShell();
   document.getElementById('userName').textContent = CURRENT_USER.name;
   document.getElementById('userAvatar').textContent = CURRENT_USER.name.trim().charAt(0).toUpperCase();
+  const roleEl = document.getElementById('topbarUserRole');
+  if (roleEl) roleEl.textContent = CURRENT_USER.name;
 
   window.addEventListener('hashchange', route);
   route();

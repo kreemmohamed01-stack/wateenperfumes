@@ -136,6 +136,19 @@ router.createPublicOrder = async (req, res, next) => {
 
 /* ---------- admin: list ---------- */
 
+// split of orders by payment method, for the Payments page
+// declared before '/:id' so "payment-breakdown" isn't parsed as an order id
+router.get('/payment-breakdown', requireAuth, async (req, res, next) => {
+  try {
+    const rows = await db.prepare(`
+      SELECT payment_method method, COUNT(*) count
+      FROM orders WHERE status NOT IN ('cancelled','returned','refunded')
+      GROUP BY payment_method ORDER BY COUNT(*) DESC
+    `).all();
+    res.json(rows.map(r => ({ method: r.method, count: Number(r.count) })));
+  } catch (e) { next(e); }
+});
+
 router.get('/', requireAuth, async (req, res, next) => {
   try {
     const { q, status, paymentStatus, page = 1, pageSize = 20, from, to } = req.query;

@@ -112,7 +112,7 @@ async function serializeProductsBulk(rows) {
 router.get('/', requireAuth, async (req, res, next) => {
   try {
     const {
-      q, status, category, brand, bestSeller, onSale, lowStock,
+      q, status, category, brand, bestSeller, featured, newArrival, onSale, lowStock,
       page = 1, pageSize = 20, sort = 'created_desc'
     } = req.query;
 
@@ -123,6 +123,8 @@ router.get('/', requireAuth, async (req, res, next) => {
     if (status) { where.push('p.status = @status'); params.status = status; }
     if (brand) { where.push('p.brand_id = @brand'); params.brand = brand; }
     if (bestSeller === 'true') where.push('p.best_seller = TRUE');
+    if (featured === 'true') where.push('p.featured = TRUE');
+    if (newArrival === 'true') where.push('p.new_arrival = TRUE');
     if (onSale === 'true') where.push('(p.discount_active = TRUE OR p.on_sale = TRUE)');
     if (category) {
       where.push('EXISTS (SELECT 1 FROM product_categories pc JOIN categories c ON c.id = pc.category_id WHERE pc.product_id = p.id AND c.slug = @category)');
