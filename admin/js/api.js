@@ -6,7 +6,32 @@
    ════════════════════════════════════════════════ */
 const API_BASE = '/api';
 
+// short-lived cache for lookups that barely change (categories, brands) —
+// every Products page visit was re-fetching both from scratch, adding a
+// full network round trip (cold Vercel function + Neon query) that a
+// 60-second cache makes disappear for anyone browsing normally.
+const CACHEABLE_GET_PATHS = ['/categories', '/brands'];
+const CACHE_TTL_MS = 60000;
+const _getCache = new Map();
+
+function cacheKeyFor(path) {
+  return CACHEABLE_GET_PATHS.find(p => path === p || path.startsWith(p + '?'));
+}
+
+function invalidateCache(path) {
+  // a write to /categories or /brands (create/update/delete/reorder) invalidates that lookup
+  for (const key of [..._getCache.keys()]) {
+    if (path.startsWith(key)) _getCache.delete(key);
+  }
+}
+
 async function apiRequest(method, path, body, opts) {
+  const cacheKey = method === 'GET' ? cacheKeyFor(path) : null;
+  if (cacheKey) {
+    const hit = _getCache.get(path);
+    if (hit && Date.now() - hit.at < CACHE_TTL_MS) return hit.data;
+  }
+
   const isForm = body instanceof FormData;
   const res = await fetch(API_BASE + path, {
     method,
@@ -30,6 +55,10 @@ async function apiRequest(method, path, body, opts) {
     const message = (data && data.error) || ('Request failed (' + res.status + ').');
     throw new Error(message);
   }
+
+  if (cacheKey) _getCache.set(path, { data, at: Date.now() });
+  else if (method !== 'GET') invalidateCache(path);
+
   return data;
 }
 

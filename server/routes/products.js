@@ -22,22 +22,7 @@ async function uniqueSlug(base, ignoreId) {
   }
 }
 
-async function serializeProduct(p) {
-  const variants = await db.prepare(`
-    SELECT * FROM product_variants WHERE product_id = ? ORDER BY sort_order, id
-  `).all(p.id);
-  const images = await db.prepare(`
-    SELECT * FROM product_images WHERE product_id = ? ORDER BY sort_order, id
-  `).all(p.id);
-  const categories = await db.prepare(`
-    SELECT c.id, c.slug, c.name, pc.is_primary
-    FROM product_categories pc JOIN categories c ON c.id = pc.category_id
-    WHERE pc.product_id = ? ORDER BY pc.is_primary DESC
-  `).all(p.id);
-  const brand = p.brand_id
-    ? await db.prepare('SELECT id, name, slug FROM brands WHERE id = ?').get(p.brand_id)
-    : null;
-
+function buildProductPayload(p, variants, images, categories, brand) {
   return {
     id: p.id, slug: p.slug, name: p.name, nameAr: p.name_ar,
     brand, type: p.type, sku: p.sku, barcode: p.barcode,
@@ -60,6 +45,66 @@ async function serializeProduct(p) {
     })),
     images: images.map(img => ({ id: img.id, url: img.url, sortOrder: img.sort_order, isMain: !!img.is_main }))
   };
+}
+
+async function serializeProduct(p) {
+  const variants = await db.prepare(`
+    SELECT * FROM product_variants WHERE product_id = ? ORDER BY sort_order, id
+  `).all(p.id);
+  const images = await db.prepare(`
+    SELECT * FROM product_images WHERE product_id = ? ORDER BY sort_order, id
+  `).all(p.id);
+  const categories = await db.prepare(`
+    SELECT c.id, c.slug, c.name, pc.is_primary
+    FROM product_categories pc JOIN categories c ON c.id = pc.category_id
+    WHERE pc.product_id = ? ORDER BY pc.is_primary DESC
+  `).all(p.id);
+  const brand = p.brand_id
+    ? await db.prepare('SELECT id, name, slug FROM brands WHERE id = ?').get(p.brand_id)
+    : null;
+
+  return buildProductPayload(p, variants, images, categories, brand);
+}
+
+// bulk version of serializeProduct for list endpoints — 4 queries total for
+// the whole page instead of 4 per product (a 20-row page was issuing 80
+// queries just to render the admin Products table).
+async function serializeProductsBulk(rows) {
+  if (!rows.length) return [];
+  const ids = rows.map(r => r.id);
+  const placeholders = ids.map(() => '?').join(',');
+
+  const [variants, images, categoryLinks, brands] = await Promise.all([
+    db.prepare(`SELECT * FROM product_variants WHERE product_id IN (${placeholders}) ORDER BY sort_order, id`).all(...ids),
+    db.prepare(`SELECT * FROM product_images WHERE product_id IN (${placeholders}) ORDER BY sort_order, id`).all(...ids),
+    db.prepare(`
+      SELECT pc.product_id, c.id, c.slug, c.name, pc.is_primary FROM product_categories pc
+      JOIN categories c ON c.id = pc.category_id WHERE pc.product_id IN (${placeholders}) ORDER BY pc.is_primary DESC
+    `).all(...ids),
+    db.prepare('SELECT id, name, slug FROM brands').all()
+  ]);
+
+  const byProduct = (rows, key) => {
+    const map = new Map();
+    rows.forEach(r => {
+      const k = r[key];
+      if (!map.has(k)) map.set(k, []);
+      map.get(k).push(r);
+    });
+    return map;
+  };
+  const variantsByProduct = byProduct(variants, 'product_id');
+  const imagesByProduct = byProduct(images, 'product_id');
+  const categoriesByProduct = byProduct(categoryLinks, 'product_id');
+  const brandsById = new Map(brands.map(b => [b.id, b]));
+
+  return rows.map(p => buildProductPayload(
+    p,
+    variantsByProduct.get(p.id) || [],
+    imagesByProduct.get(p.id) || [],
+    categoriesByProduct.get(p.id) || [],
+    p.brand_id ? (brandsById.get(p.brand_id) || null) : null
+  ));
 }
 
 /* ---------- list (search, filter, sort, pagination) ---------- */
@@ -106,7 +151,7 @@ router.get('/', requireAuth, async (req, res, next) => {
       SELECT p.* FROM products p ${whereSql} ORDER BY ${orderSql} LIMIT @limit OFFSET @offset
     `).all({ ...params, limit, offset });
 
-    const items = await Promise.all(rows.map(serializeProduct));
+    const items = await serializeProductsBulk(rows);
     res.json({ total, page: Number(page), pageSize: limit, items });
   } catch (e) { next(e); }
 });

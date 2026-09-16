@@ -24,7 +24,7 @@ function renderShell() {
     <aside class="sidebar ${SIDEBAR_COLLAPSED ? 'is-collapsed' : ''}" id="sidebar">
       <div class="sidebar__brand">
         <img src="/assets/logo.png" alt="Wateen Perfumes">
-        <div class="sidebar__brandTxt"><b>WATEEN</b><i>ADMIN CONTROL</i></div>
+        <div class="sidebar__brandTxt"><b>WATEEN</b><i>PERFUMES</i></div>
       </div>
       <nav class="sidebar__nav" id="sidebarNav"></nav>
       <div class="sidebar__foot">
