@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const { initSchema } = require('./db');
 
 const ROOT = path.join(__dirname, '..');
 
@@ -31,11 +32,11 @@ app.use(cookieParser());
 
 /* ---------- public API (no auth) — used by the storefront itself ---------- */
 app.use('/api/public', publicCatalogRoutes);
-app.use('/api/public/settings', (req, res) => settingsRoutes.publicSettings(req, res));
-app.post('/api/public/orders', (req, res) => orderRoutes.createPublicOrder(req, res));
-app.post('/api/public/coupons/validate', (req, res) => couponRoutes.validatePublic(req, res));
-app.get('/api/public/coupons/featured', (req, res) => couponRoutes.featuredPublic(req, res));
-app.post('/api/public/reviews', (req, res) => reviewRoutes.submitPublic(req, res));
+app.use('/api/public/settings', (req, res, next) => settingsRoutes.publicSettings(req, res, next));
+app.post('/api/public/orders', (req, res, next) => orderRoutes.createPublicOrder(req, res, next));
+app.post('/api/public/coupons/validate', (req, res, next) => couponRoutes.validatePublic(req, res, next));
+app.get('/api/public/coupons/featured', (req, res, next) => couponRoutes.featuredPublic(req, res, next));
+app.post('/api/public/reviews', (req, res, next) => reviewRoutes.submitPublic(req, res, next));
 
 /* ---------- admin API (auth required inside each router) ---------- */
 app.use('/api/auth', authRoutes);
@@ -69,7 +70,15 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Wateen Perfumes server running: http://localhost:${PORT}`);
-  console.log(`Admin dashboard:               http://localhost:${PORT}/admin`);
-});
+
+initSchema()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Wateen Perfumes server running: http://localhost:${PORT}`);
+      console.log(`Admin dashboard:               http://localhost:${PORT}/admin`);
+    });
+  })
+  .catch((err) => {
+    console.error('Failed to initialize database schema:', err);
+    process.exit(1);
+  });

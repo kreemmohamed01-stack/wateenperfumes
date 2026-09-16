@@ -3,8 +3,8 @@ const { db } = require('../db');
 
 const router = express.Router();
 
-function settingsMap() {
-  const rows = db.prepare('SELECT key, value FROM settings').all();
+async function settingsMap() {
+  const rows = await db.prepare('SELECT key, value FROM settings').all();
   const obj = {};
   rows.forEach(r => { obj[r.key] = r.value; });
   return obj;
@@ -56,14 +56,14 @@ function toLegacyShape(p, settings) {
 
 // same serializer used in products.js, duplicated minimally here to avoid a
 // circular require between the admin and public route modules
-function loadFullProduct(row) {
-  const variants = db.prepare('SELECT * FROM product_variants WHERE product_id = ? ORDER BY sort_order, id').all(row.id);
-  const images = db.prepare('SELECT * FROM product_images WHERE product_id = ? ORDER BY sort_order, id').all(row.id);
-  const categories = db.prepare(`
+async function loadFullProduct(row) {
+  const variants = await db.prepare('SELECT * FROM product_variants WHERE product_id = ? ORDER BY sort_order, id').all(row.id);
+  const images = await db.prepare('SELECT * FROM product_images WHERE product_id = ? ORDER BY sort_order, id').all(row.id);
+  const categories = await db.prepare(`
     SELECT c.id, c.slug, c.name, pc.is_primary FROM product_categories pc
     JOIN categories c ON c.id = pc.category_id WHERE pc.product_id = ? ORDER BY pc.is_primary DESC
   `).all(row.id);
-  const brand = row.brand_id ? db.prepare('SELECT id, name, name_ar FROM brands WHERE id = ?').get(row.brand_id) : null;
+  const brand = row.brand_id ? await db.prepare('SELECT id, name, name_ar FROM brands WHERE id = ?').get(row.brand_id) : null;
 
   return {
     id: row.id, slug: row.slug, name: row.name, nameAr: row.name_ar, brand, type: row.type, sku: row.sku,
@@ -81,33 +81,42 @@ function loadFullProduct(row) {
   };
 }
 
-router.get('/catalog', (req, res) => {
-  const settings = settingsMap();
-  const rows = db.prepare(`SELECT * FROM products WHERE status = 'published'`).all();
-  const items = rows.map(r => toLegacyShape(loadFullProduct(r), settings));
-  res.json(items);
+router.get('/catalog', async (req, res, next) => {
+  try {
+    const settings = await settingsMap();
+    const rows = await db.prepare(`SELECT * FROM products WHERE status = 'published'`).all();
+    const fullProducts = await Promise.all(rows.map(loadFullProduct));
+    res.json(fullProducts.map(p => toLegacyShape(p, settings)));
+  } catch (e) { next(e); }
 });
 
-router.get('/catalog/:slug', (req, res) => {
-  const row = db.prepare(`SELECT * FROM products WHERE slug = ? AND status = 'published'`).get(req.params.slug);
-  if (!row) return res.status(404).json({ error: 'Product not found.' });
-  res.json(toLegacyShape(loadFullProduct(row), settingsMap()));
+router.get('/catalog/:slug', async (req, res, next) => {
+  try {
+    const row = await db.prepare(`SELECT * FROM products WHERE slug = ? AND status = 'published'`).get(req.params.slug);
+    if (!row) return res.status(404).json({ error: 'Product not found.' });
+    const full = await loadFullProduct(row);
+    res.json(toLegacyShape(full, await settingsMap()));
+  } catch (e) { next(e); }
 });
 
-router.get('/categories', (req, res) => {
-  const rows = db.prepare('SELECT * FROM categories WHERE is_active = 1 ORDER BY sort_order').all();
-  res.json(rows.map(c => ({
-    slug: c.slug, name: c.name, description: c.description,
-    image: c.image, heroImage: c.hero_image, banner: c.banner
-  })));
+router.get('/categories', async (req, res, next) => {
+  try {
+    const rows = await db.prepare('SELECT * FROM categories WHERE is_active = TRUE ORDER BY sort_order').all();
+    res.json(rows.map(c => ({
+      slug: c.slug, name: c.name, description: c.description,
+      image: c.image, heroImage: c.hero_image, banner: c.banner
+    })));
+  } catch (e) { next(e); }
 });
 
-router.get('/brands', (req, res) => {
-  const rows = db.prepare('SELECT * FROM brands WHERE is_active = 1 ORDER BY sort_order, name').all();
-  res.json(rows.map(b => ({
-    slug: b.slug, name: b.name, nameAr: b.name_ar, logo: b.logo, banner: b.banner,
-    description: b.description, featured: !!b.featured
-  })));
+router.get('/brands', async (req, res, next) => {
+  try {
+    const rows = await db.prepare('SELECT * FROM brands WHERE is_active = TRUE ORDER BY sort_order, name').all();
+    res.json(rows.map(b => ({
+      slug: b.slug, name: b.name, nameAr: b.name_ar, logo: b.logo, banner: b.banner,
+      description: b.description, featured: !!b.featured
+    })));
+  } catch (e) { next(e); }
 });
 
 module.exports = router;

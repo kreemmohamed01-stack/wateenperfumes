@@ -26,7 +26,7 @@ function clearSessionCookie(res) {
 
 // verifies the session cookie and attaches req.user from the DB (not just the token)
 // so a disabled/deleted account is rejected immediately, not just at token expiry.
-function requireAuth(req, res, next) {
+async function requireAuth(req, res, next) {
   const token = req.cookies && req.cookies[COOKIE_NAME];
   if (!token) return res.status(401).json({ error: 'Not authenticated.' });
 
@@ -37,13 +37,16 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ error: 'Session expired. Please log in again.' });
   }
 
-  const user = db.prepare('SELECT id, name, email, role, is_active FROM users WHERE id = ?').get(payload.sub);
-  if (!user || !user.is_active) {
-    return res.status(401).json({ error: 'Account not available.' });
+  try {
+    const user = await db.prepare('SELECT id, name, email, role, is_active FROM users WHERE id = ?').get(payload.sub);
+    if (!user || !user.is_active) {
+      return res.status(401).json({ error: 'Account not available.' });
+    }
+    req.user = user;
+    next();
+  } catch (e) {
+    next(e);
   }
-
-  req.user = user;
-  next();
 }
 
 // role hierarchy: super_admin can do anything; other roles are checked explicitly
@@ -66,23 +69,21 @@ function requirePermission(area) {
   };
 }
 
+// fire-and-forget by design: every call site calls this without awaiting it,
+// so failures are only logged, never allowed to reject unhandled or block the response.
 function logActivity(req, { action, entityType, entityId, description }) {
-  try {
-    db.prepare(`
-      INSERT INTO activity_log (user_id, user_name, action, entity_type, entity_id, description, ip)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(
-      req.user ? req.user.id : null,
-      req.user ? req.user.name : 'system',
-      action,
-      entityType || null,
-      entityId != null ? String(entityId) : null,
-      description,
-      req.ip
-    );
-  } catch (e) {
-    console.error('activity log failed', e);
-  }
+  db.prepare(`
+    INSERT INTO activity_log (user_id, user_name, action, entity_type, entity_id, description, ip)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    req.user ? req.user.id : null,
+    req.user ? req.user.name : 'system',
+    action,
+    entityType || null,
+    entityId != null ? String(entityId) : null,
+    description,
+    req.ip
+  ).catch(e => console.error('activity log failed', e));
 }
 
 module.exports = {

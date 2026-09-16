@@ -23,32 +23,34 @@ function recordAttempt(ip) {
 }
 function clearAttempts(ip) { attempts.delete(ip); }
 
-router.post('/login', (req, res) => {
-  const { email, password } = req.body || {};
-  if (!email || !password) return res.status(400).json({ error: 'Email and password are required.' });
+router.post('/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body || {};
+    if (!email || !password) return res.status(400).json({ error: 'Email and password are required.' });
 
-  if (tooManyAttempts(req.ip)) {
-    return res.status(429).json({ error: 'Too many attempts. Try again in a few minutes.' });
-  }
+    if (tooManyAttempts(req.ip)) {
+      return res.status(429).json({ error: 'Too many attempts. Try again in a few minutes.' });
+    }
 
-  const user = db.prepare('SELECT * FROM users WHERE email = ?').get(String(email).trim().toLowerCase());
-  if (!user || !user.is_active || !bcrypt.compareSync(password, user.password_hash)) {
-    recordAttempt(req.ip);
-    return res.status(401).json({ error: 'Invalid email or password.' });
-  }
+    const user = await db.prepare('SELECT * FROM users WHERE email = ?').get(String(email).trim().toLowerCase());
+    if (!user || !user.is_active || !bcrypt.compareSync(password, user.password_hash)) {
+      recordAttempt(req.ip);
+      return res.status(401).json({ error: 'Invalid email or password.' });
+    }
 
-  clearAttempts(req.ip);
-  db.prepare('UPDATE users SET last_login_at = datetime(\'now\') WHERE id = ?').run(user.id);
+    clearAttempts(req.ip);
+    await db.prepare('UPDATE users SET last_login_at = NOW() WHERE id = ?').run(user.id);
 
-  const token = signToken(user);
-  setSessionCookie(res, token);
+    const token = signToken(user);
+    setSessionCookie(res, token);
 
-  logActivity({ user: { id: user.id, name: user.name } , ip: req.ip}, {
-    action: 'auth.login', entityType: 'user', entityId: user.id,
-    description: user.name + ' logged in.'
-  });
+    logActivity({ user: { id: user.id, name: user.name }, ip: req.ip }, {
+      action: 'auth.login', entityType: 'user', entityId: user.id,
+      description: user.name + ' logged in.'
+    });
 
-  res.json({ id: user.id, name: user.name, email: user.email, role: user.role });
+    res.json({ id: user.id, name: user.name, email: user.email, role: user.role });
+  } catch (e) { next(e); }
 });
 
 router.post('/logout', requireAuth, (req, res) => {
@@ -61,19 +63,21 @@ router.get('/me', requireAuth, (req, res) => {
   res.json(req.user);
 });
 
-router.post('/change-password', requireAuth, (req, res) => {
-  const { currentPassword, newPassword } = req.body || {};
-  if (!currentPassword || !newPassword || newPassword.length < 8) {
-    return res.status(400).json({ error: 'New password must be at least 8 characters.' });
-  }
-  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
-  if (!bcrypt.compareSync(currentPassword, user.password_hash)) {
-    return res.status(401).json({ error: 'Current password is incorrect.' });
-  }
-  const hash = bcrypt.hashSync(newPassword, 10);
-  db.prepare('UPDATE users SET password_hash = ?, updated_at = datetime(\'now\') WHERE id = ?').run(hash, req.user.id);
-  logActivity(req, { action: 'auth.change_password', entityType: 'user', entityId: req.user.id, description: 'Password changed.' });
-  res.json({ ok: true });
+router.post('/change-password', requireAuth, async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body || {};
+    if (!currentPassword || !newPassword || newPassword.length < 8) {
+      return res.status(400).json({ error: 'New password must be at least 8 characters.' });
+    }
+    const user = await db.prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+    if (!bcrypt.compareSync(currentPassword, user.password_hash)) {
+      return res.status(401).json({ error: 'Current password is incorrect.' });
+    }
+    const hash = bcrypt.hashSync(newPassword, 10);
+    await db.prepare('UPDATE users SET password_hash = ?, updated_at = NOW() WHERE id = ?').run(hash, req.user.id);
+    logActivity(req, { action: 'auth.change_password', entityType: 'user', entityId: req.user.id, description: 'Password changed.' });
+    res.json({ ok: true });
+  } catch (e) { next(e); }
 });
 
 module.exports = router;

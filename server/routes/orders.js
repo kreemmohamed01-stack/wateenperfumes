@@ -1,5 +1,5 @@
 const express = require('express');
-const { db } = require('../db');
+const { db, withTransaction } = require('../db');
 const { requireAuth, requirePermission, logActivity } = require('../middleware/auth');
 const { notify } = require('../lib/notify');
 
@@ -13,9 +13,9 @@ function genOrderNumber() {
   return 'WP-' + n;
 }
 
-function serializeOrder(o) {
-  const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(o.id);
-  const timeline = db.prepare('SELECT * FROM order_timeline WHERE order_id = ? ORDER BY created_at').all(o.id);
+async function serializeOrder(o) {
+  const items = await db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(o.id);
+  const timeline = await db.prepare('SELECT * FROM order_timeline WHERE order_id = ? ORDER BY created_at').all(o.id);
   return {
     id: o.id, orderNumber: o.order_number, customerId: o.customer_id,
     customer: { name: o.customer_name, phone: o.customer_phone, email: o.customer_email },
@@ -37,191 +37,210 @@ function serializeOrder(o) {
 
 /* ---------- public: create order from checkout ---------- */
 // mounted separately without requireAuth — see server.js (/api/public/orders)
-router.createPublicOrder = (req, res) => {
-  const b = req.body || {};
-  if (!b.customer || !b.customer.name || !b.customer.phone) {
-    return res.status(400).json({ error: 'Customer name and phone are required.' });
-  }
-  if (!Array.isArray(b.items) || !b.items.length) {
-    return res.status(400).json({ error: 'Order must contain at least one item.' });
-  }
-
-  const create = db.transaction(() => {
-    let customer = db.prepare('SELECT * FROM customers WHERE phone = ?').get(b.customer.phone.trim());
-    if (!customer) {
-      const result = db.prepare(`
-        INSERT INTO customers (name, email, phone, governorate, city, address, apartment)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-      `).run(b.customer.name.trim(), b.customer.email || null, b.customer.phone.trim(),
-             b.address?.governorate || null, b.address?.city || null, b.address?.address || null, b.address?.apartment || null);
-      customer = db.prepare('SELECT * FROM customers WHERE id = ?').get(result.lastInsertRowid);
-    } else {
-      db.prepare(`
-        UPDATE customers SET name=?, email=COALESCE(?, email), governorate=?, city=?, address=?, apartment=?, updated_at=datetime('now')
-        WHERE id=?
-      `).run(b.customer.name.trim(), b.customer.email || null, b.address?.governorate || null,
-             b.address?.city || null, b.address?.address || null, b.address?.apartment || null, customer.id);
+router.createPublicOrder = async (req, res, next) => {
+  try {
+    const b = req.body || {};
+    if (!b.customer || !b.customer.name || !b.customer.phone) {
+      return res.status(400).json({ error: 'Customer name and phone are required.' });
+    }
+    if (!Array.isArray(b.items) || !b.items.length) {
+      return res.status(400).json({ error: 'Order must contain at least one item.' });
     }
 
-    let orderNumber = genOrderNumber();
-    while (db.prepare('SELECT id FROM orders WHERE order_number = ?').get(orderNumber)) orderNumber = genOrderNumber();
-
-    const result = db.prepare(`
-      INSERT INTO orders (
-        order_number, customer_id, customer_name, customer_phone, customer_email,
-        governorate, city, address, apartment, subtotal, discount_total, shipping_fee, total,
-        coupon_code, payment_method, payment_status, payment_reference, shipping_method, customer_notes
-      ) VALUES (@order_number, @customer_id, @customer_name, @customer_phone, @customer_email,
-        @governorate, @city, @address, @apartment, @subtotal, @discount_total, @shipping_fee, @total,
-        @coupon_code, @payment_method, @payment_status, @payment_reference, @shipping_method, @customer_notes)
-    `).run({
-      order_number: orderNumber, customer_id: customer.id, customer_name: b.customer.name.trim(),
-      customer_phone: b.customer.phone.trim(), customer_email: b.customer.email || null,
-      governorate: b.address?.governorate || null, city: b.address?.city || null,
-      address: b.address?.address || null, apartment: b.address?.apartment || null,
-      subtotal: b.subtotal || 0, discount_total: b.discountTotal || 0, shipping_fee: b.shippingFee || 0,
-      total: b.total || 0, coupon_code: b.couponCode || null, payment_method: b.paymentMethod || 'cod',
-      payment_status: b.paymentMethod === 'cod' ? 'pending' : 'pending',
-      payment_reference: b.paymentReference || null, shipping_method: b.shippingMethod || 'standard',
-      customer_notes: b.customerNotes || null
-    });
-    const orderId = result.lastInsertRowid;
-
-    const insertItem = db.prepare(`
-      INSERT INTO order_items (order_id, product_id, variant_id, product_name, brand_name, size, qty, unit_price, image)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    b.items.forEach(item => {
-      insertItem.run(orderId, item.productId || null, item.variantId || null, item.name, item.brand || null,
-                     item.size || null, item.qty, item.unitPrice, item.image || null);
-      if (item.variantId) {
-        db.prepare('UPDATE product_variants SET stock = MAX(0, stock - ?), updated_at=datetime(\'now\') WHERE id = ?')
-          .run(item.qty, item.variantId);
-        db.prepare(`
-          INSERT INTO inventory_log (variant_id, change_qty, reason, note) VALUES (?, ?, 'sale', ?)
-        `).run(item.variantId, -item.qty, 'Order ' + orderNumber);
+    const { orderId, orderNumber } = await withTransaction(async (tdb) => {
+      let customer = await tdb.prepare('SELECT * FROM customers WHERE phone = ?').get(b.customer.phone.trim());
+      if (!customer) {
+        const result = await tdb.prepare(`
+          INSERT INTO customers (name, email, phone, governorate, city, address, apartment)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
+        `).run(b.customer.name.trim(), b.customer.email || null, b.customer.phone.trim(),
+               b.address?.governorate || null, b.address?.city || null, b.address?.address || null, b.address?.apartment || null);
+        customer = await tdb.prepare('SELECT * FROM customers WHERE id = ?').get(result.lastInsertRowid);
+      } else {
+        await tdb.prepare(`
+          UPDATE customers SET name=?, email=COALESCE(?, email), governorate=?, city=?, address=?, apartment=?, updated_at=NOW()
+          WHERE id=?
+        `).run(b.customer.name.trim(), b.customer.email || null, b.address?.governorate || null,
+               b.address?.city || null, b.address?.address || null, b.address?.apartment || null, customer.id);
       }
+
+      let orderNumber = genOrderNumber();
+      while (await tdb.prepare('SELECT id FROM orders WHERE order_number = ?').get(orderNumber)) orderNumber = genOrderNumber();
+
+      const result = await tdb.prepare(`
+        INSERT INTO orders (
+          order_number, customer_id, customer_name, customer_phone, customer_email,
+          governorate, city, address, apartment, subtotal, discount_total, shipping_fee, total,
+          coupon_code, payment_method, payment_status, payment_reference, shipping_method, customer_notes
+        ) VALUES (@order_number, @customer_id, @customer_name, @customer_phone, @customer_email,
+          @governorate, @city, @address, @apartment, @subtotal, @discount_total, @shipping_fee, @total,
+          @coupon_code, @payment_method, @payment_status, @payment_reference, @shipping_method, @customer_notes)
+      `).run({
+        order_number: orderNumber, customer_id: customer.id, customer_name: b.customer.name.trim(),
+        customer_phone: b.customer.phone.trim(), customer_email: b.customer.email || null,
+        governorate: b.address?.governorate || null, city: b.address?.city || null,
+        address: b.address?.address || null, apartment: b.address?.apartment || null,
+        subtotal: b.subtotal || 0, discount_total: b.discountTotal || 0, shipping_fee: b.shippingFee || 0,
+        total: b.total || 0, coupon_code: b.couponCode || null, payment_method: b.paymentMethod || 'cod',
+        payment_status: b.paymentMethod === 'cod' ? 'pending' : 'pending',
+        payment_reference: b.paymentReference || null, shipping_method: b.shippingMethod || 'standard',
+        customer_notes: b.customerNotes || null
+      });
+      const orderId = result.lastInsertRowid;
+
+      for (const item of b.items) {
+        await tdb.prepare(`
+          INSERT INTO order_items (order_id, product_id, variant_id, product_name, brand_name, size, qty, unit_price, image)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).run(orderId, item.productId || null, item.variantId || null, item.name, item.brand || null,
+               item.size || null, item.qty, item.unitPrice, item.image || null);
+
+        if (item.variantId) {
+          await tdb.prepare('UPDATE product_variants SET stock = GREATEST(0, stock - ?), updated_at=NOW() WHERE id = ?')
+            .run(item.qty, item.variantId);
+          await tdb.prepare(`
+            INSERT INTO inventory_log (variant_id, change_qty, reason, note) VALUES (?, ?, 'sale', ?)
+          `).run(item.variantId, -item.qty, 'Order ' + orderNumber);
+        }
+      }
+
+      await tdb.prepare('INSERT INTO order_timeline (order_id, status, note) VALUES (?, ?, ?)').run(orderId, 'pending', 'Order placed by customer.');
+
+      if (b.couponCode) {
+        const coupon = await tdb.prepare('SELECT * FROM coupons WHERE code = ?').get(b.couponCode.toUpperCase());
+        if (coupon) {
+          await tdb.prepare('UPDATE coupons SET used_count = used_count + 1 WHERE id = ?').run(coupon.id);
+          await tdb.prepare('INSERT INTO coupon_redemptions (coupon_id, order_id, customer_id) VALUES (?, ?, ?)').run(coupon.id, orderId, customer.id);
+        }
+      }
+
+      return { orderId, orderNumber };
     });
 
-    db.prepare('INSERT INTO order_timeline (order_id, status, note) VALUES (?, ?, ?)').run(orderId, 'pending', 'Order placed by customer.');
+    notify('new_order', 'New order ' + orderNumber, b.customer.name + ' placed an order for ' + (b.total || 0) + ' EGP.', '/orders/' + orderId);
 
-    if (b.couponCode) {
-      const coupon = db.prepare('SELECT * FROM coupons WHERE code = ?').get(b.couponCode.toUpperCase());
-      if (coupon) {
-        db.prepare('UPDATE coupons SET used_count = used_count + 1 WHERE id = ?').run(coupon.id);
-        db.prepare('INSERT INTO coupon_redemptions (coupon_id, order_id, customer_id) VALUES (?, ?, ?)').run(coupon.id, orderId, customer.id);
-      }
-    }
-
-    return { orderId, orderNumber, isNewCustomer: !customer.created_at || customer.created_at === customer.updated_at };
-  });
-
-  const { orderId, orderNumber } = create();
-
-  notify('new_order', 'New order ' + orderNumber, b.customer.name + ' placed an order for ' + (b.total || 0) + ' EGP.', '/orders/' + orderId);
-
-  res.status(201).json({ orderId, orderNumber });
+    res.status(201).json({ orderId, orderNumber });
+  } catch (e) { next(e); }
 };
 
 /* ---------- admin: list ---------- */
 
-router.get('/', requireAuth, (req, res) => {
-  const { q, status, paymentStatus, page = 1, pageSize = 20, from, to } = req.query;
-  const where = [];
-  const params = {};
+router.get('/', requireAuth, async (req, res, next) => {
+  try {
+    const { q, status, paymentStatus, page = 1, pageSize = 20, from, to } = req.query;
+    const where = [];
+    const params = {};
 
-  if (q) { where.push('(o.order_number LIKE @q OR o.customer_name LIKE @q OR o.customer_phone LIKE @q)'); params.q = '%' + q + '%'; }
-  if (status) { where.push('o.status = @status'); params.status = status; }
-  if (paymentStatus) { where.push('o.payment_status = @paymentStatus'); params.paymentStatus = paymentStatus; }
-  if (from) { where.push('o.created_at >= @from'); params.from = from; }
-  if (to) { where.push('o.created_at <= @to'); params.to = to; }
+    if (q) { where.push('(o.order_number LIKE @q OR o.customer_name LIKE @q OR o.customer_phone LIKE @q)'); params.q = '%' + q + '%'; }
+    if (status) { where.push('o.status = @status'); params.status = status; }
+    if (paymentStatus) { where.push('o.payment_status = @paymentStatus'); params.paymentStatus = paymentStatus; }
+    if (from) { where.push('o.created_at >= @from'); params.from = from; }
+    if (to) { where.push('o.created_at <= @to'); params.to = to; }
 
-  const whereSql = where.length ? 'WHERE ' + where.join(' AND ') : '';
-  const total = db.prepare(`SELECT COUNT(*) c FROM orders o ${whereSql}`).get(params).c;
+    const whereSql = where.length ? 'WHERE ' + where.join(' AND ') : '';
+    const total = (await db.prepare(`SELECT COUNT(*) c FROM orders o ${whereSql}`).get(params)).c;
 
-  const limit = Math.min(100, Math.max(1, Number(pageSize) || 20));
-  const offset = (Math.max(1, Number(page) || 1) - 1) * limit;
+    const limit = Math.min(100, Math.max(1, Number(pageSize) || 20));
+    const offset = (Math.max(1, Number(page) || 1) - 1) * limit;
 
-  const rows = db.prepare(`
-    SELECT o.* FROM orders o ${whereSql} ORDER BY o.created_at DESC LIMIT @limit OFFSET @offset
-  `).all({ ...params, limit, offset });
+    const rows = await db.prepare(`
+      SELECT o.* FROM orders o ${whereSql} ORDER BY o.created_at DESC LIMIT @limit OFFSET @offset
+    `).all({ ...params, limit, offset });
 
-  res.json({ total, page: Number(page), pageSize: limit, items: rows.map(serializeOrder) });
+    const items = await Promise.all(rows.map(serializeOrder));
+    res.json({ total: Number(total), page: Number(page), pageSize: limit, items });
+  } catch (e) { next(e); }
 });
 
-router.get('/:id', requireAuth, (req, res) => {
-  const o = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
-  if (!o) return res.status(404).json({ error: 'Order not found.' });
-  res.json(serializeOrder(o));
+router.get('/:id', requireAuth, async (req, res, next) => {
+  try {
+    const o = await db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+    if (!o) return res.status(404).json({ error: 'Order not found.' });
+    res.json(await serializeOrder(o));
+  } catch (e) { next(e); }
 });
 
-router.put('/:id/status', requireAuth, requirePermission('orders'), (req, res) => {
-  const o = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
-  if (!o) return res.status(404).json({ error: 'Order not found.' });
-  const { status, note } = req.body || {};
-  if (!ALL_STATUSES.includes(status)) return res.status(400).json({ error: 'Invalid status.' });
+router.put('/:id/status', requireAuth, requirePermission('orders'), async (req, res, next) => {
+  try {
+    const o = await db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+    if (!o) return res.status(404).json({ error: 'Order not found.' });
+    const { status, note } = req.body || {};
+    if (!ALL_STATUSES.includes(status)) return res.status(400).json({ error: 'Invalid status.' });
 
-  const update = db.transaction(() => {
-    db.prepare('UPDATE orders SET status = ?, updated_at = datetime(\'now\') WHERE id = ?').run(status, o.id);
-    db.prepare('INSERT INTO order_timeline (order_id, status, note, user_id) VALUES (?, ?, ?, ?)')
-      .run(o.id, status, note || null, req.user.id);
+    await withTransaction(async (tdb) => {
+      await tdb.prepare('UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?').run(status, o.id);
+      await tdb.prepare('INSERT INTO order_timeline (order_id, status, note, user_id) VALUES (?, ?, ?, ?)')
+        .run(o.id, status, note || null, req.user.id);
 
-    if ((status === 'cancelled' || status === 'returned') && o.status !== 'cancelled' && o.status !== 'returned') {
-      db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(o.id).forEach(item => {
-        if (item.variant_id) {
-          db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.qty, item.variant_id);
-          db.prepare(`INSERT INTO inventory_log (variant_id, change_qty, reason, note) VALUES (?, ?, 'return', ?)`)
-            .run(item.variant_id, item.qty, 'Order ' + o.order_number + ' ' + status);
+      if ((status === 'cancelled' || status === 'returned') && o.status !== 'cancelled' && o.status !== 'returned') {
+        const items = await tdb.prepare('SELECT * FROM order_items WHERE order_id = ?').all(o.id);
+        for (const item of items) {
+          if (item.variant_id) {
+            await tdb.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.qty, item.variant_id);
+            await tdb.prepare(`INSERT INTO inventory_log (variant_id, change_qty, reason, note) VALUES (?, ?, 'return', ?)`)
+              .run(item.variant_id, item.qty, 'Order ' + o.order_number + ' ' + status);
+          }
+        }
+      }
+    });
+
+    logActivity(req, { action: 'order.status_change', entityType: 'order', entityId: o.id, description: `Order ${o.order_number} status changed to "${status}".` });
+    if (status === 'cancelled') notify('cancelled_order', 'Order cancelled', `Order ${o.order_number} was cancelled.`, '/orders/' + o.id);
+
+    const updated = await db.prepare('SELECT * FROM orders WHERE id = ?').get(o.id);
+    res.json(await serializeOrder(updated));
+  } catch (e) { next(e); }
+});
+
+router.put('/:id/payment', requireAuth, requirePermission('orders'), async (req, res, next) => {
+  try {
+    const o = await db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+    if (!o) return res.status(404).json({ error: 'Order not found.' });
+    const { paymentStatus, paymentReference } = req.body || {};
+    if (!['pending', 'paid', 'failed', 'refunded'].includes(paymentStatus)) return res.status(400).json({ error: 'Invalid payment status.' });
+
+    await db.prepare(`
+      UPDATE orders SET payment_status = ?, payment_reference = COALESCE(?, payment_reference), updated_at = NOW() WHERE id = ?
+    `).run(paymentStatus, paymentReference || null, o.id);
+
+    logActivity(req, { action: 'order.payment_update', entityType: 'order', entityId: o.id, description: `Order ${o.order_number} payment marked "${paymentStatus}".` });
+    if (paymentStatus === 'paid') notify('payment_received', 'Payment received', `Payment received for order ${o.order_number}.`, '/orders/' + o.id);
+
+    const updated = await db.prepare('SELECT * FROM orders WHERE id = ?').get(o.id);
+    res.json(await serializeOrder(updated));
+  } catch (e) { next(e); }
+});
+
+router.put('/:id/notes', requireAuth, requirePermission('orders'), async (req, res, next) => {
+  try {
+    const o = await db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
+    if (!o) return res.status(404).json({ error: 'Order not found.' });
+    const { adminNotes } = req.body || {};
+    await db.prepare('UPDATE orders SET admin_notes = ?, updated_at = NOW() WHERE id = ?').run(adminNotes || null, o.id);
+    logActivity(req, { action: 'order.note', entityType: 'order', entityId: o.id, description: `Added a note to order ${o.order_number}.` });
+    const updated = await db.prepare('SELECT * FROM orders WHERE id = ?').get(o.id);
+    res.json(await serializeOrder(updated));
+  } catch (e) { next(e); }
+});
+
+router.post('/bulk', requireAuth, requirePermission('orders'), async (req, res, next) => {
+  try {
+    const { ids, action, value } = req.body || {};
+    if (!Array.isArray(ids) || !ids.length) return res.status(400).json({ error: 'No orders selected.' });
+    if (action === 'status') {
+      if (!ALL_STATUSES.includes(value)) return res.status(400).json({ error: 'Invalid status.' });
+      await withTransaction(async (tdb) => {
+        for (const id of ids) {
+          await tdb.prepare('UPDATE orders SET status = ?, updated_at = NOW() WHERE id = ?').run(value, id);
+          await tdb.prepare('INSERT INTO order_timeline (order_id, status, user_id) VALUES (?, ?, ?)').run(id, value, req.user.id);
         }
       });
+    } else {
+      return res.status(400).json({ error: 'Unknown bulk action.' });
     }
-  });
-  update();
-
-  logActivity(req, { action: 'order.status_change', entityType: 'order', entityId: o.id, description: `Order ${o.order_number} status changed to "${status}".` });
-  if (status === 'cancelled') notify('cancelled_order', 'Order cancelled', `Order ${o.order_number} was cancelled.`, '/orders/' + o.id);
-
-  res.json(serializeOrder(db.prepare('SELECT * FROM orders WHERE id = ?').get(o.id)));
-});
-
-router.put('/:id/payment', requireAuth, requirePermission('orders'), (req, res) => {
-  const o = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
-  if (!o) return res.status(404).json({ error: 'Order not found.' });
-  const { paymentStatus, paymentReference } = req.body || {};
-  if (!['pending', 'paid', 'failed', 'refunded'].includes(paymentStatus)) return res.status(400).json({ error: 'Invalid payment status.' });
-
-  db.prepare(`
-    UPDATE orders SET payment_status = ?, payment_reference = COALESCE(?, payment_reference), updated_at = datetime('now') WHERE id = ?
-  `).run(paymentStatus, paymentReference || null, o.id);
-
-  logActivity(req, { action: 'order.payment_update', entityType: 'order', entityId: o.id, description: `Order ${o.order_number} payment marked "${paymentStatus}".` });
-  if (paymentStatus === 'paid') notify('payment_received', 'Payment received', `Payment received for order ${o.order_number}.`, '/orders/' + o.id);
-
-  res.json(serializeOrder(db.prepare('SELECT * FROM orders WHERE id = ?').get(o.id)));
-});
-
-router.put('/:id/notes', requireAuth, requirePermission('orders'), (req, res) => {
-  const o = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id);
-  if (!o) return res.status(404).json({ error: 'Order not found.' });
-  const { adminNotes } = req.body || {};
-  db.prepare('UPDATE orders SET admin_notes = ?, updated_at = datetime(\'now\') WHERE id = ?').run(adminNotes || null, o.id);
-  logActivity(req, { action: 'order.note', entityType: 'order', entityId: o.id, description: `Added a note to order ${o.order_number}.` });
-  res.json(serializeOrder(db.prepare('SELECT * FROM orders WHERE id = ?').get(o.id)));
-});
-
-router.post('/bulk', requireAuth, requirePermission('orders'), (req, res) => {
-  const { ids, action, value } = req.body || {};
-  if (!Array.isArray(ids) || !ids.length) return res.status(400).json({ error: 'No orders selected.' });
-  if (action === 'status') {
-    if (!ALL_STATUSES.includes(value)) return res.status(400).json({ error: 'Invalid status.' });
-    const stmt = db.prepare('UPDATE orders SET status = ?, updated_at = datetime(\'now\') WHERE id = ?');
-    const timelineStmt = db.prepare('INSERT INTO order_timeline (order_id, status, user_id) VALUES (?, ?, ?)');
-    ids.forEach(id => { stmt.run(value, id); timelineStmt.run(id, value, req.user.id); });
-  } else {
-    return res.status(400).json({ error: 'Unknown bulk action.' });
-  }
-  logActivity(req, { action: 'order.bulk_status', entityType: 'order', entityId: ids.join(','), description: `Bulk status "${value}" applied to ${ids.length} order(s).` });
-  res.json({ ok: true, affected: ids.length });
+    logActivity(req, { action: 'order.bulk_status', entityType: 'order', entityId: ids.join(','), description: `Bulk status "${value}" applied to ${ids.length} order(s).` });
+    res.json({ ok: true, affected: ids.length });
+  } catch (e) { next(e); }
 });
 
 module.exports = router;

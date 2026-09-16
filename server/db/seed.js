@@ -1,15 +1,21 @@
 /* ════════════════════════════════════════════════
    ONE-TIME MIGRATION
    Reads the legacy catalog.js array and populates the
-   real SQLite database: brands, categories, products,
+   real Postgres database: brands, categories, products,
    variants (per-size price/stock), images, settings,
    and the first admin user. Safe to re-run — it skips
-   work if products already exist.
+   the catalog import if products already exist.
+
+   Uses batched multi-row INSERTs (not one row per network
+   round trip) because a remote Postgres connection (Neon)
+   makes per-statement latency the dominant cost at 356
+   products × several child rows each.
    ════════════════════════════════════════════════ */
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env'), quiet: true });
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
-const { db } = require('./index');
+const { db, pool, initSchema } = require('./index');
 
 const ROOT = path.join(__dirname, '..', '..');
 
@@ -58,21 +64,46 @@ const DEFAULT_SETTINGS = {
   social_tiktok: ''
 };
 
-function run() {
-  const productCount = db.prepare('SELECT COUNT(*) c FROM products').get().c;
+const ratingToNumber = (stars) => {
+  if (!stars) return 0;
+  return (stars.match(/★/g) || []).length;
+};
 
-  // settings + admin user always ensured, even on re-run
-  const insertSetting = db.prepare(`
-    INSERT INTO settings (key, value) VALUES (?, ?)
-    ON CONFLICT(key) DO NOTHING
-  `);
-  Object.entries(DEFAULT_SETTINGS).forEach(([k, v]) => insertSetting.run(k, v));
+// builds a single "INSERT INTO t (cols) VALUES ($1,$2,..),($n+1,..) ..." for a batch of rows
+function buildBulkInsert(table, columns, rows, opts) {
+  opts = opts || {};
+  const values = [];
+  const tuples = rows.map((row, ri) => {
+    const placeholders = columns.map((col, ci) => {
+      values.push(row[ci]);
+      return '$' + (ri * columns.length + ci + 1);
+    });
+    return '(' + placeholders.join(',') + ')';
+  });
+  let sql = `INSERT INTO ${table} (${columns.join(',')}) VALUES ${tuples.join(',')}`;
+  if (opts.onConflict) sql += ' ' + opts.onConflict;
+  if (opts.returning) sql += ' RETURNING ' + opts.returning;
+  return { text: sql, values };
+}
+
+async function run() {
+  await initSchema();
+
+  const productCountRow = await db.prepare('SELECT COUNT(*) c FROM products').get();
+  const productCount = Number(productCountRow.c);
+
+  for (const [k, v] of Object.entries(DEFAULT_SETTINGS)) {
+    await db.prepare(`
+      INSERT INTO settings (key, value) VALUES (?, ?)
+      ON CONFLICT (key) DO NOTHING
+    `).run(k, v);
+  }
 
   const adminEmail = 'admin@wateenperfumes.com';
-  const existingAdmin = db.prepare('SELECT id FROM users WHERE email = ?').get(adminEmail);
+  const existingAdmin = await db.prepare('SELECT id FROM users WHERE email = ?').get(adminEmail);
   if (!existingAdmin) {
     const hash = bcrypt.hashSync('WateenAdmin@2026', 10);
-    db.prepare(`
+    await db.prepare(`
       INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)
     `).run('Wateen Admin', adminEmail, hash, 'super_admin');
     console.log('Created default admin user:', adminEmail, '/ WateenAdmin@2026 (change after first login)');
@@ -86,109 +117,120 @@ function run() {
   const CATALOG = loadCatalog();
   console.log('Migrating', CATALOG.length, 'products from catalog.js...');
 
+  for (let i = 0; i < CATEGORY_DEFS.length; i++) {
+    const c = CATEGORY_DEFS[i];
+    await db.prepare(`
+      INSERT INTO categories (slug, name, sort_order) VALUES (?, ?, ?)
+      ON CONFLICT (slug) DO NOTHING
+    `).run(c.slug, c.name, i);
+  }
   const categoryIdBySlug = {};
-  const insertCategory = db.prepare(`
-    INSERT INTO categories (slug, name, sort_order) VALUES (?, ?, ?)
-    ON CONFLICT(slug) DO NOTHING
-  `);
-  CATEGORY_DEFS.forEach((c, i) => {
-    insertCategory.run(c.slug, c.name, i);
-  });
-  db.prepare('SELECT id, slug FROM categories').all().forEach(r => { categoryIdBySlug[r.slug] = r.id; });
+  (await db.prepare('SELECT id, slug FROM categories').all()).forEach(r => { categoryIdBySlug[r.slug] = r.id; });
 
-  const brandIdByName = {};
-  const insertBrand = db.prepare(`
-    INSERT INTO brands (slug, name, name_ar) VALUES (?, ?, ?)
-    ON CONFLICT(slug) DO NOTHING
-  `);
   const brandsSeen = new Map();
   CATALOG.forEach(p => { if (!brandsSeen.has(p.brand)) brandsSeen.set(p.brand, p.brandAr || null); });
-  brandsSeen.forEach((nameAr, name) => insertBrand.run(slugify(name), name, nameAr));
-  db.prepare('SELECT id, name FROM brands').all().forEach(r => { brandIdByName[r.name] = r.id; });
+  const brandRows = [...brandsSeen.entries()].map(([name, nameAr]) => [slugify(name), name, nameAr]);
+  if (brandRows.length) {
+    const { text, values } = buildBulkInsert('brands', ['slug', 'name', 'name_ar'], brandRows, { onConflict: 'ON CONFLICT (slug) DO NOTHING' });
+    await pool.query(text, values);
+  }
+  const brandIdByName = {};
+  (await db.prepare('SELECT id, name FROM brands').all()).forEach(r => { brandIdByName[r.name] = r.id; });
 
-  const insertProduct = db.prepare(`
-    INSERT INTO products (
-      slug, name, name_ar, brand_id, type, sku, description, gender, family,
-      origin, year, notes_top, notes_heart, notes_base, tag_html,
-      rating, reviews_count, status, best_seller
-    ) VALUES (@slug, @name, @name_ar, @brand_id, @type, @sku, @description, @gender, @family,
-      @origin, @year, @notes_top, @notes_heart, @notes_base, @tag_html,
-      @rating, @reviews_count, 'published', 0)
-  `);
+  const BATCH_SIZE = 25;
+  let migrated = 0;
 
-  const insertProductCategory = db.prepare(`
-    INSERT OR IGNORE INTO product_categories (product_id, category_id, is_primary) VALUES (?, ?, ?)
-  `);
+  for (let start = 0; start < CATALOG.length; start += BATCH_SIZE) {
+    const batch = CATALOG.slice(start, start + BATCH_SIZE);
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
 
-  const insertVariant = db.prepare(`
-    INSERT INTO product_variants (product_id, size, sku, price, stock, is_default, sort_order)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `);
+      const productRows = batch.map(p => [
+        p.id, p.name, p.nameAr || null, brandIdByName[p.brand] || null, p.type || null, p.sku || null,
+        p.desc || null, p.gender || null, p.family || null, p.origin || null, p.year || null,
+        (p.notes && p.notes.top) || null, (p.notes && p.notes.heart) || null, (p.notes && p.notes.base) || null,
+        p.tag || null, ratingToNumber(p.rating), p.reviews || 0, 'published', false
+      ]);
+      const { text: prodText, values: prodValues } = buildBulkInsert(
+        'products',
+        ['slug', 'name', 'name_ar', 'brand_id', 'type', 'sku', 'description', 'gender', 'family',
+         'origin', 'year', 'notes_top', 'notes_heart', 'notes_base', 'tag_html',
+         'rating', 'reviews_count', 'status', 'best_seller'],
+        productRows,
+        { returning: 'id, slug' }
+      );
+      const prodResult = await client.query(prodText, prodValues);
+      const productIdBySlug = {};
+      prodResult.rows.forEach(r => { productIdBySlug[r.slug] = r.id; });
 
-  const insertImage = db.prepare(`
-    INSERT INTO product_images (product_id, url, sort_order, is_main) VALUES (?, ?, ?, ?)
-  `);
+      const categoryRows = [];
+      const variantRows = [];
+      const imageRows = [];
 
-  const ratingToNumber = (stars) => {
-    if (!stars) return 0;
-    const full = (stars.match(/★/g) || []).length;
-    return full;
-  };
+      for (const p of batch) {
+        const productId = productIdBySlug[p.id];
 
-  const insertAll = db.transaction((rows) => {
-    rows.forEach((p, idx) => {
-      const brand_id = brandIdByName[p.brand] || null;
-      const result = insertProduct.run({
-        slug: p.id,
-        name: p.name,
-        name_ar: p.nameAr || null,
-        brand_id,
-        type: p.type || null,
-        sku: p.sku || null,
-        description: p.desc || null,
-        gender: p.gender || null,
-        family: p.family || null,
-        origin: p.origin || null,
-        year: p.year || null,
-        notes_top: (p.notes && p.notes.top) || null,
-        notes_heart: (p.notes && p.notes.heart) || null,
-        notes_base: (p.notes && p.notes.base) || null,
-        tag_html: p.tag || null,
-        rating: ratingToNumber(p.rating),
-        reviews_count: p.reviews || 0
-      });
-      const productId = result.lastInsertRowid;
+        const cats = [p.cat, ...(p.extraCats || [])].filter(Boolean);
+        cats.forEach((slug, i) => {
+          const catId = categoryIdBySlug[slug];
+          if (catId) categoryRows.push([productId, catId, i === 0]);
+        });
 
-      // categories: primary cat + any extraCats
-      const cats = [p.cat, ...(p.extraCats || [])].filter(Boolean);
-      cats.forEach((slug, i) => {
-        const catId = categoryIdBySlug[slug];
-        if (catId) insertProductCategory.run(productId, catId, i === 0 ? 1 : 0);
-      });
+        const sizes = (p.sizes && p.sizes.length) ? p.sizes : [p.size || 'One Size'];
+        let defaultAssigned = false;
+        sizes.forEach((size, i) => {
+          const isDefault = size === p.size;
+          if (isDefault) defaultAssigned = true;
+          variantRows.push([
+            productId, size, p.sku ? (p.sku + '-' + slugify(size)) : null, p.price, 50,
+            isDefault, i
+          ]);
+        });
+        if (!defaultAssigned && variantRows.length) {
+          // mark the first size of this product as default since none matched p.size exactly
+          const firstIdx = variantRows.length - sizes.length;
+          variantRows[firstIdx][5] = true;
+        }
 
-      // variants: every declared size gets a real price row.
-      // legacy data only had one flat price, so every size starts at that
-      // price until the admin sets size-specific pricing in the dashboard.
-      const sizes = (p.sizes && p.sizes.length) ? p.sizes : [p.size || 'One Size'];
-      sizes.forEach((size, i) => {
-        insertVariant.run(
-          productId, size, p.sku ? (p.sku + '-' + slugify(size)) : null,
-          p.price, 50, size === p.size ? 1 : 0, i
-        );
-      });
-      if (!sizes.includes(p.size)) {
-        db.prepare('UPDATE product_variants SET is_default = 1 WHERE product_id = ? AND size = ?')
-          .run(productId, sizes[0]);
+        const images = [p.img, p.img2].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i);
+        images.forEach((url, i) => imageRows.push([productId, url, i, i === 0]));
       }
 
-      // images
-      const images = [p.img, p.img2].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i);
-      images.forEach((url, i) => insertImage.run(productId, url, i, i === 0 ? 1 : 0));
-    });
-  });
+      if (categoryRows.length) {
+        const { text, values } = buildBulkInsert(
+          'product_categories', ['product_id', 'category_id', 'is_primary'], categoryRows,
+          { onConflict: 'ON CONFLICT (product_id, category_id) DO NOTHING' }
+        );
+        await client.query(text, values);
+      }
+      if (variantRows.length) {
+        const { text, values } = buildBulkInsert(
+          'product_variants', ['product_id', 'size', 'sku', 'price', 'stock', 'is_default', 'sort_order'], variantRows
+        );
+        await client.query(text, values);
+      }
+      if (imageRows.length) {
+        const { text, values } = buildBulkInsert(
+          'product_images', ['product_id', 'url', 'sort_order', 'is_main'], imageRows
+        );
+        await client.query(text, values);
+      }
 
-  insertAll(CATALOG);
+      await client.query('COMMIT');
+      migrated += batch.length;
+      console.log('migrated', migrated, '/', CATALOG.length);
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
+  }
+
   console.log('Migration complete:', CATALOG.length, 'products,', brandsSeen.size, 'brands.');
 }
 
-run();
+run()
+  .then(() => process.exit(0))
+  .catch((err) => { console.error(err); process.exit(1); });
