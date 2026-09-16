@@ -296,8 +296,21 @@
       });
     }, { threshold: 0.6 });
     rolls.forEach((el) => ro.observe(el));
+
+    // querySelectorAll above is a static snapshot taken at parse time, so
+    // .roll elements injected later (e.g. the best-sellers grid, rendered
+    // from CATALOG data after this runs) never get observed and stay
+    // frozen at their placeholder "0" forever. Expose a hook so any
+    // later-injected markup can opt its own .roll spans into the same
+    // animation instead of duplicating this logic.
+    window.__wireRolls = function (root) {
+      (root || document).querySelectorAll('.roll').forEach((el) => ro.observe(el));
+    };
   } else {
     rolls.forEach(runRoll);
+    window.__wireRolls = function (root) {
+      (root || document).querySelectorAll('.roll').forEach(runRoll);
+    };
   }
 
 
@@ -571,6 +584,10 @@
         '</article>'
       );
     }).join('');
+    // these .roll spans were injected after hero.js's own roll-animation
+    // setup took its one-time querySelectorAll snapshot, so they'd never
+    // animate (or even show their real number) without this
+    if (window.__wireRolls) window.__wireRolls(grid);
   })();
 
   /* ---------- cart state (persisted so checkout.html can read it) ---------- */
