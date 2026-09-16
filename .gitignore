@@ -6,3 +6,6 @@ server/db/wateen.db-shm
 server/db/wateen.db-wal
 server/uploads/*
 !server/uploads/.gitkeep
+
+.vercel
+.env*

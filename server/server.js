@@ -54,31 +54,48 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/overview', overviewRoutes);
 app.use('/api/staff', staffRoutes);
 
-/* ---------- uploaded product images ---------- */
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-/* ---------- admin dashboard (static SPA) ---------- */
-app.use('/admin', express.static(path.join(ROOT, 'admin')));
-app.get('/admin/*splat', (req, res) => res.sendFile(path.join(ROOT, 'admin', 'index.html')));
-
-/* ---------- the existing public website, unchanged ---------- */
-app.use(express.static(ROOT, { index: 'index.html' }));
+// locally (node server/server.js) this Express app also serves the static
+// site and uploaded images directly. On Vercel, static files and /admin are
+// served by the CDN per vercel.json, and only /api/* reaches this function —
+// see api/index.js.
+if (!process.env.VERCEL) {
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+  app.use('/admin', express.static(path.join(ROOT, 'admin')));
+  app.get('/admin/*splat', (req, res) => res.sendFile(path.join(ROOT, 'admin', 'index.html')));
+  app.use(express.static(ROOT, { index: 'index.html' }));
+}
 
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: process.env.NODE_ENV === 'production' ? 'Something went wrong.' : err.message });
 });
 
-const PORT = process.env.PORT || 3000;
+let schemaReady = null;
+function ensureSchema() {
+  if (!schemaReady) schemaReady = initSchema();
+  return schemaReady;
+}
 
-initSchema()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Wateen Perfumes server running: http://localhost:${PORT}`);
-      console.log(`Admin dashboard:               http://localhost:${PORT}/admin`);
+// serverless entry point (Vercel): make sure the schema exists before the
+// first request on a cold start, then hand off to the Express app
+async function handler(req, res) {
+  await ensureSchema();
+  return app(req, res);
+}
+
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  ensureSchema()
+    .then(() => {
+      app.listen(PORT, () => {
+        console.log(`Wateen Perfumes server running: http://localhost:${PORT}`);
+        console.log(`Admin dashboard:               http://localhost:${PORT}/admin`);
+      });
+    })
+    .catch((err) => {
+      console.error('Failed to initialize database schema:', err);
+      process.exit(1);
     });
-  })
-  .catch((err) => {
-    console.error('Failed to initialize database schema:', err);
-    process.exit(1);
-  });
+}
+
+module.exports = { app, handler };

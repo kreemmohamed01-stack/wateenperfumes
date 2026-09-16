@@ -8,7 +8,6 @@
    ════════════════════════════════════════════════ */
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 const hasCloudinaryConfig = !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET);
 
@@ -22,19 +21,12 @@ if (hasCloudinaryConfig) {
 
 const ALLOWED_EXT = new Set(['png', 'jpg', 'jpeg', 'webp', 'gif']);
 
-const storage = hasCloudinaryConfig
-  ? new CloudinaryStorage({
-      cloudinary,
-      params: {
-        folder: 'wateen-perfumes',
-        allowed_formats: [...ALLOWED_EXT],
-        transformation: [{ width: 1600, height: 1600, crop: 'limit' }]
-      }
-    })
-  : multer.memoryStorage(); // local dev fallback when Cloudinary env vars aren't set — see note in upload route
-
+// files land in memory first, then get streamed to Cloudinary explicitly —
+// this avoids depending on multer-storage-cloudinary, which pins an old,
+// vulnerable cloudinary v1 peer dependency (GHSA-g4mf-96x5-5m2c) and hasn't
+// been updated for the cloudinary v2 SDK used here.
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 8 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const ext = (file.originalname.split('.').pop() || '').toLowerCase();
@@ -43,4 +35,14 @@ const upload = multer({
   }
 });
 
-module.exports = { upload, hasCloudinaryConfig };
+function uploadBufferToCloudinary(buffer) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: 'wateen-perfumes', transformation: [{ width: 1600, height: 1600, crop: 'limit' }] },
+      (err, result) => (err ? reject(err) : resolve(result))
+    );
+    stream.end(buffer);
+  });
+}
+
+module.exports = { upload, uploadBufferToCloudinary, hasCloudinaryConfig };

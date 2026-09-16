@@ -1,7 +1,7 @@
 const express = require('express');
 const { db, withTransaction } = require('../db');
 const { requireAuth, requirePermission, logActivity } = require('../middleware/auth');
-const { upload, hasCloudinaryConfig } = require('../lib/upload');
+const { upload, uploadBufferToCloudinary, hasCloudinaryConfig } = require('../lib/upload');
 
 const router = express.Router();
 
@@ -405,15 +405,17 @@ router.post('/bulk', requireAuth, requirePermission('products'), async (req, res
 
 /* ---------- image upload ---------- */
 
-router.post('/upload-image', requireAuth, requirePermission('products'), (req, res) => {
+router.post('/upload-image', requireAuth, requirePermission('products'), (req, res, next) => {
   if (!hasCloudinaryConfig) {
     return res.status(500).json({ error: 'Image uploads are not configured — set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.' });
   }
-  upload.single('image')(req, res, (err) => {
+  upload.single('image')(req, res, async (err) => {
     if (err) return res.status(400).json({ error: err.message });
     if (!req.file) return res.status(400).json({ error: 'No image uploaded.' });
-    // CloudinaryStorage populates req.file.path with the hosted, absolute URL
-    res.json({ url: req.file.path });
+    try {
+      const result = await uploadBufferToCloudinary(req.file.buffer);
+      res.json({ url: result.secure_url });
+    } catch (e) { next(e); }
   });
 });
 
