@@ -385,6 +385,10 @@ body.product-page .crumb{ padding-top:88px; }
   width:6px; height:6px; border-radius:50%;
   background:#3e7d4d;
 }
+.pd__stock.is-low{ color:#b3251e; }
+.pd__stock.is-low i{ background:#b3251e; }
+.pd__stock.is-out{ color:var(--ink-soft); }
+.pd__stock.is-out i{ background:var(--ink-soft); }
 
 
 /* ════════════════════════════════════════════════

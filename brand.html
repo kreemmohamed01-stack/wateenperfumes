@@ -333,6 +333,13 @@
 
     <div class="shopResults__bar">
       <p class="shopResults__count"><span id="rCount">0</span> PRODUCTS</p>
+      <div class="shopSearch" id="shopSearchWrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
+        <input type="text" id="shopSearchInput" placeholder="Search this brand…" autocomplete="off">
+        <button type="button" class="shopSearch__clear" id="shopSearchClear" aria-label="Clear search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+        </button>
+      </div>
     </div>
 
     <div class="grid grid--products shopGrid" id="brandGrid"><!-- injected --></div>
@@ -607,10 +614,8 @@
   }
 
   // ---- products for this brand ----
-  var products = brand.brandName ? CAT.filter(function (p) { return p.brand === brand.brandName; }) : [];
-
-  var rCountEl2 = document.getElementById('rCount');
-  if (rCountEl2) rCountEl2.textContent = String(products.length);
+  var allProducts = brand.brandName ? CAT.filter(function (p) { return p.brand === brand.brandName; }) : [];
+  var searchQuery = '';
 
   function cardHtml(p, i) {
     var onSale = p.compareAtPrice && Number(p.compareAtPrice) > Number(p.price);
@@ -681,23 +686,65 @@
 
   var gridEl = document.getElementById('brandGrid');
   var emptyEl = document.getElementById('brandEmpty');
+  var rCountEl2 = document.getElementById('rCount');
 
-  if (products.length === 0) {
-    if (gridEl) gridEl.innerHTML = '';
-    if (emptyEl) {
-      emptyEl.hidden = false;
-      setText('brandEmptyTitle', "We're curating our " + brand.name + ' collection');
-      setText('brandEmptyText', "We're curating our " + brand.name + ' collection — check back soon.');
+  function renderProducts() {
+    var q = searchQuery.trim().toLowerCase();
+    var products = q
+      ? allProducts.filter(function (p) { return p.name.toLowerCase().indexOf(q) !== -1; })
+      : allProducts;
+
+    if (rCountEl2) rCountEl2.textContent = String(products.length);
+
+    if (products.length === 0) {
+      if (gridEl) gridEl.innerHTML = '';
+      if (emptyEl) {
+        emptyEl.hidden = false;
+        if (q) {
+          setText('brandEmptyTitle', 'No matches in ' + brand.name);
+          setText('brandEmptyText', 'Try a different search term.');
+        } else {
+          setText('brandEmptyTitle', "We're curating our " + brand.name + ' collection');
+          setText('brandEmptyText', "We're curating our " + brand.name + ' collection — check back soon.');
+        }
+      }
+    } else {
+      if (emptyEl) emptyEl.hidden = true;
+      if (gridEl) {
+        gridEl.innerHTML = products.map(cardHtml).join('');
+        gridEl.querySelectorAll('[data-wish]').forEach(function (btn) {
+          if (isWished(btn.dataset.wish)) btn.classList.add('is-on');
+        });
+        wireGrid();
+      }
     }
-  } else {
-    if (emptyEl) emptyEl.hidden = true;
-    if (gridEl) {
-      gridEl.innerHTML = products.map(cardHtml).join('');
-      gridEl.querySelectorAll('[data-wish]').forEach(function (btn) {
-        if (isWished(btn.dataset.wish)) btn.classList.add('is-on');
-      });
-      wireGrid();
-    }
+  }
+
+  renderProducts();
+
+  // ---- in-page search: filters this brand's own products by name ----
+  var searchInput = document.getElementById('shopSearchInput');
+  var searchWrap = document.getElementById('shopSearchWrap');
+  var searchClear = document.getElementById('shopSearchClear');
+  if (searchInput) {
+    var searchDebounce;
+    searchInput.addEventListener('input', function () {
+      clearTimeout(searchDebounce);
+      var val = searchInput.value;
+      searchDebounce = setTimeout(function () {
+        searchQuery = val;
+        if (searchWrap) searchWrap.classList.toggle('has-value', val.length > 0);
+        renderProducts();
+      }, 250);
+    });
+  }
+  if (searchClear) {
+    searchClear.addEventListener('click', function () {
+      if (searchInput) searchInput.value = '';
+      searchQuery = '';
+      if (searchWrap) searchWrap.classList.remove('has-value');
+      renderProducts();
+    });
   }
 })();
 </script>

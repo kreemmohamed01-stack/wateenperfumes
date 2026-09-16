@@ -396,7 +396,7 @@
         <tr><th>Gender</th><td id="pdDetailGender"></td></tr>
         <tr><th>Origin</th><td id="pdDetailOrigin"></td></tr>
         <tr><th>SKU</th><td id="pdDetailSku"></td></tr>
-        <tr><th>Availability</th><td><span class="pd__stock"><i></i>In Stock</span></td></tr>
+        <tr><th>Availability</th><td><span class="pd__stock" id="pdStock"><i></i>In Stock</span></td></tr>
       </table>
     </div>
 
@@ -783,6 +783,20 @@
   setText('pdDetailGender', product.gender);
   setText('pdDetailOrigin', product.origin);
   setText('pdDetailSku', product.sku);
+
+  var stockEl = document.getElementById('pdStock');
+  if (stockEl) {
+    var avail = Number(product.stock) || 0;
+    if (avail <= 0) {
+      stockEl.classList.add('is-out');
+      stockEl.innerHTML = '<i></i>Out of Stock';
+    } else if (product.isLowStock) {
+      stockEl.classList.add('is-low');
+      stockEl.innerHTML = '<i></i>Low Stock &mdash; ' + avail + ' available';
+    } else {
+      stockEl.innerHTML = '<i></i>In Stock &mdash; ' + avail + ' available';
+    }
+  }
 
   // ---- related products: everything else in the catalog, same category first ----
   var related = CAT.filter(function (p) { return p.id !== product.id; })

@@ -367,6 +367,13 @@
 
       <div class="shopResults__bar">
         <p class="shopResults__count"><span id="rCount">0</span> PRODUCTS</p>
+        <div class="shopSearch" id="shopSearchWrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
+          <input type="text" id="shopSearchInput" placeholder="Search in Men…" autocomplete="off">
+          <button type="button" class="shopSearch__clear" id="shopSearchClear" aria-label="Clear search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+          </button>
+        </div>
         <div class="shopResults__right">
           <button class="shopSort" id="shopSort" data-sort="featured">
             Sort by: <span id="sortLabel">Featured</span>
@@ -588,6 +595,7 @@
     families: [],   // selected scent family names
     sizes: [],       // selected size labels
     maxPrice: null,
+    q: '',          // in-page search, scoped to this category only
     sort: 'featured',
     view: 'grid',
     page: 1
@@ -647,13 +655,42 @@
     });
   }
 
+  // ---- in-page search: filters this category's own products by name/brand ----
+  var searchInput = document.getElementById('shopSearchInput');
+  var searchWrap = document.getElementById('shopSearchWrap');
+  var searchClear = document.getElementById('shopSearchClear');
+  if (searchInput) {
+    var searchDebounce;
+    searchInput.addEventListener('input', function () {
+      clearTimeout(searchDebounce);
+      var val = searchInput.value;
+      searchDebounce = setTimeout(function () {
+        state.q = val;
+        state.page = 1;
+        if (searchWrap) searchWrap.classList.toggle('has-value', val.length > 0);
+        renderResults();
+      }, 250);
+    });
+  }
+  if (searchClear) {
+    searchClear.addEventListener('click', function () {
+      if (searchInput) searchInput.value = '';
+      state.q = '';
+      state.page = 1;
+      if (searchWrap) searchWrap.classList.remove('has-value');
+      renderResults();
+    });
+  }
+
   // ---- filtering / sorting ----
   function getFiltered() {
+    var q = state.q.trim().toLowerCase();
     return CAT.filter(function (p) {
       if (state.brands.length && state.brands.indexOf(p.brand) === -1) return false;
       if (state.families.length && state.families.indexOf(p.family) === -1) return false;
       if (state.sizes.length && !(p.sizes || []).some(function (s) { return state.sizes.indexOf(s) !== -1; })) return false;
       if (p.price > state.maxPrice) return false;
+      if (q && p.name.toLowerCase().indexOf(q) === -1 && p.brand.toLowerCase().indexOf(q) === -1) return false;
       return true;
     });
   }

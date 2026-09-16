@@ -246,6 +246,45 @@ body.shop-page .crumb{ padding-top:88px; }
 .shopResults__right{
   display:flex; align-items:center; gap:12px;
 }
+
+/* ---- in-page search: filters this page's own grid only (its category or
+   brand), separate from the global search modal which searches everything ---- */
+.shopSearch{
+  position:relative;
+  flex:1 1 220px;
+  max-width:280px;
+}
+.shopSearch svg{
+  position:absolute; left:13px; top:50%; transform:translateY(-50%);
+  width:14px; height:14px; color:var(--ink-soft); opacity:.6;
+  pointer-events:none;
+}
+.shopSearch input{
+  width:100%;
+  padding:9px 34px 9px 34px;
+  border:1px solid rgba(58,50,42,.18);
+  border-radius:20px;
+  background:#fff;
+  font-size:12px;
+  color:var(--ink);
+  transition:border-color .16s var(--ease);
+}
+.shopSearch input::placeholder{ color:rgba(58,50,42,.45); }
+.shopSearch input:focus{ outline:none; border-color:var(--gold); }
+.shopSearch__clear{
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  width:20px; height:20px;
+  display:none;
+  align-items:center; justify-content:center;
+  border-radius:50%;
+  background:rgba(58,50,42,.1);
+  color:var(--ink-soft);
+}
+.shopSearch__clear svg{ position:static; width:9px; height:9px; opacity:1; }
+.shopSearch.has-value .shopSearch__clear{ display:flex; }
+@media (max-width:640px){
+  .shopSearch{ flex:1 1 100%; max-width:none; order:3; }
+}
 .shopSort{
   display:inline-flex; align-items:center; gap:10px;
   padding:9px 16px;
