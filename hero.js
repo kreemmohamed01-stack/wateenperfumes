@@ -255,6 +255,13 @@
     const target = parseInt(el.dataset.value, 10);
     if (isNaN(target)) return;
 
+    // an element can be observed twice (once from the page-load snapshot, once
+    // via __wireRolls after its value is filled in), and two concurrent
+    // animations on the same node fight over textContent — whichever finishes
+    // last wins, which can leave a stale number on screen. Only ever run once.
+    if (el.dataset.rolled === '1') return;
+    el.dataset.rolled = '1';
+
     const fmt = (n) => n.toLocaleString('en-US');
 
     if (reduce) { el.textContent = fmt(target); return; }

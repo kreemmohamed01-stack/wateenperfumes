@@ -645,8 +645,11 @@
 </section>
 
 
-<!-- ══════════════════ 6 · SALE BANNER ══════════════════ -->
-<section class="sale reveal">
+<!-- ══════════════════ 6 · SALE BANNER ══════════════════
+     Hidden by default and only revealed by site-data.js when a site-wide
+     sale is actually switched on in the dashboard — otherwise the hardcoded
+     percentage would flash on screen before the script could hide it. -->
+<section class="sale reveal" style="display:none">
   <div class="sale__full">
     <div class="sale__card">
       <img class="sale__bg" src="assets/bg/sale.webp" alt="" loading="lazy">
@@ -656,7 +659,7 @@
         <span class="sale__div"></span>
 
         <p class="sale__mid">
-          <b><span class="roll" data-value="20">0</span>% OFF</b>
+          <b><span class="roll" data-value="0">0</span>% OFF</b>
           <i>ON ALL FRAGRANCES</i>
         </p>
 
@@ -1085,8 +1088,7 @@
 
     <nav class="foot__col">
       <h4>CUSTOMER CARE</h4>
-      <a href="#">Track Your Order</a><a href="#">Shipping &amp; Delivery</a>
-      <a href="#">Returns &amp; Exchanges</a><a href="#">FAQ</a><a href="#">Contact Us</a>
+      <a href="returns.html">Returns &amp; Exchange</a>
     </nav>
 
     <div class="foot__news">

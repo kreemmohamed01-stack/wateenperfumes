@@ -450,6 +450,83 @@ body.co-page .drawer{ display:none !important; }
 .coCardFields .coRow .coField{ margin-bottom:0; }
 
 
+/* ════════════════ RETURNS POLICY (collapsible) ════════════════ */
+
+.coPolicy{ padding:0; overflow:hidden; }
+.coPolicy__box{ width:100%; }
+.coPolicy__head{
+  display:flex; align-items:center; gap:14px;
+  padding:18px 22px;
+  cursor:pointer;
+  list-style:none;
+  transition:background .18s var(--ease);
+}
+.coPolicy__head::-webkit-details-marker{ display:none; }
+.coPolicy__head:hover{ background:rgba(185,139,82,.05); }
+.coPolicy__ico{
+  flex:0 0 auto; width:38px; height:38px;
+  display:grid; place-items:center;
+  border-radius:50%;
+  background:rgba(185,139,82,.1);
+  color:var(--gold-deep);
+}
+.coPolicy__ico svg{ width:19px; height:19px; }
+.coPolicy__headTxt{ flex:1 1 auto; min-width:0; }
+.coPolicy__headTxt b{ display:block; font-size:12.5px; font-weight:500; color:var(--ink); }
+.coPolicy__headTxt i{ display:block; margin-top:3px; font-style:normal; font-size:11px; color:var(--ink-soft); }
+.coPolicy__caret{
+  flex:0 0 auto; width:17px; height:17px; color:var(--ink-soft);
+  transition:transform .22s var(--ease);
+}
+.coPolicy__box[open] .coPolicy__caret{ transform:rotate(180deg); }
+
+.coPolicy__body{
+  padding:4px 22px 22px;
+  border-top:1px solid rgba(58,50,42,.1);
+  margin-top:0;
+}
+.coPolicy__body p{
+  margin:14px 0 0;
+  font-size:12.5px; line-height:1.85; font-weight:300;
+  color:var(--ink-soft);
+}
+.coPolicy__body b{ font-weight:500; color:var(--ink); }
+.coPolicy__sub{
+  margin-top:16px !important;
+  font-size:10.5px !important;
+  letter-spacing:.14em;
+  font-weight:500 !important;
+  color:var(--ink) !important;
+}
+.coPolicy__body ul{
+  margin:8px 0 0;
+  padding-left:0;
+  list-style:none;
+}
+.coPolicy__body li{
+  position:relative;
+  padding-left:18px;
+  margin-bottom:6px;
+  font-size:12.5px; line-height:1.75; font-weight:300;
+  color:var(--ink-soft);
+}
+.coPolicy__body li::before{
+  content:'✦';
+  position:absolute; left:0; top:0;
+  font-size:8px; color:var(--gold);
+  line-height:2.5;
+}
+.coPolicy__more{
+  display:inline-flex; align-items:center; gap:7px;
+  margin-top:18px;
+  font-size:11px; letter-spacing:.1em; font-weight:500;
+  color:var(--gold-deep);
+  transition:gap .18s var(--ease);
+}
+.coPolicy__more svg{ width:14px; height:14px; }
+.coPolicy__more:hover{ gap:11px; }
+
+
 /* ════════════════ PLACE ORDER ════════════════ */
 
 .coPlace{

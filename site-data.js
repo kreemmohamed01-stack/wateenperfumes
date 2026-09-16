@@ -103,25 +103,43 @@
     });
   }
 
-  /* ---------- sync the homepage "LIMITED TIME OFFER — X% OFF" banner ---------- */
+  /* ---------- sync the homepage "LIMITED TIME OFFER — X% OFF" banner ----------
+     The section ships hidden. It only appears when a site-wide sale is turned
+     on in the dashboard, and always shows that sale's real percentage. */
   function syncSaleBanner() {
-    var rollEl = document.querySelector('.sale .roll');
     var saleSection = document.querySelector('.sale');
-    if (!rollEl) return;
+    var rollEl = document.querySelector('.sale .roll');
+    if (!saleSection || !rollEl) return;
 
-    if (window.SITE_SETTINGS.globalSaleEnabled && window.SITE_SETTINGS.globalSalePercent > 0) {
-      rollEl.dataset.value = String(window.SITE_SETTINGS.globalSalePercent);
-    } else if (saleSection) {
-      // no active site-wide sale — hide the banner rather than show a false 0% offer
-      saleSection.style.display = 'none';
-    }
+    var s = window.SITE_SETTINGS || {};
+    var pct = Number(s.globalSalePercent || 0);
+    if (!s.globalSaleEnabled || pct <= 0) return; // stays hidden
+
+    rollEl.dataset.value = String(pct);
+    rollEl.textContent = '0';
+    // clear the "already animated" guard — the value only becomes real here,
+    // so this counter must be allowed to run even if it was observed earlier
+    delete rollEl.dataset.rolled;
+    saleSection.style.display = '';
+
+    // hero.js takes its one-time snapshot of .roll elements before this runs,
+    // so this counter has to be opted into the animation explicitly
+    if (window.__wireRolls) window.__wireRolls(saleSection);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { applyAnnouncementSettings(); renderPromoBanner(); syncSaleBanner(); });
-  } else {
+  function applyAll() {
     applyAnnouncementSettings();
     renderPromoBanner();
     syncSaleBanner();
+  }
+
+  // this file is parsed before hero.js, which is what defines __wireRolls, so
+  // the work is deferred to DOMContentLoaded (by which point hero.js has run).
+  // If the document is somehow already parsed, fall back to a microtask so
+  // hero.js still gets its chance to define the hook first.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyAll);
+  } else {
+    setTimeout(applyAll, 0);
   }
 })();

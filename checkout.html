@@ -337,13 +337,62 @@
         <p class="coCount"><span id="coNotesCount">0</span>/200</p>
       </section>
 
+      <!-- ─────────── returns policy ───────────
+           Collapsed by default so it doesn't push the Place Order button
+           down the page, but readable before ordering without leaving checkout. -->
+      <section class="coCard coPolicy">
+        <details class="coPolicy__box">
+          <summary class="coPolicy__head">
+            <span class="coPolicy__ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <path d="M3 9.5 12 4.5l9 5v9l-9 5-9-5v-9Z" stroke-linejoin="round"/>
+                <path d="M9 13.5 11 15.5l4.5-4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="coPolicy__headTxt">
+              <b>Returns &amp; Exchange Policy</b>
+              <i>14-day returns on defective products</i>
+            </span>
+            <svg class="coPolicy__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </summary>
+
+          <div class="coPolicy__body">
+            <p>You may request a return within <b>14 days</b> of delivery if the product has a manufacturing defect or a genuine product issue. All requests are subject to inspection by our team.</p>
+
+            <p class="coPolicy__sub">Eligible when:</p>
+            <ul>
+              <li>The request is made within 14 days of delivery.</li>
+              <li>The product has a confirmed defect or genuine issue.</li>
+              <li>Photos or a video of the issue can be provided if requested.</li>
+              <li>Original packaging and accessories are included, if applicable.</li>
+            </ul>
+
+            <p class="coPolicy__sub">Not accepted when:</p>
+            <ul>
+              <li>It's a change of mind or fragrance preference.</li>
+              <li>The product was used or opened in a way that affects resale condition.</li>
+              <li>Damage was caused by misuse, improper storage, or an accident.</li>
+              <li>The request comes after the 14-day period.</li>
+            </ul>
+
+            <p>If a defect is confirmed and cannot be repaired, the product may be exchanged for the same item, subject to availability.</p>
+
+            <a href="returns.html" class="coPolicy__more" target="_blank" rel="noopener">Read the full policy
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h13M14 6l5 6-5 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </details>
+      </section>
+
       <button type="submit" class="coPlace" id="coPlace">
         <span class="coPlace__label">PLACE ORDER</span>
         <svg class="coPlace__arrow" viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.4">
           <path d="M0 6h27" stroke-linecap="round"/><path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <p class="coTerms">By placing your order, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+      <p class="coTerms">By placing your order, you agree to our <a href="returns.html">Returns &amp; Exchange Policy</a>.</p>
     </div>
 
     <!-- ─────────── RIGHT: order summary ─────────── -->
@@ -490,10 +539,7 @@
 
     <nav class="coFoot__col">
       <h4>CUSTOMER CARE</h4>
-      <a href="#">Track Order</a>
-      <a href="#">Shipping &amp; Returns</a>
-      <a href="#">FAQs</a>
-      <a href="#">Contact Us</a>
+      <a href="returns.html">Returns &amp; Exchange</a>
     </nav>
 
     <nav class="coFoot__col">
