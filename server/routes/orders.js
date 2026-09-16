@@ -2,6 +2,7 @@ const express = require('express');
 const { db, withTransaction } = require('../db');
 const { requireAuth, requirePermission, logActivity } = require('../middleware/auth');
 const { notify } = require('../lib/notify');
+const { sendOrderWhatsApp } = require('../lib/whatsapp');
 
 const router = express.Router();
 
@@ -118,6 +119,14 @@ router.createPublicOrder = async (req, res, next) => {
     });
 
     notify('new_order', 'New order ' + orderNumber, b.customer.name + ' placed an order for ' + (b.total || 0) + ' EGP.', '/orders/' + orderId);
+
+    // fire-and-forget: a failed WhatsApp notification must never fail the order itself
+    sendOrderWhatsApp({
+      orderNumber, customer: b.customer, address: b.address, items: b.items,
+      subtotal: b.subtotal || 0, discountTotal: b.discountTotal || 0, shippingFee: b.shippingFee || 0,
+      total: b.total || 0, paymentMethod: b.paymentMethod || 'cod', couponCode: b.couponCode || null,
+      customerNotes: b.customerNotes || null
+    }).catch(() => {});
 
     res.status(201).json({ orderId, orderNumber });
   } catch (e) { next(e); }

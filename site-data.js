@@ -33,9 +33,10 @@
 
   window.CATALOG = catalog || (window.CATALOG || []);
   window.SITE_SETTINGS = settings || {
-    freeShippingThreshold: 1000, defaultShippingFee: 90,
+    freeShippingThreshold: 1000, defaultShippingFee: 80,
     globalSaleEnabled: false, globalSalePercent: 0,
-    codEnabled: true, instapayEnabled: true, cardEnabled: true, instapayNumber: '01027380269'
+    codEnabled: true, instapayEnabled: true, cardEnabled: true, instapayNumber: '01027380269',
+    shippingRatesByGovernorate: {}
   };
   window.FEATURED_COUPON = featuredCoupon || null;
 

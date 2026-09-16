@@ -10,8 +10,21 @@
   var CART_KEY = 'wateen_cart';
   var SETTINGS = (typeof window !== 'undefined' && window.SITE_SETTINGS) || {};
 
-  var FREE_SHIP_AT = SETTINGS.freeShippingThreshold || 1000;
-  var SHIP_FEE     = SETTINGS.defaultShippingFee || 90;
+  // watches ship free; every other product (perfumes) ships at a flat rate
+  // that varies by governorate — see shipping_rates_by_governorate in Settings.
+  var GOV_RATES    = SETTINGS.shippingRatesByGovernorate || {};
+  var DEFAULT_SHIP = SETTINGS.defaultShippingFee || 80;
+
+  function isWatch(p) {
+    return p && (p.cat === 'watches' || (p.extraCats || []).indexOf('watches') !== -1);
+  }
+
+  // the perfume shipping fee for whatever governorate is currently selected
+  function perfumeShippingFee() {
+    var gov = ($('coGov') && $('coGov').value) || '';
+    if (gov && GOV_RATES[gov] != null) return Number(GOV_RATES[gov]);
+    return Number(DEFAULT_SHIP);
+  }
 
   var fmt = function (n) { return Math.round(n).toLocaleString('en-US'); };
   var $   = function (id) { return document.getElementById(id); };
@@ -81,14 +94,20 @@
 
   function totals() {
     var subtotal = 0, count = 0;
+    var hasNonWatch = false;
+
     cart.forEach(function (line) {
       var p = findProduct(line.id);
       if (!p) return;
       subtotal += p.price * line.qty;
       count += line.qty;
+      if (!isWatch(p)) hasNonWatch = true;
     });
 
-    var shipping = (subtotal >= FREE_SHIP_AT || subtotal === 0) ? 0 : SHIP_FEE;
+    // watches ship free; if the cart has any non-watch item (perfume), the
+    // whole order ships at the perfume rate for the selected governorate —
+    // there's a single delivery, so it doesn't make sense to charge per line.
+    var shipping = (count === 0) ? 0 : (hasNonWatch ? perfumeShippingFee() : 0);
     var discount = 0;
 
     if (promo) {
@@ -101,6 +120,7 @@
       subtotal: subtotal,
       shipping: shipping,
       discount: discount,
+      hasNonWatch: hasNonWatch,
       total: Math.max(0, subtotal - discount) + shipping
     };
   }
@@ -118,29 +138,26 @@
     var shipPrice = $('coShipPrice');
     if (shipPrice) shipPrice.textContent = t.shipping === 0 ? 'FREE' : fmt(t.shipping) + ' EGP';
 
-    // free-shipping progress, in the summary and under the shipping option
-    var away = Math.max(0, FREE_SHIP_AT - t.subtotal);
-    var pct  = Math.max(0, Math.min(100, (t.subtotal / FREE_SHIP_AT) * 100));
-
-    var fill = $('coProgressFill');
-    if (fill) fill.style.width = pct + '%';
-
-    var msg = $('coProgressMsg');
-    if (msg) {
-      msg.innerHTML = away > 0
-        ? "You're <b>" + fmt(away) + " EGP</b> away from FREE SHIPPING!"
-        : "You've unlocked <b>FREE SHIPPING</b>!";
-    }
-
+    // shipping is watches-free / perfume-flat-by-governorate now, not a
+    // subtotal threshold — the progress bar no longer applies
+    var noteTitle = $('coShipNoteTitle');
     var noteAway = $('coShipAway');
-    if (noteAway) {
-      noteAway.innerHTML = away > 0
-        ? "You're <b>" + fmt(away) + " EGP</b> away from free shipping!"
-        : "Applied to this order.";
+    if (noteTitle && noteAway) {
+      if (!t.hasNonWatch && t.count > 0) {
+        noteTitle.textContent = 'FREE SHIPPING ON WATCHES';
+        noteAway.textContent = 'Applied to this order.';
+      } else if (t.hasNonWatch) {
+        var gov = ($('coGov') && $('coGov').value) || '';
+        noteTitle.textContent = 'PERFUME SHIPPING: ' + fmt(perfumeShippingFee()) + ' EGP';
+        noteAway.textContent = gov ? ('Rate for ' + gov + '.') : 'Select your governorate for the exact rate.';
+      } else {
+        noteTitle.textContent = 'FREE SHIPPING ON WATCHES';
+        noteAway.textContent = '';
+      }
     }
 
     var progress = $('coProgress');
-    if (progress) progress.hidden = t.count === 0;
+    if (progress) progress.hidden = true;
 
     // the InstaPay panel quotes the exact amount to transfer
     var payAmount = $('coPayAmount');
@@ -597,6 +614,11 @@
         });
     });
   }
+
+  /* ---------- governorate change recalculates the perfume shipping fee ---------- */
+
+  var govSelect = $('coGov');
+  if (govSelect) govSelect.addEventListener('change', renderTotals);
 
   /* ---------- go ---------- */
 

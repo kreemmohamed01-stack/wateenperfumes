@@ -891,7 +891,7 @@
       '<p class="searchm__resultsTitle">PRODUCTS (' + list.length + ')</p>' +
       list.map(function (p) {
         return (
-          '<div class="searchm__row">' +
+          '<div class="searchm__row" data-id="' + p.id + '" style="cursor:pointer">' +
             '<div class="searchm__rowImg"><img src="' + p.img + '" alt="' + p.name + '"></div>' +
             '<div class="searchm__rowInfo">' +
               '<b>' + p.brand + '</b>' +
@@ -906,6 +906,14 @@
           '</div>'
         );
       }).join('');
+
+    // clicking a result (but not its Add-to-cart/wishlist buttons) opens the product
+    searchResults.querySelectorAll('.searchm__row').forEach(function (row) {
+      row.addEventListener('click', function (e) {
+        if (e.target.closest('.searchm__rowAdd, .searchm__rowWish')) return;
+        window.location.href = 'product.html?id=' + row.dataset.id;
+      });
+    });
   }
 
   function runSearch() {
