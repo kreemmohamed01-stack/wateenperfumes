@@ -2978,7 +2978,7 @@ a{ text-decoration:none; color:inherit; }
   border-radius:10px;
   overflow:hidden;
   aspect-ratio:4 / 5;
-  background:#1a140e url('assets/bg/video.png') center/cover no-repeat;
+  background:#1a140e url('assets/bg/video.webp') center/cover no-repeat;
   box-shadow:0 24px 48px -26px rgba(60,42,26,.55);
 }
 .story__player video{

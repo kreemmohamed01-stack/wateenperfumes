@@ -13,6 +13,24 @@
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ─────────── shared scroll lock ───────────
+     the mobile drawer, cart drawer, and search modal can all be triggered
+     independently and can end up open at the same time (e.g. open the
+     drawer, then search from inside it). Each used to set
+     body.style.overflow directly, so closing whichever one closed last
+     unlocked scrolling even while another was still open. This tracks how
+     many things currently want scroll locked and only releases it once
+     none do. */
+  let scrollLockCount = 0;
+  function lockScroll() {
+    scrollLockCount++;
+    document.body.style.overflow = 'hidden';
+  }
+  function unlockScroll() {
+    scrollLockCount = Math.max(0, scrollLockCount - 1);
+    if (scrollLockCount === 0) document.body.style.overflow = '';
+  }
+
 
   /* ─────────── NAV: glass on scroll + hide/reveal ───────────
      category/product pages have no hero for the nav to float over —
@@ -74,14 +92,14 @@
     drawer.classList.add('is-open');
     drawer.setAttribute('aria-hidden', 'false');
     burger.setAttribute('aria-expanded', 'true');
-    document.body.style.overflow = 'hidden';
+    lockScroll();
   }
 
   function closeDrawer() {
     drawer.classList.remove('is-open');
     drawer.setAttribute('aria-hidden', 'true');
     burger.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
+    unlockScroll();
   }
 
   burger.addEventListener('click', openDrawer);
@@ -669,13 +687,13 @@
     if (!cartDrawer) return;
     cartDrawer.classList.add('is-open');
     cartDrawer.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+    lockScroll();
   }
   function closeCart() {
     if (!cartDrawer) return;
     cartDrawer.classList.remove('is-open');
     cartDrawer.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    unlockScroll();
   }
 
   ['cartBtn', 'cartBtnMob', 'drawerCartBtn'].forEach(function (id) {
@@ -840,7 +858,7 @@
     if (!searchModal) return;
     searchModal.classList.add('is-open');
     searchModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+    lockScroll();
     runSearch();
     setTimeout(function () { if (searchInput) searchInput.focus(); }, 250);
   }
@@ -848,7 +866,7 @@
     if (!searchModal) return;
     searchModal.classList.remove('is-open');
     searchModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    unlockScroll();
   }
 
   ['searchBtn', 'searchBtnMob'].forEach(function (id) {

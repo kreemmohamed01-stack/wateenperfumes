@@ -30,7 +30,7 @@ function renderShell() {
       <div class="sidebar__foot">
         <div class="sidebar__user">
           <div class="sidebar__avatar" id="userAvatar">?</div>
-          <div class="sidebar__userTxt"><b id="userName">—</b><i id="userRole">—</i></div>
+          <div class="sidebar__userTxt"><b id="userName">—</b></div>
         </div>
         <button class="sidebar__collapseBtn" id="collapseBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 5 8 12l7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -188,7 +188,6 @@ async function initApp() {
 
   renderShell();
   document.getElementById('userName').textContent = CURRENT_USER.name;
-  document.getElementById('userRole').textContent = CURRENT_USER.role.replace(/_/g, ' ');
   document.getElementById('userAvatar').textContent = CURRENT_USER.name.trim().charAt(0).toUpperCase();
 
   window.addEventListener('hashchange', route);

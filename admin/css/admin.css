@@ -3,35 +3,36 @@
    ════════════════════════════════════════════════ */
 
 :root{
-  /* gold — richer, slightly deeper than the storefront's for more contrast on white cards */
-  --gold:        #c69a4e;
-  --gold-light:  #e8c992;
-  --gold-deep:   #96702c;
-  --gold-ink:    #4a3712;
+  /* gold — bright, polished metallic gold. no muddy/olive tones. */
+  --gold:        #e6b64f;
+  --gold-light:  #f7dfa0;
+  --gold-shine:  #fff3d6;
+  --gold-deep:   #b8862c;
+  --gold-ink:    #5c4514;
 
-  /* ink / neutrals */
-  --ink:         #0f0d0a;
-  --ink-soft:    #453c30;
-  --ivory:       #faf8f4;
-  --ivory-deep:  #f1ebe0;
-  --line:        rgba(58,50,42,.13);
-  --line-soft:   rgba(58,50,42,.07);
+  /* strict palette per brand direction: black, white, gold, green, red — no beige/cream */
+  --ink:         #0a0a0a;
+  --ink-soft:    #4a4a4a;
+  --ivory:       #ffffff;
+  --ivory-deep:  #f4f4f4;
+  --line:        rgba(0,0,0,.12);
+  --line-soft:   rgba(0,0,0,.07);
   --white:       #ffffff;
 
   /* emerald — success / positive movement */
-  --emerald:     #1f6e4f;
-  --emerald-deep:#164f39;
+  --emerald:     #1a7a4e;
+  --emerald-deep:#125536;
   --success:     var(--emerald);
-  --success-bg:  #e6f2ec;
+  --success-bg:  #e3f4ea;
 
-  /* garnet red — danger / negative movement */
-  --garnet:      #9c2b2b;
-  --garnet-deep: #7a1f1f;
+  /* red — danger / negative movement */
+  --garnet:      #c62828;
+  --garnet-deep: #8f1d1d;
   --danger:      var(--garnet);
-  --danger-bg:   #f7e8e6;
+  --danger-bg:   #fbe6e6;
 
-  --warn:        #a06a12;
-  --warn-bg:     #faf0dc;
+  --warn:        #b8862c;
+  --warn-bg:     #fbf1dc;
   --info:        #2f5f82;
   --info-bg:     #e8f0f5;
 
@@ -47,7 +48,8 @@
   --shadow-sm: 0 1px 2px rgba(15,13,10,.05), 0 1px 1px rgba(15,13,10,.04);
   --shadow-md: 0 14px 34px -14px rgba(15,13,10,.22);
   --shadow-lg: 0 28px 70px -20px rgba(15,13,10,.32);
-  --shadow-gold: 0 8px 22px -8px rgba(198,154,78,.45);
+  --shadow-gold: 0 8px 24px -6px rgba(230,182,79,.55);
+  --gold-metal: linear-gradient(135deg, var(--gold-shine) 0%, var(--gold) 32%, var(--gold-deep) 78%, var(--gold) 100%);
 }
 
 *{ box-sizing:border-box; }
@@ -132,9 +134,9 @@ h1,h2,h3,h4{ font-family:var(--f-display); font-weight:600; margin:0; color:var(
   position:relative;
 }
 .sidebar__link svg{ width:17px; height:17px; flex:0 0 auto; stroke:currentColor; }
-.sidebar__link:hover{ background:rgba(198,154,78,.1); color:#fff; }
+.sidebar__link:hover{ background:rgba(230,182,79,.12); color:#fff; }
 .sidebar__link.is-active{
-  background:linear-gradient(180deg, var(--gold) 0%, var(--gold-deep) 100%);
+  background:var(--gold-metal);
   color:#1a1108;
   font-weight:600;
   box-shadow:var(--shadow-gold);
@@ -250,8 +252,8 @@ h1,h2,h3,h4{ font-family:var(--f-display); font-weight:600; margin:0; color:var(
 
 .btn--primary{ background:var(--ink); color:#fff; }
 .btn--primary:hover{ background:#241d16; }
-.btn--gold{ background:linear-gradient(180deg, var(--gold) 0%, var(--gold-deep) 100%); color:#1a1108; font-weight:600; box-shadow:var(--shadow-gold); }
-.btn--gold:hover{ filter:brightness(1.05); }
+.btn--gold{ background:var(--gold-metal); color:#1a1108; font-weight:600; box-shadow:var(--shadow-gold); }
+.btn--gold:hover{ filter:brightness(1.08) saturate(1.05); }
 .btn--ghost{ background:#fff; border-color:var(--line); color:var(--ink); }
 .btn--ghost:hover{ background:var(--ivory); border-color:rgba(58,50,42,.3); }
 .btn--danger{ background:var(--danger-bg); color:var(--danger); border-color:rgba(156,43,43,.16); }
