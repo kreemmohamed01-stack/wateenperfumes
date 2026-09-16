@@ -526,6 +526,53 @@
 
   var fmt = function (n) { return n.toLocaleString('en-US'); };
 
+  /* ---------- homepage best-sellers grid: rendered live from CATALOG,
+     never hand-authored, so price/name/image can never drift from the
+     real product data in the database ---------- */
+  (function renderBestSellers() {
+    var grid = document.getElementById('bestSellersGrid');
+    if (!grid) return;
+    var items = CATALOG.filter(function (p) { return p.bestSeller; }).slice(0, 8);
+    grid.innerHTML = items.map(function (p, i) {
+      var onSale = p.compareAtPrice && Number(p.compareAtPrice) > Number(p.price);
+      var isLow = !!p.isLowStock;
+      var cornerBadge = isLow
+        ? '<span class="card__badge card__badge--low" style="left:auto;right:10px;top:auto;bottom:10px">LOW STOCK</span>'
+        : (onSale ? '<span class="card__badge card__badge--sale" style="top:auto;bottom:10px">SALE</span>' : '');
+      var priceHtml = onSale
+        ? '<span class="card__priceNow">EGP <span class="roll" data-value="' + p.price + '">0</span></span><span class="card__priceWas">EGP ' + Number(p.compareAtPrice).toLocaleString('en-US') + '</span>'
+        : 'EGP <span class="roll" data-value="' + p.price + '">0</span>';
+      return (
+        '<article class="card" style="--d:' + (i % 4) + '" data-id="' + p.id + '">' +
+          '<div class="card__media">' +
+            '<span class="card__badge">BEST SELLER</span>' +
+            cornerBadge +
+            '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy">' +
+          '</div>' +
+          '<p class="card__brand">' + p.brand + '</p>' +
+          '<h3 class="card__name">' + p.name + '</h3>' +
+          '<p class="card__type">' + p.type + '</p>' +
+          '<p class="card__price' + (onSale ? ' card__price--sale' : '') + '">' + priceHtml + '</p>' +
+          '<div class="card__buy">' +
+            '<button class="add">' +
+              '<span class="add__fill"></span>' +
+              '<span class="add__label">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">' +
+                  '<path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>' +
+                  '<path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>' +
+                '</svg>ADD TO CART</span>' +
+            '</button>' +
+            '<button class="wish" aria-label="Add to wishlist">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">' +
+                '<path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>' +
+              '</svg>' +
+            '</button>' +
+          '</div>' +
+        '</article>'
+      );
+    }).join('');
+  })();
+
   /* ---------- cart state (persisted so checkout.html can read it) ---------- */
 
   var CART_KEY = 'wateen_cart';
@@ -790,7 +837,13 @@
   document.querySelectorAll('.mini').forEach(function (mini) {
     var nameEl = mini.querySelector('em');
     var product = nameEl ? findByName(nameEl.textContent) : null;
-    if (product) mini.setAttribute('href', 'product.html?id=' + product.id);
+    if (!product) return;
+    mini.setAttribute('href', 'product.html?id=' + product.id);
+    // the price printed in this rail card is hand-authored markup — always
+    // override it with the product's real live price so it can never drift
+    // from what the category page / checkout actually charges
+    var priceEl = mini.querySelector('i');
+    if (priceEl) priceEl.textContent = 'EGP ' + Number(product.price).toLocaleString('en-US');
   });
 
 

@@ -310,6 +310,7 @@
 
     <div class="pd__info">
       <p class="pd__brand" id="pdBrand"></p>
+      <span class="pd__lowStock" id="pdLowStock" style="display:none">LOW STOCK</span>
       <h1 class="pd__name" id="pdName"></h1>
       <p class="pd__type" id="pdType"></p>
 
@@ -749,6 +750,9 @@
       badgeEl.style.display = '';
     }
   }
+
+  var lowStockEl = document.getElementById('pdLowStock');
+  if (lowStockEl && product.isLowStock) lowStockEl.style.display = '';
 
   setText('pdDesc', product.desc);
 

@@ -614,9 +614,18 @@
   if (rCountEl2) rCountEl2.textContent = String(products.length);
 
   function cardHtml(p, i) {
+    var onSale = p.compareAtPrice && Number(p.compareAtPrice) > Number(p.price);
+    var isLow = !!p.isLowStock;
+    var badge = isLow
+      ? '<span class="card__badge card__badge--low">LOW STOCK</span>'
+      : (onSale ? '<span class="card__badge card__badge--sale">SALE</span>' : '');
+    var priceHtml = onSale
+      ? '<span class="card__priceNow">EGP ' + fmt(p.price) + '</span><span class="card__priceWas">EGP ' + fmt(p.compareAtPrice) + '</span>'
+      : 'EGP ' + fmt(p.price);
     return (
       '<article class="card" style="--d:' + (i % 4) + '" data-id="' + p.id + '">' +
         '<div class="card__media">' +
+          badge +
           '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy">' +
         '</div>' +
         '<button class="card__wish" data-wish="' + p.id + '" aria-label="Add to wishlist">' +
@@ -626,7 +635,7 @@
         '<h3 class="card__name"><a href="product.html?id=' + p.id + '">' + p.name + '</a></h3>' +
         '<p class="card__type">' + p.type + '</p>' +
         '<p class="card__rating">' + p.rating + ' <i>(' + p.reviews + ')</i></p>' +
-        '<p class="card__price">EGP ' + fmt(p.price) + '</p>' +
+        '<p class="card__price' + (onSale ? ' card__price--sale' : '') + '">' + priceHtml + '</p>' +
         '<div class="card__buy"><button class="add" data-add="' + p.id + '"><span class="add__fill"></span><span class="add__label">ADD TO CART</span></button></div>' +
       '</article>'
     );

@@ -996,12 +996,14 @@ a{ text-decoration:none; color:inherit; }
   position:relative;
   width:100%;
   max-width:900px;
+  max-height:88vh;
+  display:flex;
+  flex-direction:column;
   background:var(--cream);
   color:var(--ink);
   border-radius:10px;
-  /* clip children to the rounded corners — without this the results list's
-     own background shows square-cornered and the backdrop blur can bleed
-     through at the edges as the list scrolls */
+  /* clip to the rounded corners; internal scrolling happens in
+     .searchm__body below, never on this panel itself */
   overflow:hidden;
   box-shadow:0 40px 90px -30px rgba(20,16,12,.55);
   opacity:0;
@@ -1010,6 +1012,7 @@ a{ text-decoration:none; color:inherit; }
 }
 
 .searchm__head{
+  flex:0 0 auto;
   display:flex; align-items:flex-start; justify-content:space-between;
   padding:30px 34px 0;
 }
@@ -1038,6 +1041,7 @@ a{ text-decoration:none; color:inherit; }
 .searchm__close:hover{ color:var(--gold-deep); border-color:var(--gold); transform:rotate(90deg); }
 
 .searchm__bar{
+  flex:0 0 auto;
   display:flex; align-items:center; gap:12px;
   margin:22px 34px 0;
   padding:14px 18px;
@@ -1065,6 +1069,7 @@ a{ text-decoration:none; color:inherit; }
 .searchm__clear[hidden]{ display:none; }
 
 .searchm__tabs{
+  flex:0 0 auto;
   display:flex; gap:26px;
   margin:20px 34px 0;
   padding-bottom:14px;
@@ -1095,7 +1100,13 @@ a{ text-decoration:none; color:inherit; }
   display:grid;
   grid-template-columns:200px 1fr;
   gap:0;
-  max-height:48vh;
+  flex:1 1 auto;
+  /* the real fix: a grid item's default min-height is auto (its content's
+     natural height), which lets .searchm__body grow past the flex panel
+     and get clipped by its overflow:hidden instead of scrolling. min-height:0
+     lets this item actually shrink to the panel's available space so its
+     own overflow-y can take over. */
+  min-height:0;
   overflow-y:auto;
 }
 .searchm__side{
@@ -1141,29 +1152,29 @@ a{ text-decoration:none; color:inherit; }
 }
 .searchm__row{
   display:grid;
-  grid-template-columns:56px 1fr auto auto auto;
+  grid-template-columns:76px 1fr auto auto auto;
   align-items:center;
-  gap:14px;
-  padding:12px 0;
+  gap:16px;
+  padding:16px 0;
   border-bottom:1px solid rgba(58,50,42,.08);
 }
 .searchm__row:last-child{ border-bottom:0; }
 .searchm__rowImg{
-  width:56px; height:56px;
-  border-radius:6px;
+  width:76px; height:76px;
+  border-radius:8px;
   background:#fff;
   border:1px solid rgba(58,50,42,.08);
   display:grid; place-items:center;
   overflow:hidden;
 }
-.searchm__rowImg img{ max-width:80%; max-height:80%; object-fit:contain; }
-.searchm__rowInfo b{ display:block; font-size:13px; font-weight:600; color:var(--ink); }
-.searchm__rowInfo i{ display:block; margin-top:2px; font-style:normal; font-size:10.5px; color:var(--ink-soft); }
-.searchm__rowInfo em{ display:block; margin-top:3px; font-style:normal; font-size:10px; color:var(--gold); }
-.searchm__rowPrice{ font-size:13px; font-weight:600; white-space:nowrap; }
+.searchm__rowImg img{ max-width:82%; max-height:82%; object-fit:contain; }
+.searchm__rowInfo b{ display:block; font-size:15.5px; font-weight:600; color:var(--ink); }
+.searchm__rowInfo i{ display:block; margin-top:3px; font-style:normal; font-size:12.5px; color:var(--ink-soft); }
+.searchm__rowInfo em{ display:block; margin-top:4px; font-style:normal; font-size:11.5px; color:var(--gold); }
+.searchm__rowPrice{ font-size:15px; font-weight:600; white-space:nowrap; }
 .searchm__rowAdd{
-  padding:9px 16px;
-  font-size:9.5px;
+  padding:10px 18px;
+  font-size:10.5px;
   letter-spacing:.12em;
   color:#fff;
   background:var(--ink);
@@ -1173,12 +1184,12 @@ a{ text-decoration:none; color:inherit; }
 }
 .searchm__rowAdd:hover{ background:var(--gold-deep); }
 .searchm__rowWish{
-  width:30px; height:30px;
+  width:34px; height:34px;
   display:grid; place-items:center;
   color:var(--ink-soft);
   transition:color .18s var(--ease);
 }
-.searchm__rowWish svg{ width:15px; height:15px; }
+.searchm__rowWish svg{ width:17px; height:17px; }
 .searchm__rowWish:hover{ color:#b4413f; }
 .searchm__rowWish.is-on{ color:#b4413f; }
 .searchm__rowWish.is-on svg{ fill:#b4413f; }
@@ -1935,14 +1946,39 @@ a{ text-decoration:none; color:inherit; }
   position:absolute;
   top:-34px; left:16px;
   z-index:2;
-  padding:6px 12px;
-  background:var(--gold-deep);
+  padding:6px 13px;
+  background:#2e7d4f;
   color:#fff;
   font-size:9.5px;
-  font-weight:600;
-  letter-spacing:.12em;
+  font-weight:400;
+  letter-spacing:.16em;
   border-radius:3px;
   pointer-events:none;
+}
+
+/* general-purpose card badges: used on any category grid/card, not just the
+   homepage best-sellers rail — pinned inside the media box's own corner
+   since these cards don't reserve the extra top margin the rail does */
+.card__badge{
+  position:absolute;
+  top:10px; left:10px;
+  z-index:2;
+  padding:5px 11px;
+  background:#2e7d4f;
+  color:#fff;
+  font-size:9px;
+  font-weight:400;
+  letter-spacing:.14em;
+  border-radius:3px;
+  pointer-events:none;
+}
+.card__badge--low{
+  top:auto; left:10px; right:auto; bottom:10px;
+  background:#b3251e;
+}
+.card__badge--sale{
+  top:10px; right:10px; left:auto;
+  background:#b3251e;
 }
 /* Pinned to the box with inset rather than sized by a percentage: a % height
    resolves against the content area, which let a very tall, narrow bottle shot
@@ -2001,8 +2037,16 @@ a{ text-decoration:none; color:inherit; }
   margin:auto 0 16px;
   font-size:14px; letter-spacing:.09em; font-weight:400;
   color:var(--ink);
+  display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
 }
 .card__price .roll{ font-variant-numeric:tabular-nums; }
+.card__price--sale .card__priceNow{ color:#b3251e; }
+.card__priceWas{
+  font-size:.82em;
+  color:var(--ink-soft);
+  text-decoration:line-through;
+  opacity:.65;
+}
 
 .card__buy{ display:flex; align-items:center; gap:9px; width:100%; }
 
@@ -3582,7 +3626,8 @@ a{ text-decoration:none; color:inherit; }
   .searchm__panel{
     max-width:none;
     width:100%;
-    min-height:100%;
+    max-height:none;
+    height:100%;
     border-radius:0;
   }
   .searchm__head{ padding:22px 18px 0; }
@@ -3593,8 +3638,7 @@ a{ text-decoration:none; color:inherit; }
   .searchm__tabs button{ flex:0 0 auto; white-space:nowrap; font-size:9.5px; }
   .searchm__body{
     grid-template-columns:1fr;
-    max-height:none;
-    flex:1 1 auto;
+    grid-template-rows:auto 1fr;
   }
   .searchm__side{
     padding:18px 18px 0;
@@ -3603,10 +3647,12 @@ a{ text-decoration:none; color:inherit; }
     display:flex;
     gap:26px;
     overflow-x:auto;
+    flex:0 0 auto;
   }
   .searchm__sideBlock{ margin-bottom:18px; flex:0 0 auto; min-width:150px; }
   .searchm__results{ padding:18px; }
-  .searchm__row{ grid-template-columns:48px 1fr auto; row-gap:8px; }
+  .searchm__row{ grid-template-columns:64px 1fr auto; row-gap:8px; }
+  .searchm__rowImg{ width:64px; height:64px; }
   .searchm__rowWish{ grid-row:1; grid-column:3; }
   .searchm__rowPrice{ grid-column:2 / 3; }
   .searchm__rowAdd{ grid-column:2 / 3; justify-self:start; }

@@ -31,6 +31,9 @@ function toLegacyShape(p, settings) {
   const primaryCat = p.categories.find(c => c.is_primary) || p.categories[0];
   const extraCats = p.categories.filter(c => c !== primaryCat).map(c => c.slug);
 
+  const stock = p.variants.reduce((sum, v) => sum + Math.max(v.available, 0), 0);
+  const lowStockThreshold = p.lowStockThreshold != null ? p.lowStockThreshold : 5;
+
   return {
     id: p.slug, dbId: p.id,
     brand: p.brand ? p.brand.name : '', brandId: p.brand ? p.brand.id : null,
@@ -50,7 +53,9 @@ function toLegacyShape(p, settings) {
     desc: p.description, notes: p.notes, family: p.family, year: p.year, origin: p.origin,
     sku: p.sku, gender: p.gender, tag: p.tagHtml,
     bestSeller: p.bestSeller, featured: p.featured, newArrival: p.newArrival,
-    onSale: (p.discountActive && p.discountPercent > 0) || globalSaleOn
+    onSale: (p.discountActive && p.discountPercent > 0) || globalSaleOn,
+    stock, lowStockThreshold,
+    isLowStock: stock > 0 && stock <= lowStockThreshold
   };
 }
 
@@ -68,7 +73,7 @@ function assembleProduct(row, variantsByProduct, imagesByProduct, categoriesByPr
     notes: { top: row.notes_top, heart: row.notes_heart, base: row.notes_base }, tagHtml: row.tag_html,
     rating: row.rating, reviewsCount: row.reviews_count, bestSeller: !!row.best_seller,
     featured: !!row.featured, newArrival: !!row.new_arrival, discountPercent: row.discount_percent,
-    discountActive: !!row.discount_active,
+    discountActive: !!row.discount_active, lowStockThreshold: row.low_stock_threshold,
     categories,
     variants: variants.map(v => ({
       isDefault: !!v.is_default, size: v.size, price: v.price, compareAtPrice: v.compare_at_price,

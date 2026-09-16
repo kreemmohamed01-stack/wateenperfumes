@@ -177,6 +177,17 @@ body.product-page .crumb{ padding-top:88px; }
   font-size:12.5px; letter-spacing:.36em; font-weight:500;
   color:var(--gold-deep);
 }
+.pd__lowStock{
+  display:inline-block;
+  margin:0 0 10px 10px;
+  padding:4px 10px;
+  font-family:var(--f-body);
+  font-size:10px; font-weight:600; letter-spacing:.1em;
+  color:#fff;
+  background:#b3251e;
+  border-radius:3px;
+  vertical-align:middle;
+}
 .pd__name{
   margin:0;
   font-family:var(--f-display);
