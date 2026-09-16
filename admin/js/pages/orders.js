@@ -189,7 +189,7 @@ async function renderOrderDetail(id) {
           <div class="tableWrap"><table class="dt"><thead><tr><th>Product</th><th>Size</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
           <tbody>${o.items.map(i => `
             <tr>
-              <td class="hstack"><img class="dt__thumb" src="${i.image ? '/'+i.image : ''}" onerror="this.style.visibility='hidden'"><span>${escapeHtml(i.name)}<span class="dt__meta">${escapeHtml(i.brand||'')}</span></span></td>
+              <td class="hstack"><img class="dt__thumb" src="${resolveImageUrl(i.image)}" onerror="this.style.visibility='hidden'"><span>${escapeHtml(i.name)}<span class="dt__meta">${escapeHtml(i.brand||'')}</span></span></td>
               <td>${escapeHtml(i.size||'—')}</td><td>${i.qty}</td><td>${fmtMoney(i.unitPrice)}</td><td>${fmtMoney(i.unitPrice*i.qty)}</td>
             </tr>`).join('')}</tbody></table></div>
           <div class="panel__body" style="border-top:1px solid var(--line-soft)">

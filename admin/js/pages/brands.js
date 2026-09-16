@@ -24,7 +24,7 @@ async function loadBrands() {
   body.innerHTML = rows.map(b => `
     <tr>
       <td class="hstack">
-        <img class="dt__thumb" style="border-radius:50%;width:34px;height:34px" src="${b.logo?'/'+b.logo:''}" onerror="this.style.visibility='hidden'">
+        <img class="dt__thumb" style="border-radius:50%;width:34px;height:34px" src="${resolveImageUrl(b.logo)}" onerror="this.style.visibility='hidden'">
         <b>${escapeHtml(b.name)}</b>${b.featured?' <span class="pill pill--gold" style="margin-left:6px">Featured</span>':''}
       </td>
       <td>${b.productCount}</td>

@@ -23,7 +23,7 @@ async function loadCategories() {
   if (!rows.length) { body.innerHTML = `<tr><td colspan="5">${emptyState('', 'No categories yet', '')}</td></tr>`; return; }
   body.innerHTML = rows.map(c => `
     <tr>
-      <td class="hstack"><img class="dt__thumb" src="${c.image?'/'+c.image:''}" onerror="this.style.visibility='hidden'"><b>${escapeHtml(c.name)}</b></td>
+      <td class="hstack"><img class="dt__thumb" src="${resolveImageUrl(c.image)}" onerror="this.style.visibility='hidden'"><b>${escapeHtml(c.name)}</b></td>
       <td class="muted">${escapeHtml(c.slug)}</td>
       <td>${c.productCount}</td>
       <td><span class="pill pill--${c.isActive?'success':'neutral'}">${c.isActive?'Active':'Disabled'}</span></td>

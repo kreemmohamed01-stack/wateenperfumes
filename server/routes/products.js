@@ -1,33 +1,9 @@
 const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const crypto = require('crypto');
 const { db, withTransaction } = require('../db');
 const { requireAuth, requirePermission, logActivity } = require('../middleware/auth');
+const { upload, hasCloudinaryConfig } = require('../lib/upload');
 
 const router = express.Router();
-
-const UPLOAD_DIR = path.join(__dirname, '..', 'uploads');
-fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, UPLOAD_DIR),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, crypto.randomBytes(16).toString('hex') + ext);
-  }
-});
-const ALLOWED_EXT = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif']);
-const upload = multer({
-  storage,
-  limits: { fileSize: 8 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    if (!ALLOWED_EXT.has(ext)) return cb(new Error('Unsupported image type.'));
-    cb(null, true);
-  }
-});
 
 function slugify(s) {
   return String(s).toLowerCase().trim()
@@ -430,10 +406,14 @@ router.post('/bulk', requireAuth, requirePermission('products'), async (req, res
 /* ---------- image upload ---------- */
 
 router.post('/upload-image', requireAuth, requirePermission('products'), (req, res) => {
+  if (!hasCloudinaryConfig) {
+    return res.status(500).json({ error: 'Image uploads are not configured — set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.' });
+  }
   upload.single('image')(req, res, (err) => {
     if (err) return res.status(400).json({ error: err.message });
     if (!req.file) return res.status(400).json({ error: 'No image uploaded.' });
-    res.json({ url: 'uploads/' + req.file.filename });
+    // CloudinaryStorage populates req.file.path with the hosted, absolute URL
+    res.json({ url: req.file.path });
   });
 });
 

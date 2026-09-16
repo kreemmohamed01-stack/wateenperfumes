@@ -89,7 +89,7 @@ async function loadProducts() {
       <tr>
         <td><input type="checkbox" class="dt__checkbox prodRowCheck" value="${p.id}"></td>
         <td class="hstack">
-          <img class="dt__thumb" src="${p.images[0] ? '/'+p.images[0].url : ''}" onerror="this.style.visibility='hidden'">
+          <img class="dt__thumb" src="${p.images[0] ? resolveImageUrl(p.images[0].url) : ''}" onerror="this.style.visibility='hidden'">
           <span><a href="#/products/edit/${p.id}" class="dt__name" style="color:var(--ink)">${escapeHtml(p.name)}</a><span class="dt__meta">${escapeHtml(p.sku||'')}</span></span>
         </td>
         <td>${p.brand ? escapeHtml(p.brand.name) : '—'}</td>
@@ -334,7 +334,7 @@ function renderImageGrid() {
   const grid = document.getElementById('imgGrid');
   grid.innerHTML = editorImages.map((img, i) => `
     <div class="imgCell ${i===0?'is-main':''}" draggable="true" data-i="${i}">
-      <img src="/${img.url}">
+      <img src="${resolveImageUrl(img.url)}">
       <button class="imgCell__del" data-idel="${i}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg></button>
     </div>
   `).join('') + `

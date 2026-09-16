@@ -54,7 +54,7 @@ async function loadInventory() {
   body.innerHTML = data.items.map(r => `
     <tr>
       <td><input type="checkbox" class="dt__checkbox invRowCheck" value="${r.variantId}"></td>
-      <td class="hstack"><img class="dt__thumb" src="${r.image?'/'+r.image:''}" onerror="this.style.visibility='hidden'"><span><b>${escapeHtml(r.productName)}</b><span class="dt__meta">${escapeHtml(r.size)}</span></span></td>
+      <td class="hstack"><img class="dt__thumb" src="${resolveImageUrl(r.image)}" onerror="this.style.visibility='hidden'"><span><b>${escapeHtml(r.productName)}</b><span class="dt__meta">${escapeHtml(r.size)}</span></span></td>
       <td class="muted">${escapeHtml(r.sku||'—')}</td>
       <td>${fmtMoney(r.price)}</td>
       <td>${r.stock}</td>

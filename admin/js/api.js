@@ -65,3 +65,11 @@ function fmtDate(iso) {
 function escapeHtml(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
+
+// product/brand/category images are either a full Cloudinary URL (new
+// uploads) or a legacy relative path like "assets/products/x.png" (from
+// the original catalog) — only the relative kind needs a leading slash.
+function resolveImageUrl(url) {
+  if (!url) return '';
+  return /^https?:\/\//i.test(url) ? url : '/' + url;
+}

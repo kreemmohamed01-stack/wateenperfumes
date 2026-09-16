@@ -128,7 +128,7 @@ function renderTopProducts(rows) {
   box.innerHTML = `<div class="tableWrap"><table class="dt"><tbody>${rows.filter(r=>r.unitsSold>0).slice(0,6).map(p => `
     <tr>
       <td class="hstack">
-        <img class="dt__thumb" src="${p.image ? '/' + p.image : ''}" onerror="this.style.visibility='hidden'">
+        <img class="dt__thumb" src="${resolveImageUrl(p.image)}" onerror="this.style.visibility='hidden'">
         <span class="dt__name">${escapeHtml(p.name)}</span>
       </td>
       <td>${p.unitsSold} sold</td>
