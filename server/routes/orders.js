@@ -120,8 +120,10 @@ router.createPublicOrder = async (req, res, next) => {
 
     notify('new_order', 'New order ' + orderNumber, b.customer.name + ' placed an order for ' + (b.total || 0) + ' EGP.', '/orders/' + orderId);
 
-    // fire-and-forget: a failed WhatsApp notification must never fail the order itself
-    sendOrderWhatsApp({
+    // awaited so the send actually completes before this serverless function
+    // is frozen/torn down — a failure here still must never fail the order,
+    // since the order is already committed to the DB at this point.
+    await sendOrderWhatsApp({
       orderNumber, customer: b.customer, address: b.address, items: b.items,
       subtotal: b.subtotal || 0, discountTotal: b.discountTotal || 0, shippingFee: b.shippingFee || 0,
       total: b.total || 0, paymentMethod: b.paymentMethod || 'cod', couponCode: b.couponCode || null,
