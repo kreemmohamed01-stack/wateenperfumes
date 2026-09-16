@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wateen Perfumes — A Feeling That Stays</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hero.css">
+<link rel="icon" href="assets/logo.png">
+</head>
+<body>
+
+<!-- ══════════ ANNOUNCEMENT ══════════ -->
+<div class="announce">
+  <div class="announce__track">
+    <span>FREE SHIPPING ON ORDERS OVER 1000 EGP</span>
+    <span class="announce__dot">✦</span>
+    <span>AUTHENTIC LUXURY FRAGRANCES</span>
+    <span class="announce__dot">✦</span>
+    <span>FREE SHIPPING ON ORDERS OVER 1000 EGP</span>
+    <span class="announce__dot">✦</span>
+    <span>AUTHENTIC LUXURY FRAGRANCES</span>
+    <span class="announce__dot">✦</span>
+  </div>
+</div>
+
+<!-- ══════════ NAVBAR ══════════ -->
+<header class="nav" id="nav">
+
+  <!-- ---------- DESKTOP: split glass capsule with centred logo medallion ---------- -->
+  <div class="nav__bar">
+
+    <div class="nav__cap nav__cap--left">
+      <span class="nav__tag">SCENTS<br>CREATE<br>STORIES</span>
+      <span class="nav__tagStar">✦</span>
+      <span class="nav__div"></span>
+      <nav class="nav__links">
+        <a href="#" class="is-active">HOME<i></i></a>
+        <a href="shop.html">SHOP<i></i></a>
+        <a href="men.html">MEN<i></i></a>
+        <a href="women.html">WOMEN<i></i></a>
+      </nav>
+    </div>
+
+    <a href="#" class="nav__medallion" aria-label="Wateen Perfumes">
+      <span class="nav__medallionRing"></span>
+      <img src="assets/logo.png" alt="Wateen Perfumes">
+    </a>
+
+    <div class="nav__cap nav__cap--right">
+      <nav class="nav__links">
+        <a href="unisex.html">UNISEX<i></i></a>
+        <a href="all-brands.html">BRANDS<i></i></a>
+        <a href="https://wa.me/201027380269" target="_blank" rel="noopener">CONTACT<i></i></a>
+      </nav>
+
+      <div class="nav__pill">
+        <button class="nav__icon" id="searchBtn" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <a class="nav__icon" href="wishlist.html" id="wishBtn" aria-label="Wishlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>
+          </svg>
+          <span class="nav__badge" id="wishCount">0</span>
+        </a>
+        <button class="nav__icon nav__icon--cart" id="cartBtn" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>
+            <path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>
+          </svg>
+          <span class="nav__badge" id="cartCount">0</span>
+        </button>
+      </div>
+
+      <button class="nav__cur" aria-label="Currency">
+        EGP
+        <svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.4">
+          <path d="M1 1.8 6 6.4l5-4.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ---------- MOBILE: burger capsule + logo + icon capsule, links below ---------- -->
+  <div class="nav__mob">
+
+    <div class="nav__mobTop">
+      <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <a href="#" class="nav__mobLogo" aria-label="Wateen Perfumes">
+        <img src="assets/logo.png" alt="Wateen Perfumes">
+      </a>
+
+      <div class="nav__pill nav__pill--mob">
+        <button class="nav__icon" id="searchBtnMob" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <a class="nav__icon" href="wishlist.html" aria-label="Wishlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>
+          </svg>
+          <span class="nav__badge" id="wishCountMob">0</span>
+        </a>
+        <button class="nav__icon nav__icon--cart" id="cartBtnMob" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>
+            <path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>
+          </svg>
+          <span class="nav__badge" id="cartCountMob">0</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</header>
+
+<!-- ══════════ MOBILE DRAWER ══════════ -->
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer__panel">
+
+    <div class="drawer__head">
+      <img class="drawer__logo" src="assets/logo.png" alt="Wateen Perfumes">
+      <button class="drawer__close" id="drawerClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="drawer__links">
+      <a href="index.html" class="is-active" style="--i:1">
+        <span class="drawer__linkIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 11.5 12 4l8 7.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9.4h12V10" stroke-linejoin="round"/></svg></span>
+        <span class="drawer__linkText">HOME</span>
+      </a>
+      <a href="shop.html" style="--i:2">
+        <span class="drawer__linkIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/><path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/></svg></span>
+        <span class="drawer__linkText">SHOP</span>
+        <svg class="drawer__linkArrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="men.html" style="--i:3">
+        <span class="drawer__linkIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2c.6-3.9 3.6-6 7.2-6s6.6 2.1 7.2 6" stroke-linecap="round"/></svg></span>
+        <span class="drawer__linkText">MEN</span>
+        <svg class="drawer__linkArrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="women.html" style="--i:4">
+        <span class="drawer__linkIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2c.6-3.9 3.6-6 7.2-6s6.6 2.1 7.2 6" stroke-linecap="round"/></svg></span>
+        <span class="drawer__linkText">WOMEN</span>
+        <svg class="drawer__linkArrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="unisex.html" style="--i:5">
+        <span class="drawer__linkIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M20 8.5h-3.5M20 8.5v3.5M20 8.5 15.8 12.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.5" cy="13.5" r="5.3"/><path d="M10.5 18.8V22M8.3 20.4h4.4" stroke-linecap="round"/></svg></span>
+        <span class="drawer__linkText">UNISEX</span>
+        <svg class="drawer__linkArrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#categories" style="--i:6">
+        <span class="drawer__linkIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg></span>
+        <span class="drawer__linkText">COLLECTIONS</span>
+        <svg class="drawer__linkArrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="all-brands.html" style="--i:7">
+        <span class="drawer__linkIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3.4l2.6 5.6 6 .8-4.4 4.2 1.1 6-5.3-3-5.3 3 1.1-6-4.4-4.2 6-.8Z" stroke-linejoin="round"/></svg></span>
+        <span class="drawer__linkText">BRANDS</span>
+        <svg class="drawer__linkArrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#best" style="--i:8">
+        <span class="drawer__linkIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 4.5h3l1.6 3.2M4 4.5 2 2M8.6 7.7l2 4.4h7.5l2.3-6H6.6M8.6 7.7 6.6 6.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 18.6h.01M16 18.6h.01" stroke-linecap="round"/></svg></span>
+        <span class="drawer__linkText">BEST SELLERS</span>
+      </a>
+      <a href="https://wa.me/201027380269" target="_blank" rel="noopener" style="--i:9">
+        <span class="drawer__linkIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4.5 5.5c0 8 6 14 14 14l2-3.4-5-2.3-1.3 1.8a11.4 11.4 0 0 1-5.8-5.8l1.8-1.3-2.3-5Z" stroke-linejoin="round"/></svg></span>
+        <span class="drawer__linkText">CONTACT US</span>
+      </a>
+    </nav>
+
+    <div class="drawer__quick" style="--i:12">
+      <a href="#" class="drawer__quickItem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2c.6-3.9 3.6-6 7.2-6s6.6 2.1 7.2 6" stroke-linecap="round"/></svg>
+        <span>MY ACCOUNT</span>
+      </a>
+      <a href="wishlist.html" class="drawer__quickItem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/></svg>
+        <span>WISHLIST</span>
+        <i class="drawer__quickBadge" id="drawerWishCount">0</i>
+      </a>
+      <button class="drawer__quickItem" id="drawerCartBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/><path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/></svg>
+        <span>MY CART</span>
+        <i class="drawer__quickBadge" id="drawerCartCount">0</i>
+      </button>
+    </div>
+
+    <div class="drawer__foot" style="--i:13">
+      <div class="drawer__social">
+        <a href="https://wa.me/201027380269" target="_blank" rel="noopener" aria-label="WhatsApp" class="is-wa"><svg viewBox="0 0 24 24" fill="#fff"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.6l.4-.5c.1-.1.2-.3.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.5h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.3 0 1.4 1 2.7 1.1 2.9.1.2 2 3 4.8 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.6.2-1.2.2-1.3-.1-.1-.2-.2-.5-.3Z"/><path d="M12 2.2A9.8 9.8 0 0 0 3.9 17l-1.1 4.1 4.2-1.1A9.8 9.8 0 1 0 12 2.2Zm0 17.7c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3.1.8.8-3-.2-.3A7.9 7.9 0 1 1 12 19.9Z"/></svg></a>
+        <a href="https://www.facebook.com/share/1KAZzLxbjH/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="is-fb"><svg viewBox="0 0 24 24" fill="#fff"><path d="M13.5 21.9v-8.1h2.7l.4-3.2h-3.1V8.6c0-.9.3-1.6 1.6-1.6h1.7V4.1C16.5 4 15.5 4 14.4 4c-2.4 0-4.1 1.5-4.1 4.2v2.4H7.6v3.2h2.7v8.1h3.2Z"/></svg></a>
+        <a href="https://www.instagram.com/wateenperfum?stkn=Z2Y5MTVuNnBueWxm" target="_blank" rel="noopener" aria-label="Instagram" class="is-ig"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="#fff" stroke="none"/></svg></a>
+      </div>
+      <span class="drawer__footStar">✦</span>
+      <p>More than a fragrance.<br>A better you.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ CART DRAWER ══════════ -->
+<div class="cartd" id="cartDrawer" aria-hidden="true">
+  <div class="cartd__panel">
+
+    <div class="cartd__head">
+      <h2>YOUR CART <span id="cartHeadCount">(0)</span></h2>
+      <button class="cartd__close" id="cartClose" aria-label="Close cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="cartd__ship">
+      <span class="cartd__shipIco">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M20 12v7a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-7" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.5 8 12 3l9.5 5-9.5 5-9.5-5Z" stroke-linejoin="round"/></svg>
+      </span>
+      <p id="cartShipMsg">Add <b>550 EGP</b> more for free shipping</p>
+      <div class="cartd__shipBar"><i id="cartShipFill" style="width:45%"></i></div>
+      <span class="cartd__shipNums"><b id="cartShipHave">450</b> / 1000 EGP</span>
+    </div>
+
+    <div class="cartd__items" id="cartItems">
+      <!-- injected by hero.js from the cart state -->
+    </div>
+
+    <div class="cartd__empty" id="cartEmpty" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/><path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/></svg>
+      <p>Your cart is empty</p>
+      <button class="ghost" id="cartEmptyShop"><span class="ghost__fill"></span><span class="ghost__label">CONTINUE SHOPPING</span></button>
+    </div>
+
+    <div class="cartd__foot" id="cartFoot">
+      <button class="cartd__promo" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M20.5 12.7 12.7 20.5a1.8 1.8 0 0 1-2.5 0L3.5 13.8a1.8 1.8 0 0 1 0-2.5L11.3 3.5H18a2.5 2.5 0 0 1 2.5 2.5v6.7Z" stroke-linejoin="round"/><circle cx="15.3" cy="8.7" r="1.3"/></svg>
+        Add a discount code
+        <span>+</span>
+      </button>
+
+      <div class="cartd__totals">
+        <p><span>Subtotal</span><b id="cartSubtotal">0 EGP</b></p>
+        <p><span>Shipping</span><b id="cartShippingFee">90 EGP</b></p>
+      </div>
+      <div class="cartd__grand">
+        <span>Total</span>
+        <b id="cartTotal">0 EGP</b>
+      </div>
+      <p class="cartd__vat">(Including VAT)</p>
+
+      <button class="btn btn--cartCheckout" id="cartCheckout">
+        <span class="btn__fill"></span><span class="btn__shine"></span>
+        <span class="btn__label">PROCEED TO CHECKOUT
+          <svg class="btn__arrow" viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 6h27" stroke-linecap="round"/><path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </button>
+      <button class="cartd__continue" id="cartContinue">CONTINUE SHOPPING</button>
+
+      <div class="cartd__trust">
+        <span><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 10h15v11H2z" stroke-linejoin="round"/><path d="M17 14h6.5l4.5 4.4V21H17z" stroke-linejoin="round"/><circle cx="7.5" cy="23.5" r="2.5"/><circle cx="22.5" cy="23.5" r="2.5"/></svg><b>FREE SHIPPING</b><i>On orders over 1000 EGP</i></span>
+        <span><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="4" y="10" width="24" height="18" rx="2.4"/><path d="M4 10l12-6 12 6" stroke-linejoin="round"/></svg><b>EASY RETURNS</b><i>Within 14 days</i></span>
+        <span><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M16 3 27 7v9c0 6.6-4.5 11.4-11 13C9.5 27.4 5 22.6 5 16V7Z" stroke-linejoin="round"/><path d="m11 16 3.6 3.6L21.5 12" stroke-linecap="round" stroke-linejoin="round"/></svg><b>100% ORIGINAL</b><i>Authentic products</i></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ SEARCH MODAL ══════════ -->
+<div class="searchm" id="searchModal" aria-hidden="true">
+  <div class="searchm__panel">
+
+    <div class="searchm__head">
+      <div>
+        <p class="searchm__title">SEARCH</p>
+        <p class="searchm__sub">FIND YOUR SIGNATURE SCENT</p>
+      </div>
+      <button class="searchm__close" id="searchClose" aria-label="Close search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="searchm__bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6" stroke-linecap="round"/></svg>
+      <input type="text" id="searchInput" placeholder="Search for perfumes, brands, categories..." autocomplete="off">
+      <button class="searchm__clear" id="searchClear" aria-label="Clear search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="searchm__tabs">
+      <button class="is-active" data-tab="all">ALL</button>
+      <button data-tab="products">PRODUCTS</button>
+      <button data-tab="categories">CATEGORIES</button>
+      <button data-tab="brands">BRANDS</button>
+    </div>
+
+    <div class="searchm__body">
+      <aside class="searchm__side">
+        <div class="searchm__sideBlock">
+          <p class="searchm__sideTitle">CATEGORIES</p>
+          <a href="men.html">Men <i>(8)</i></a>
+          <a href="women.html">Women <i>(8)</i></a>
+          <a href="unisex.html">Unisex <i>(8)</i></a>
+          <a href="accessories.html">Accessories <i>(8)</i></a>
+          <a href="watches.html">Watches <i>(6)</i></a>
+        </div>
+        <div class="searchm__sideBlock">
+          <p class="searchm__sideTitle">BRANDS</p>
+          <label><input type="checkbox" value="rasasi"> Rasasi <i>(2)</i></label>
+          <label><input type="checkbox" value="arabiyat"> Arabiyat Prestige <i>(1)</i></label>
+          <label><input type="checkbox" value="swiss"> Swiss Arabian <i>(5)</i></label>
+        </div>
+      </aside>
+
+      <div class="searchm__results" id="searchResults">
+        <!-- injected by hero.js -->
+      </div>
+    </div>
+
+    <div class="searchm__foot">
+      <p><b>CAN'T FIND WHAT YOU'RE LOOKING FOR?</b>Explore our full collection of luxury fragrances.</p>
+      <a href="#collections" class="ghost"><span class="ghost__fill"></span><span class="ghost__label">VIEW ALL PRODUCTS
+        <svg viewBox="0 0 26 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M0 5h23" stroke-linecap="round"/><path d="M19 1.4 23 5l-4 3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span></a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero" id="hero">
+
+  <picture class="hero__bg">
+    <source media="(max-width: 900px)" srcset="assets/hero-mobile.png">
+    <img src="assets/hero-desktop.png" alt="Wateen luxury perfume bottle on travertine stone" fetchpriority="high">
+  </picture>
+
+  <div class="hero__veil"></div>
+  <div class="hero__grain"></div>
+
+  <div class="hero__content">
+
+    <p class="hero__eyebrow">
+      <span class="hero__rule"></span>
+      <span class="hero__eyebrowText">MORE THAN A SCENT</span>
+    </p>
+
+    <h1 class="hero__title">
+      <span class="hero__line">A FEELING</span>
+      <span class="hero__line hero__line--gold">THAT STAYS</span>
+    </h1>
+
+    <p class="hero__sub">
+      Discover luxurious fragrances crafted for
+      every moment, every mood, every you.
+    </p>
+
+    <a href="shop.html" class="btn">
+      <span class="btn__fill"></span>
+      <span class="btn__shine"></span>
+      <span class="btn__label">
+        SHOP NOW
+        <svg class="btn__arrow" viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M0 6h27" stroke-linecap="round"/>
+          <path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </a>
+
+  </div>
+
+  <!-- vertical tagline -->
+  <div class="hero__vertical">
+    <span class="hero__vline"></span>
+    <span class="hero__vtext">SCENTS&nbsp;&nbsp;CREATE&nbsp;&nbsp;STORIES</span>
+    <span class="hero__vstar">✦</span>
+    <span class="hero__vline"></span>
+  </div>
+
+  <!-- scroll cue -->
+  <div class="hero__scroll">
+    <span class="hero__scrollText">SCROLL</span>
+    <span class="hero__scrollLine"><i></i></span>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════ 2 · BEST SELLERS ══════════════════ -->
+<section class="best reveal" id="best">
+  <div class="wrap">
+
+    <header class="shead">
+      <p class="shead__eyebrow"><span class="shead__rule"></span>OUR BEST SELLERS<span class="shead__rule"></span></p>
+      <h2 class="shead__title">CUSTOMERS' <em>FAVORITES</em></h2>
+      <p class="shead__sub">TIMELESS SCENTS. REAL STORIES.</p>
+      <a href="#" class="ghost">
+        <span class="ghost__fill"></span>
+        <span class="ghost__label">EXPLORE ALL
+          <svg viewBox="0 0 26 10" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M0 5h23" stroke-linecap="round"/><path d="M19 1.4 23 5l-4 3.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+    </header>
+
+    <div class="grid grid--products">
+
+      <article class="card" style="--d:0">
+        <div class="card__media">
+          <span class="card__badge">BEST SELLER</span>
+          <img src="assets/products/shuhrah.png" alt="Shuhrah Pour Homme" loading="lazy">
+        </div>
+        <p class="card__brand">RASASI</p>
+        <h3 class="card__name">Shuhrah</h3>
+        <p class="card__type">Eau de Parfum</p>
+        <div class="sizes">
+          <button class="size is-on">60ml</button><button class="size">100ml</button><button class="size">200ml</button>
+        </div>
+        <p class="card__price">EGP <span class="roll" data-value="1375">0</span></p>
+        <div class="card__buy">
+          <button class="add">
+            <span class="add__fill"></span>
+            <span class="add__label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>
+                <path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>
+              </svg>ADD TO CART</span>
+          </button>
+          <button class="wish" aria-label="Add to wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+
+      <article class="card" style="--d:1">
+        <div class="card__media">
+          <span class="card__badge">BEST SELLER</span>
+          <img src="assets/products/mahd-al-dhahab.png" alt="Mahd Al Dhahab" loading="lazy">
+        </div>
+        <p class="card__brand">ARABIYAT PRESTIGE</p>
+        <h3 class="card__name">Mahd Al Dhahab</h3>
+        <p class="card__type">Eau de Parfum</p>
+        <div class="sizes">
+          <button class="size is-on">50ml</button><button class="size">100ml</button><button class="size">150ml</button>
+        </div>
+        <p class="card__price">EGP <span class="roll" data-value="1600">0</span></p>
+        <div class="card__buy">
+          <button class="add">
+            <span class="add__fill"></span>
+            <span class="add__label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>
+                <path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>
+              </svg>ADD TO CART</span>
+          </button>
+          <button class="wish" aria-label="Add to wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+
+      <article class="card" style="--d:2">
+        <div class="card__media">
+          <span class="card__badge">BEST SELLER</span>
+          <img src="assets/products/musk-07.png" alt="Musk 07" loading="lazy">
+        </div>
+        <p class="card__brand">SWISS ARABIAN</p>
+        <h3 class="card__name">Musk 07</h3>
+        <p class="card__type">Eau de Parfum</p>
+        <div class="sizes">
+          <button class="size is-on">50ml</button><button class="size">100ml</button>
+        </div>
+        <p class="card__price">EGP <span class="roll" data-value="2950">0</span></p>
+        <div class="card__buy">
+          <button class="add">
+            <span class="add__fill"></span>
+            <span class="add__label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>
+                <path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>
+              </svg>ADD TO CART</span>
+          </button>
+          <button class="wish" aria-label="Add to wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+
+      <article class="card" style="--d:3">
+        <div class="card__media">
+          <span class="card__badge">BEST SELLER</span>
+          <img src="assets/products/shaghaf-oud-tonka.png" alt="Shaghaf Oud Tonka" loading="lazy">
+        </div>
+        <p class="card__brand">SWISS ARABIAN</p>
+        <h3 class="card__name">Shaghaf Oud Tonka</h3>
+        <p class="card__type">Eau de Parfum</p>
+        <div class="sizes">
+          <button class="size is-on">75ml</button><button class="size">100ml</button>
+        </div>
+        <p class="card__price">EGP <span class="roll" data-value="2600">0</span></p>
+        <div class="card__buy">
+          <button class="add">
+            <span class="add__fill"></span>
+            <span class="add__label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>
+                <path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>
+              </svg>ADD TO CART</span>
+          </button>
+          <button class="wish" aria-label="Add to wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+
+      <article class="card" style="--d:4">
+        <div class="card__media">
+          <span class="card__badge">BEST SELLER</span>
+          <img src="assets/products/shaghaf-oud-azraq.png" alt="Shaghaf Oud Azraq" loading="lazy">
+        </div>
+        <p class="card__brand">SWISS ARABIAN</p>
+        <h3 class="card__name">Shaghaf Oud Azraq</h3>
+        <p class="card__type">Eau de Parfum</p>
+        <div class="sizes">
+          <button class="size is-on">75ml</button><button class="size">100ml</button>
+        </div>
+        <p class="card__price">EGP <span class="roll" data-value="2600">0</span></p>
+        <div class="card__buy">
+          <button class="add">
+            <span class="add__fill"></span>
+            <span class="add__label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>
+                <path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>
+              </svg>ADD TO CART</span>
+          </button>
+          <button class="wish" aria-label="Add to wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+
+      <article class="card" style="--d:5">
+        <div class="card__media">
+          <span class="card__badge">BEST SELLER</span>
+          <img src="assets/products/shaghaf-oud-ahmar.png" alt="Shaghaf Oud Ahmar" loading="lazy">
+        </div>
+        <p class="card__brand">SWISS ARABIAN</p>
+        <h3 class="card__name">Shaghaf Oud Ahmar</h3>
+        <p class="card__type">Eau de Parfum</p>
+        <div class="sizes">
+          <button class="size is-on">75ml</button><button class="size">100ml</button>
+        </div>
+        <p class="card__price">EGP <span class="roll" data-value="2600">0</span></p>
+        <div class="card__buy">
+          <button class="add">
+            <span class="add__fill"></span>
+            <span class="add__label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>
+                <path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>
+              </svg>ADD TO CART</span>
+          </button>
+          <button class="wish" aria-label="Add to wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+
+      <article class="card" style="--d:6">
+        <div class="card__media">
+          <span class="card__badge">BEST SELLER</span>
+          <img src="assets/products/casablanca.png" alt="Casablanca" loading="lazy">
+        </div>
+        <p class="card__brand">SWISS ARABIAN</p>
+        <h3 class="card__name">Casablanca</h3>
+        <p class="card__type">Eau de Parfum</p>
+        <div class="sizes">
+          <button class="size is-on">100ml</button><button class="size">150ml</button>
+        </div>
+        <p class="card__price">EGP <span class="roll" data-value="2200">0</span></p>
+        <div class="card__buy">
+          <button class="add">
+            <span class="add__fill"></span>
+            <span class="add__label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>
+                <path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>
+              </svg>ADD TO CART</span>
+          </button>
+          <button class="wish" aria-label="Add to wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+
+      <article class="card" style="--d:7">
+        <div class="card__media">
+          <span class="card__badge">BEST SELLER</span>
+          <img src="assets/products/al-wisam.png" alt="Al Wisam Born To Win" loading="lazy">
+        </div>
+        <p class="card__brand">RASASI</p>
+        <h3 class="card__name">Al Wisam</h3>
+        <p class="card__type">Eau de Parfum</p>
+        <div class="sizes">
+          <button class="size is-on">100ml</button><button class="size">150ml</button>
+        </div>
+        <p class="card__price">EGP <span class="roll" data-value="1850">0</span></p>
+        <div class="card__buy">
+          <button class="add">
+            <span class="add__fill"></span>
+            <span class="add__label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>
+                <path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>
+              </svg>ADD TO CART</span>
+          </button>
+          <button class="wish" aria-label="Add to wishlist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════ 3 · CATEGORIES ══════════════════ -->
+<section class="cats reveal" id="categories">
+  <img class="cats__bg" src="assets/bg/category.png" alt="" loading="lazy">
+  <div class="cats__veil"></div>
+
+  <div class="wrap">
+    <header class="shead">
+      <p class="shead__eyebrow"><span class="shead__rule"></span>SHOP BY CATEGORY<span class="shead__rule"></span></p>
+      <h2 class="shead__title">FIND <em>YOUR</em> SCENT</h2>
+      <p class="shead__star">✦</p>
+      <p class="shead__sub">DIFFERENT MOODS. ONE DESTINATION.</p>
+    </header>
+
+    <div class="cats__grid">
+
+      <a href="women.html" class="tile" style="--d:0">
+        <img class="tile__img" src="assets/categories/women.jpeg" alt="Women's fragrances" loading="lazy">
+        <span class="tile__shade"></span>
+        <span class="tile__body">
+          <span class="tile__name">WOMEN</span>
+          <span class="tile__desc">ELEGANCE<br>IN EVERY DETAIL</span>
+          <span class="tile__row">
+            <span class="tile__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M4 12h15" stroke-linecap="round"/><path d="M14 6.6 19.4 12 14 17.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></span>
+            <span class="tile__cta"><i>SHOP NOW</i></span>
+          </span>
+        </span>
+      </a>
+
+      <a href="men.html" class="tile" style="--d:1">
+        <img class="tile__img" src="assets/categories/men.jpeg" alt="Men's fragrances" loading="lazy">
+        <span class="tile__shade"></span>
+        <span class="tile__body">
+          <span class="tile__name">MEN</span>
+          <span class="tile__desc">CONFIDENCE<br>IN EVERY MOMENT</span>
+          <span class="tile__row">
+            <span class="tile__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M4 12h15" stroke-linecap="round"/><path d="M14 6.6 19.4 12 14 17.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></span>
+            <span class="tile__cta"><i>SHOP NOW</i></span>
+          </span>
+        </span>
+      </a>
+
+      <a href="unisex.html" class="tile" style="--d:2">
+        <img class="tile__img" src="assets/categories/unisex.jpeg" alt="Unisex fragrances" loading="lazy">
+        <span class="tile__shade"></span>
+        <span class="tile__body">
+          <span class="tile__name">UNISEX</span>
+          <span class="tile__desc">FOR EVERY<br>SIDE OF YOU</span>
+          <span class="tile__row">
+            <span class="tile__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M4 12h15" stroke-linecap="round"/><path d="M14 6.6 19.4 12 14 17.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></span>
+            <span class="tile__cta"><i>SHOP NOW</i></span>
+          </span>
+        </span>
+      </a>
+
+      <a href="accessories.html" class="tile" style="--d:3">
+        <img class="tile__img" src="assets/categories/accessories.jpeg" alt="Accessories" loading="lazy">
+        <span class="tile__shade"></span>
+        <span class="tile__body">
+          <span class="tile__name">ACCESSORIES</span>
+          <span class="tile__desc">THE DETAILS<br>THAT COMPLETE YOU</span>
+          <span class="tile__row">
+            <span class="tile__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M4 12h15" stroke-linecap="round"/><path d="M14 6.6 19.4 12 14 17.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></span>
+            <span class="tile__cta"><i>SHOP NOW</i></span>
+          </span>
+        </span>
+      </a>
+
+      <a href="watches.html" class="tile tile--wide" style="--d:4">
+        <img class="tile__img" src="assets/categories/watches.jpeg" alt="Watches" loading="lazy">
+        <span class="tile__shade"></span>
+        <span class="tile__body">
+          <span class="tile__name">WATCHES</span>
+          <span class="tile__desc">TIME, WORN BEAUTIFULLY</span>
+          <span class="tile__row">
+            <span class="tile__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M4 12h15" stroke-linecap="round"/><path d="M14 6.6 19.4 12 14 17.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></span>
+            <span class="tile__cta"><i>SHOP NOW</i></span>
+          </span>
+        </span>
+      </a>
+
+    </div>
+
+    <p class="cats__foot"><span class="shead__rule"></span>✦<span class="shead__rule"></span></p>
+    <p class="cats__tag">MORE THAN A SCENT</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════ 4 · TRUST STRIP ══════════════════ -->
+<section class="trust reveal">
+  <div class="wrap trust__inner">
+
+    <div class="trust__item" style="--d:0">
+      <span class="trust__ico">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M2 10h15v11H2z" stroke-linejoin="round"/>
+          <path d="M17 14h6.5l4.5 4.4V21H17z" stroke-linejoin="round"/>
+          <circle cx="7.5" cy="23.5" r="2.5"/><circle cx="22.5" cy="23.5" r="2.5"/>
+        </svg>
+      </span>
+      <span class="trust__txt"><b>FAST DELIVERY</b><i>Across Egypt</i></span>
+    </div>
+
+    <span class="trust__sep"></span>
+
+    <div class="trust__item" style="--d:1">
+      <span class="trust__ico">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M16 3 27 7v9c0 6.6-4.5 11.4-11 13C9.5 27.4 5 22.6 5 16V7Z" stroke-linejoin="round"/>
+          <path d="m11 16 3.6 3.6L21.5 12" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="trust__txt"><b>100% AUTHENTIC</b><i>Original Products</i></span>
+    </div>
+
+    <span class="trust__sep"></span>
+
+    <div class="trust__item" style="--d:2">
+      <span class="trust__ico">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="3" y="9" width="26" height="16" rx="2.4"/>
+          <path d="M3 14h26" stroke-linecap="round"/><path d="M7.5 20h5" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="trust__txt"><b>SECURE PAYMENT</b><i>Safe &amp; Protected</i></span>
+    </div>
+
+    <span class="trust__sep"></span>
+
+    <div class="trust__item" style="--d:3">
+      <span class="trust__ico">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M5 15v-1a11 11 0 0 1 22 0v1" stroke-linecap="round"/>
+          <rect x="2.5" y="15" width="6" height="9" rx="2.4"/>
+          <rect x="23.5" y="15" width="6" height="9" rx="2.4"/>
+          <path d="M27 24v1.5a3.5 3.5 0 0 1-3.5 3.5H18" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="trust__txt"><b>DEDICATED SUPPORT</b><i>We're Here for You</i></span>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════ 5 · BRANDS ══════════════════ -->
+<section class="brands reveal" id="brands">
+  <picture class="brands__bg">
+    <source media="(max-width:900px)" srcset="assets/bg/brands-mobile.png">
+    <img src="assets/bg/brands-desktop.png" alt="" loading="lazy">
+  </picture>
+  <div class="brands__veil"></div>
+
+  <div class="wrap brands__inner">
+
+    <div class="brands__copy">
+      <p class="brands__eyebrow">THE ART OF PERFUMERY <span class="shead__rule"></span></p>
+      <h2 class="brands__title">MORE<br>THAN<br>A FRAGRANCE</h2>
+      <p class="brands__sub">ICONIC HOUSES. EXTRAORDINARY STORIES.</p>
+      <p class="brands__text">Discover legendary fragrance houses and<br>experience the scents that define generations.</p>
+      <a href="all-brands.html" class="btn btn--sm">
+        <span class="btn__fill"></span><span class="btn__shine"></span>
+        <span class="btn__label">EXPLORE BRANDS
+          <svg class="btn__arrow" viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.3">
+            <path d="M0 6h27" stroke-linecap="round"/><path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+    </div>
+
+    <p class="brands__note">CURATED BRANDS<br>TIMELESS SCENTS</p>
+  </div>
+
+  <!-- brand rail -->
+  <div class="brands__band">
+  <div class="rail">
+    <button class="rail__nav rail__nav--prev" aria-label="Previous brands">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+        <path d="M15 5 8 12l7 7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="rail__track" id="brandRail">
+      <a href="brand.html?id=rasasi" class="brandchip"><img src="assets/brands/rasasi.png" alt="Rasasi" loading="lazy"></a>
+      <a href="brand.html?id=zimaya" class="brandchip"><img src="assets/brands/zimaya.png" alt="Zimaya" loading="lazy"></a>
+      <a href="brand.html?id=maison-alhambra" class="brandchip"><img src="assets/brands/maison-alhambra.png" alt="Maison Alhambra" loading="lazy"></a>
+      <a href="brand.html?id=lattafa" class="brandchip"><img src="assets/brands/lattafa.png" alt="Lattafa" loading="lazy"></a>
+      <a href="brand.html?id=dkhoni" class="brandchip"><img src="assets/brands/dkhoni.png" alt="Dkhoni" loading="lazy"></a>
+      <a href="brand.html?id=swiss-arabian" class="brandchip"><img src="assets/brands/swiss-arabian.png" alt="Swiss Arabian" loading="lazy"></a>
+      <a href="brand.html?id=ajmal" class="brandchip"><img src="assets/brands/ajmal.png" alt="Ajmal" loading="lazy"></a>
+      <a href="brand.html?id=azha" class="brandchip"><img src="assets/brands/azha.png" alt="Azha" loading="lazy"></a>
+      <a href="brand.html?id=arabiyat" class="brandchip"><img src="assets/brands/arabiyat.png" alt="Arabiyat Prestige" loading="lazy"></a>
+    </div>
+
+    <button class="rail__nav rail__nav--next" aria-label="Next brands">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+        <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="rail__bar"><i id="brandBar"></i></div>
+  <p class="rail__count"><span id="brandCount">01</span> / 06</p>
+  </div><!-- /brands__band -->
+</section>
+
+
+<!-- ══════════════════ 6 · SALE BANNER ══════════════════ -->
+<section class="sale reveal">
+  <div class="sale__full">
+    <div class="sale__card">
+      <img class="sale__bg" src="assets/bg/sale.png" alt="" loading="lazy">
+      <div class="sale__row">
+
+        <p class="sale__left"><span class="sale__star">✦</span>LIMITED TIME<br>OFFER</p>
+        <span class="sale__div"></span>
+
+        <p class="sale__mid">
+          <b><span class="roll" data-value="20">0</span>% OFF</b>
+          <i>ON ALL FRAGRANCES</i>
+        </p>
+
+        <span class="sale__div"></span>
+        <div class="sale__right">
+          <a href="shop.html" class="btn btn--sm">
+            <span class="btn__fill"></span><span class="btn__shine"></span>
+            <span class="btn__label">SHOP NOW
+              <svg class="btn__arrow" viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.3">
+                <path d="M0 6h27" stroke-linecap="round"/><path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+          <p class="sale__note">BECAUSE YOU DESERVE MORE</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════ 7 · COLLECTION RAILS ══════════════════ -->
+<section class="cols" id="collections">
+
+  <!-- MEN -->
+  <div class="col reveal">
+    <div class="wrap col__inner">
+      <div class="col__aside">
+        <p class="col__eyebrow">SHOP THE COLLECTION</p>
+        <h3 class="col__title">Men</h3>
+        <span class="col__rule"></span>
+        <p class="col__sub">Bold scents <br>for every occasion.</p>
+        <a href="men.html" class="btn btn--xs">
+          <span class="btn__fill"></span><span class="btn__shine"></span>
+          <span class="btn__label">VIEW ALL
+            <svg class="btn__arrow" viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M0 6h27" stroke-linecap="round"/><path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <div class="col__rail">
+        <div class="col__track">
+          <a href="product.html?id=shuhrah" class="mini"><span class="mini__ph"><img src="assets/products/shuhrah.png" alt="Shuhrah" loading="lazy"></span><b>RASASI</b><em>Shuhrah EDP</em><i>EGP 2,450</i></a>
+          <a href="product.html?id=al-wisam" class="mini"><span class="mini__ph"><img src="assets/products/al-wisam.png" alt="Al Wisam" loading="lazy"></span><b>RASASI</b><em>Al Wisam EDP</em><i>EGP 3,350</i></a>
+          <a href="product.html?id=shaghaf-oud-azraq" class="mini"><span class="mini__ph"><img src="assets/products/shaghaf-oud-azraq.png" alt="Shaghaf Oud Azraq" loading="lazy"></span><b>SWISS ARABIAN</b><em>Shaghaf Oud Azraq</em><i>EGP 3,950</i></a>
+          <a href="product.html?id=shaghaf-oud-tonka" class="mini"><span class="mini__ph"><img src="assets/products/shaghaf-oud-tonka.png" alt="Shaghaf Oud Tonka" loading="lazy"></span><b>SWISS ARABIAN</b><em>Shaghaf Oud Tonka</em><i>EGP 3,650</i></a>
+          <a href="product.html?id=mahd-al-dhahab" class="mini"><span class="mini__ph"><img src="assets/products/mahd-al-dhahab.png" alt="Mahd Al Dhahab" loading="lazy"></span><b>ARABIYAT</b><em>Mahd Al Dhahab</em><i>EGP 3,150</i></a>
+          <a href="product.html?id=casablanca" class="mini"><span class="mini__ph"><img src="assets/products/casablanca.png" alt="Casablanca" loading="lazy"></span><b>SWISS ARABIAN</b><em>Casablanca EDP</em><i>EGP 2,200</i></a>
+          <a href="product.html?id=taj-al-oud" class="mini"><span class="mini__ph"><img src="assets/products/taj-al-oud.png" alt="Taj Al Oud" loading="lazy"></span><b>AZHA</b><em>Taj Al Oud EDP</em><i>EGP 2,950</i></a>
+          <a href="product.html?id=khamrah-dukhan" class="mini"><span class="mini__ph"><img src="assets/products/khamrah-dukhan.png" alt="Khamrah Dukhan" loading="lazy"></span><b>LATTAFA</b><em>Khamrah Dukhan</em><i>EGP 2,650</i></a>
+          <a href="product.html?id=ameer-al-oudh" class="mini"><span class="mini__ph"><img src="assets/products/ameer-al-oudh.png" alt="Ameer Al Oudh" loading="lazy"></span><b>LATTAFA</b><em>Ameer Al Oudh Intense Oud</em><i>EGP 2,750</i></a>
+          <a href="product.html?id=dehn-el-oud-malaki" class="mini"><span class="mini__ph"><img src="assets/products/dehn-el-oud-malaki.png" alt="Dehn El Oud Malaki" loading="lazy"></span><b>SWISS ARABIAN</b><em>Dehn El Oud Malaki</em><i>EGP 3,250</i></a>
+          <a href="product.html?id=hawas" class="mini"><span class="mini__ph"><img src="assets/products/hawas.png" alt="Hawas For Him" loading="lazy"></span><b>RASASI</b><em>Hawas For Him</em><i>EGP 3,050</i></a>
+          <a href="product.html?id=his-confession" class="mini"><span class="mini__ph"><img src="assets/products/his-confession.png" alt="His Confession" loading="lazy"></span><b>LATTAFA</b><em>His Confession</em><i>EGP 2,950</i></a>
+          <a href="product.html?id=pride-of-lattafa" class="mini"><span class="mini__ph"><img src="assets/products/pride-of-lattafa.png" alt="Pride of Lattafa" loading="lazy"></span><b>LATTAFA</b><em>Pride of Lattafa</em><i>EGP 3,150</i></a>
+        </div>
+        <!-- one quiet scroll hint on the right — a nudge, not a control pair -->
+        <span class="col__hint" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WOMEN -->
+  <div class="col reveal">
+    <div class="wrap col__inner">
+      <div class="col__aside">
+        <p class="col__eyebrow">SHOP THE COLLECTION</p>
+        <h3 class="col__title">Women</h3>
+        <span class="col__rule"></span>
+        <p class="col__sub">Elegance <br>in every spray.</p>
+        <a href="women.html" class="btn btn--xs btn--light">
+          <span class="btn__fill"></span><span class="btn__shine"></span>
+          <span class="btn__label">VIEW ALL
+            <svg class="btn__arrow" viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M0 6h27" stroke-linecap="round"/><path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <div class="col__rail">
+        <div class="col__track">
+          <a href="product.html?id=musk-07" class="mini"><span class="mini__ph"><img src="assets/products/musk-07.png" alt="Musk 07" loading="lazy"></span><b>SWISS ARABIAN</b><em>Musk 07 EDP</em><i>EGP 2,890</i></a>
+          <a href="product.html?id=casablanca" class="mini"><span class="mini__ph"><img src="assets/products/casablanca.png" alt="Casablanca" loading="lazy"></span><b>SWISS ARABIAN</b><em>Casablanca EDP</em><i>EGP 2,200</i></a>
+          <a href="product.html?id=shaghaf-oud-ahmar" class="mini"><span class="mini__ph"><img src="assets/products/shaghaf-oud-ahmar.png" alt="Shaghaf Oud Ahmar" loading="lazy"></span><b>SWISS ARABIAN</b><em>Shaghaf Oud Ahmar</em><i>EGP 4,250</i></a>
+          <a href="product.html?id=mahd-al-dhahab" class="mini"><span class="mini__ph"><img src="assets/products/mahd-al-dhahab.png" alt="Mahd Al Dhahab" loading="lazy"></span><b>ARABIYAT</b><em>Mahd Al Dhahab</em><i>EGP 3,150</i></a>
+          <a href="product.html?id=shaghaf-oud-tonka" class="mini"><span class="mini__ph"><img src="assets/products/shaghaf-oud-tonka.png" alt="Shaghaf Oud Tonka" loading="lazy"></span><b>SWISS ARABIAN</b><em>Shaghaf Oud Tonka</em><i>EGP 3,650</i></a>
+          <a href="product.html?id=shuhrah" class="mini"><span class="mini__ph"><img src="assets/products/shuhrah.png" alt="Shuhrah" loading="lazy"></span><b>RASASI</b><em>Shuhrah EDP</em><i>EGP 2,450</i></a>
+        </div>
+        <!-- one quiet scroll hint on the right — a nudge, not a control pair -->
+        <span class="col__hint" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNISEX -->
+  <div class="col reveal">
+    <div class="wrap col__inner">
+      <div class="col__aside">
+        <p class="col__eyebrow">SHOP THE COLLECTION</p>
+        <h3 class="col__title">Unisex</h3>
+        <span class="col__rule"></span>
+        <p class="col__sub">Scents without <br>boundaries.</p>
+        <a href="unisex.html" class="btn btn--xs btn--light">
+          <span class="btn__fill"></span><span class="btn__shine"></span>
+          <span class="btn__label">VIEW ALL
+            <svg class="btn__arrow" viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M0 6h27" stroke-linecap="round"/><path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <div class="col__rail">
+        <div class="col__track">
+          <a href="product.html?id=shaghaf-oud-tonka" class="mini"><span class="mini__ph"><img src="assets/products/shaghaf-oud-tonka.png" alt="Shaghaf Oud Tonka" loading="lazy"></span><b>SWISS ARABIAN</b><em>Shaghaf Oud Tonka</em><i>EGP 3,650</i></a>
+          <a href="product.html?id=shaghaf-oud-azraq" class="mini"><span class="mini__ph"><img src="assets/products/shaghaf-oud-azraq.png" alt="Shaghaf Oud Azraq" loading="lazy"></span><b>SWISS ARABIAN</b><em>Shaghaf Oud Azraq</em><i>EGP 3,950</i></a>
+          <a href="product.html?id=shaghaf-oud-ahmar" class="mini"><span class="mini__ph"><img src="assets/products/shaghaf-oud-ahmar.png" alt="Shaghaf Oud Ahmar" loading="lazy"></span><b>SWISS ARABIAN</b><em>Shaghaf Oud Ahmar</em><i>EGP 4,250</i></a>
+          <a href="product.html?id=musk-07" class="mini"><span class="mini__ph"><img src="assets/products/musk-07.png" alt="Musk 07" loading="lazy"></span><b>SWISS ARABIAN</b><em>Musk 07 EDP</em><i>EGP 2,890</i></a>
+          <a href="product.html?id=mahd-al-dhahab" class="mini"><span class="mini__ph"><img src="assets/products/mahd-al-dhahab.png" alt="Mahd Al Dhahab" loading="lazy"></span><b>ARABIYAT</b><em>Mahd Al Dhahab</em><i>EGP 3,150</i></a>
+          <a href="product.html?id=al-wisam" class="mini"><span class="mini__ph"><img src="assets/products/al-wisam.png" alt="Al Wisam" loading="lazy"></span><b>RASASI</b><em>Al Wisam EDP</em><i>EGP 3,350</i></a>
+        </div>
+        <!-- one quiet scroll hint on the right — a nudge, not a control pair -->
+        <span class="col__hint" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCESSORIES -->
+  <div class="col reveal">
+    <div class="wrap col__inner">
+      <div class="col__aside">
+        <p class="col__eyebrow">SHOP THE COLLECTION</p>
+        <h3 class="col__title">Accessories</h3>
+        <span class="col__rule"></span>
+        <p class="col__sub">The perfect <br>finishing touch.</p>
+        <a href="accessories.html" class="btn btn--xs btn--light">
+          <span class="btn__fill"></span><span class="btn__shine"></span>
+          <span class="btn__label">VIEW ALL
+            <svg class="btn__arrow" viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M0 6h27" stroke-linecap="round"/><path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <div class="col__rail">
+        <div class="col__track">
+          <a href="accessories.html" class="mini"><span class="mini__ph"><img src="assets/products/mahd-al-dhahab.png" alt="Mahd Al Dhahab" loading="lazy"></span><b>ARABIYAT</b><em>Mahd Al Dhahab</em><i>EGP 3,150</i></a>
+          <a href="accessories.html" class="mini"><span class="mini__ph"><img src="assets/products/shuhrah.png" alt="Shuhrah" loading="lazy"></span><b>RASASI</b><em>Shuhrah EDP</em><i>EGP 2,450</i></a>
+          <a href="accessories.html" class="mini"><span class="mini__ph"><img src="assets/products/musk-07.png" alt="Musk 07" loading="lazy"></span><b>SWISS ARABIAN</b><em>Musk 07 EDP</em><i>EGP 2,890</i></a>
+          <a href="accessories.html" class="mini"><span class="mini__ph"><img src="assets/products/casablanca.png" alt="Casablanca" loading="lazy"></span><b>SWISS ARABIAN</b><em>Casablanca EDP</em><i>EGP 2,200</i></a>
+          <a href="accessories.html" class="mini"><span class="mini__ph"><img src="assets/products/al-wisam.png" alt="Al Wisam" loading="lazy"></span><b>RASASI</b><em>Al Wisam EDP</em><i>EGP 3,350</i></a>
+          <a href="accessories.html" class="mini"><span class="mini__ph"><img src="assets/products/shaghaf-oud-ahmar.png" alt="Shaghaf Oud Ahmar" loading="lazy"></span><b>SWISS ARABIAN</b><em>Shaghaf Oud Ahmar</em><i>EGP 4,250</i></a>
+        </div>
+        <!-- one quiet scroll hint on the right — a nudge, not a control pair -->
+        <span class="col__hint" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WATCHES -->
+  <div class="col reveal">
+    <div class="wrap col__inner">
+      <div class="col__aside">
+        <p class="col__eyebrow">SHOP THE COLLECTION</p>
+        <h3 class="col__title">Watches</h3>
+        <span class="col__rule"></span>
+        <p class="col__sub">Time, worn <br>beautifully.</p>
+        <a href="watches.html" class="btn btn--xs btn--light">
+          <span class="btn__fill"></span><span class="btn__shine"></span>
+          <span class="btn__label">VIEW ALL
+            <svg class="btn__arrow" viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M0 6h27" stroke-linecap="round"/><path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <div class="col__rail">
+        <div class="col__track">
+          <a href="product.html?id=mini-focus-emerald-chrono" class="mini"><span class="mini__ph"><img src="assets/watches/mf-emerald-chrono.png" alt="Emerald Chrono" loading="lazy"></span><b>MINI FOCUS</b><em>Emerald Chrono</em><i>EGP 2,200</i></a>
+          <a href="product.html?id=ibso-lagoon" class="mini"><span class="mini__ph"><img src="assets/watches/ibso-lagoon.png" alt="Lagoon" loading="lazy"></span><b>IBSO</b><em>Lagoon</em><i>EGP 1,500</i></a>
+          <a href="product.html?id=ibio-navy-grid" class="mini"><span class="mini__ph"><img src="assets/watches/ibio-navy-grid.png" alt="Navy Grid" loading="lazy"></span><b>IBIO</b><em>Navy Grid</em><i>EGP 1,900</i></a>
+          <a href="product.html?id=split-piece-shadow" class="mini"><span class="mini__ph"><img src="assets/watches/splitpiece-shadow.png" alt="Shadow" loading="lazy"></span><b>SPLIT PIECE</b><em>Shadow</em><i>EGP 3,200</i></a>
+          <a href="product.html?id=mini-focus-tachy-racer" class="mini"><span class="mini__ph"><img src="assets/watches/mf-tachy-racer.png" alt="Tachy Racer" loading="lazy"></span><b>MINI FOCUS</b><em>Tachy Racer</em><i>EGP 2,600</i></a>
+          <a href="product.html?id=ibso-champagne" class="mini"><span class="mini__ph"><img src="assets/watches/ibso-champagne.png" alt="Champagne" loading="lazy"></span><b>IBSO</b><em>Champagne</em><i>EGP 1,550</i></a>
+        </div>
+        <!-- one quiet scroll hint on the right — a nudge, not a control pair -->
+        <span class="col__hint" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════ 7.5 · REVIEWS ══════════════════ -->
+<section class="reviews reveal" id="reviews">
+  <img class="reviews__bg" src="assets/bg/reviews.png" alt="" loading="lazy">
+  <div class="reviews__veil"></div>
+
+  <div class="wrap">
+
+    <div class="reviews__mark">
+      <span class="reviews__markW">W</span>
+      <p class="reviews__markName">WATEEN</p>
+      <p class="reviews__markSub">PERFUMES</p>
+      <span class="reviews__markStar">✦</span>
+    </div>
+
+    <header class="shead">
+      <p class="shead__eyebrow"><span class="shead__rule"></span>CUSTOMER REVIEWS<span class="shead__rule"></span></p>
+      <h2 class="shead__title">REAL PEOPLE.<br><em>LASTING IMPRESSIONS.</em></h2>
+      <p class="shead__star">✦</p>
+      <p class="shead__sub">SCENTS THAT CREATE STORIES</p>
+    </header>
+
+    <div class="revrail">
+      <button class="revrail__nav revrail__nav--prev" aria-label="Previous reviews">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M15 5 8 12l7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="revrail__track" id="revTrack">
+
+        <article class="revcard" style="--d:0">
+          <div class="revcard__stars">★★★★★</div>
+          <p class="revcard__quote">&ldquo;Absolutely in love with the scent! It&rsquo;s elegant, long-lasting and instantly became my signature.&rdquo;</p>
+          <span class="revcard__rule"></span>
+          <div class="revcard__who">
+            <span class="revcard__avatar">S</span>
+            <span class="revcard__name">SARAH M.<i>CAIRO, EG</i></span>
+          </div>
+        </article>
+
+        <article class="revcard" style="--d:1">
+          <div class="revcard__stars">★★★★★</div>
+          <p class="revcard__quote">&ldquo;Premium quality and amazing packaging. You can feel the difference from the first spray.&rdquo;</p>
+          <span class="revcard__rule"></span>
+          <div class="revcard__who">
+            <span class="revcard__avatar">A</span>
+            <span class="revcard__name">AHMED K.<i>ALEXANDRIA, EG</i></span>
+          </div>
+        </article>
+
+        <article class="revcard" style="--d:2">
+          <div class="revcard__stars">★★★★★</div>
+          <p class="revcard__quote">&ldquo;A scent that truly reflects elegance. I always get compliments whenever I wear it.&rdquo;</p>
+          <span class="revcard__rule"></span>
+          <div class="revcard__who">
+            <span class="revcard__avatar">N</span>
+            <span class="revcard__name">NOUR T.<i>GIZA, EG</i></span>
+          </div>
+        </article>
+
+        <article class="revcard" style="--d:3">
+          <div class="revcard__stars">★★★★★</div>
+          <p class="revcard__quote">&ldquo;Elegant bottle, unforgettable scent. Wateen has become my go-to gift for everyone.&rdquo;</p>
+          <span class="revcard__rule"></span>
+          <div class="revcard__who">
+            <span class="revcard__avatar">M</span>
+            <span class="revcard__name">MONA H.<i>CAIRO, EG</i></span>
+          </div>
+        </article>
+
+        <article class="revcard" style="--d:4">
+          <div class="revcard__stars">★★★★★</div>
+          <p class="revcard__quote">&ldquo;Fast delivery and the fragrance lasted all day. Exactly as described, will order again.&rdquo;</p>
+          <span class="revcard__rule"></span>
+          <div class="revcard__who">
+            <span class="revcard__avatar">K</span>
+            <span class="revcard__name">KARIM S.<i>GIZA, EG</i></span>
+          </div>
+        </article>
+
+        <article class="revcard" style="--d:5">
+          <div class="revcard__stars">★★★★★</div>
+          <p class="revcard__quote">&ldquo;The packaging alone feels like a luxury gift. The scent lives up to it completely.&rdquo;</p>
+          <span class="revcard__rule"></span>
+          <div class="revcard__who">
+            <span class="revcard__avatar">L</span>
+            <span class="revcard__name">LAILA F.<i>ALEXANDRIA, EG</i></span>
+          </div>
+        </article>
+
+      </div>
+
+      <button class="revrail__nav revrail__nav--next" aria-label="Next reviews">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div class="revdots" id="revDots"></div>
+
+    <p class="reviews__foot"><span class="shead__rule"></span>✦<span class="shead__rule"></span></p>
+    <p class="reviews__tag">MORE THAN A FRAGRANCE</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════ 8 · STORY / VIDEO ══════════════════ -->
+<section class="story reveal" id="story">
+
+  <div class="wrap">
+
+    <div class="story__top">
+      <nav class="story__tabs">
+        <a href="#">PEOPLE</a><span>|</span>
+        <a href="#">PLACES</a><span>|</span>
+        <a href="#">MOMENTS</a><span>|</span>
+        <a href="#">SCENTS</a>
+      </nav>
+      <p class="story__note">MORE <br>THAN A <br>FRAGRANCE</p>
+    </div>
+
+    <div class="story__main">
+      <div class="story__copy">
+        <p class="story__eyebrow">STYLE INSPIRATION</p>
+        <h2 class="story__title">SCENTS<br>THAT TELL<br><em>STORIES</em></h2>
+        <span class="story__rule"></span>
+        <p class="story__text">DISCOVER HOW REAL PEOPLE STYLE THEIR SCENTS AND TURN EVERYDAY MOMENTS INTO SOMETHING EXTRAORDINARY.</p>
+        <a href="#video" class="btn btn--round" id="watchBtn">
+          <span class="btn__fill"></span><span class="btn__shine"></span>
+          <span class="btn__label">
+            <svg viewBox="0 0 12 14" fill="currentColor"><path d="M0 0v14l12-7z"/></svg>
+            WATCH THE STORY
+            <svg class="btn__arrow" viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.3">
+              <path d="M0 6h27" stroke-linecap="round"/><path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <div class="story__player" id="video">
+        <!-- plays by itself on loop; muted is required for autoplay to be allowed -->
+        <video id="storyVideo" playsinline autoplay muted loop preload="auto" poster="assets/bg/video.png">
+          <source src="assets/wateen.mp4" type="video/mp4">
+        </video>
+        <span class="story__badge">ICONIC<br>BRANDS<br>TIMELESS<br>SCENTS</span>
+      </div>
+    </div>
+
+    <div class="story__feats">
+      <div class="feat" style="--d:0">
+        <span class="feat__ico">✦</span>
+        <b>TIMELESS</b><span class="feat__rule"></span>
+        <i>STYLES THAT<br>NEVER FADE</i>
+      </div>
+      <span class="feat__sep"></span>
+      <div class="feat" style="--d:1">
+        <span class="feat__ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1">
+            <circle cx="12" cy="12" r="9.4"/><ellipse cx="12" cy="12" rx="4" ry="9.4"/><path d="M2.6 12h18.8" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <b>GLOBAL ICONS</b><span class="feat__rule"></span>
+        <i>FRAGRANCES FROM<br>AROUND THE WORLD</i>
+      </div>
+      <span class="feat__sep"></span>
+      <div class="feat" style="--d:2">
+        <span class="feat__ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1">
+            <path d="M5 9.5 12 4l7 5.5-7 10.5z" stroke-linejoin="round"/><path d="M5 9.5h14" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <b>SIGNATURE MOMENTS</b><span class="feat__rule"></span>
+        <i>FOR EVERY CHAPTER<br>OF YOUR LIFE</i>
+      </div>
+      <span class="feat__sep"></span>
+      <div class="feat" style="--d:3">
+        <span class="feat__ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1">
+            <path d="M20 4C10 4 4.5 8.6 4.5 15.2c0 2 .7 3.6.7 3.6S8 12 16 9.6c0 0-6.4 3.4-8.6 10.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <b>A MORE BEAUTIFUL<br>TOMORROW</b><span class="feat__rule"></span>
+        <i>SCENTS WITH<br>A PURPOSE</i>
+      </div>
+    </div>
+
+    <p class="story__foot"><span class="shead__rule"></span>✦<span class="shead__rule"></span></p>
+    <p class="story__tag">MORE THAN A FRAGRANCE</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════ 9 · FOOTER ══════════════════ -->
+<footer class="foot reveal">
+  <picture class="foot__bg">
+    <source media="(max-width:900px)" srcset="assets/bg/footer-mobile.png">
+    <img src="assets/bg/footer-desktop.png" alt="" loading="lazy">
+  </picture>
+  <div class="foot__veil"></div>
+
+  <div class="wrap foot__inner">
+
+    <div class="foot__brand">
+      <img class="foot__logo" src="assets/logo.png" alt="Wateen Perfumes">
+      <p class="foot__tag">MORE THAN A FRAGRANCE</p>
+      <p class="foot__text">Curated scents for every story.<br>Authentic brands. Timeless elegance.</p>
+      <div class="foot__social">
+        <a href="https://wa.me/201027380269" target="_blank" rel="noopener" aria-label="WhatsApp" class="is-wa"><svg viewBox="0 0 24 24" fill="#fff"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.6l.4-.5c.1-.1.2-.3.2-.4.1-.2 0-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.5h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.3 0 1.4 1 2.7 1.1 2.9.1.2 2 3 4.8 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.6.2-1.2.2-1.3-.1-.1-.2-.2-.5-.3Z"/><path d="M12 2.2A9.8 9.8 0 0 0 3.9 17l-1.1 4.1 4.2-1.1A9.8 9.8 0 1 0 12 2.2Zm0 17.7c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3.1.8.8-3-.2-.3A7.9 7.9 0 1 1 12 19.9Z"/></svg></a>
+        <a href="https://www.facebook.com/share/1KAZzLxbjH/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook" class="is-fb"><svg viewBox="0 0 24 24" fill="#fff"><path d="M13.5 21.9v-8.1h2.7l.4-3.2h-3.1V8.6c0-.9.3-1.6 1.6-1.6h1.7V4.1C16.5 4 15.5 4 14.4 4c-2.4 0-4.1 1.5-4.1 4.2v2.4H7.6v3.2h2.7v8.1h3.2Z"/></svg></a>
+        <a href="https://www.instagram.com/wateenperfum?stkn=Z2Y5MTVuNnBueWxm" target="_blank" rel="noopener" aria-label="Instagram" class="is-ig"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="#fff" stroke="none"/></svg></a>
+      </div>
+    </div>
+
+    <nav class="foot__col">
+      <h4>SHOP</h4>
+      <a href="men.html">Men</a><a href="women.html">Women</a><a href="unisex.html">Unisex</a>
+      <a href="accessories.html">Accessories</a><a href="watches.html">Watches</a><a href="shop.html">All Products</a>
+    </nav>
+
+    <nav class="foot__col">
+      <h4>CUSTOMER CARE</h4>
+      <a href="#">Track Your Order</a><a href="#">Shipping &amp; Delivery</a>
+      <a href="#">Returns &amp; Exchanges</a><a href="#">FAQ</a><a href="#">Contact Us</a>
+    </nav>
+
+    <div class="foot__news">
+      <h4>STAY CONNECTED</h4>
+      <p>Be the first to know about new arrivals,<br>exclusive offers, and more.</p>
+      <form class="news" onsubmit="return false;">
+        <input type="email" placeholder="Enter your email" aria-label="Email address" required>
+        <button type="submit" aria-label="Subscribe">
+          <svg viewBox="0 0 30 12" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M0 6h27" stroke-linecap="round"/><path d="M22 1.5 27 6l-5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <div class="wrap">
+    <p class="foot__brandsTitle"><span class="shead__rule"></span>OUR BRANDS<span class="shead__rule"></span></p>
+    <div class="foot__brands">
+      <a href="#"><img src="assets/brands/rasasi.png" alt="Rasasi" loading="lazy"></a>
+      <a href="#"><img src="assets/brands/zimaya.png" alt="Zimaya" loading="lazy"></a>
+      <a href="#"><img src="assets/brands/maison-alhambra.png" alt="Maison Alhambra" loading="lazy"></a>
+      <a href="#"><img src="assets/brands/lattafa.png" alt="Lattafa" loading="lazy"></a>
+      <a href="#"><img src="assets/brands/dkhoni.png" alt="Dkhoni" loading="lazy"></a>
+      <a href="#"><img src="assets/brands/swiss-arabian.png" alt="Swiss Arabian" loading="lazy"></a>
+      <a href="#"><img src="assets/brands/ajmal.png" alt="Ajmal" loading="lazy"></a>
+      <a href="#"><img src="assets/brands/azha.png" alt="Azha" loading="lazy"></a>
+      <a href="#"><img src="assets/brands/arabiyat.png" alt="Arabiyat Prestige" loading="lazy"></a>
+    </div>
+  </div>
+
+  <div class="wrap foot__bottom">
+    <p>© 2026 Wateen Perfumes. All rights reserved.</p>
+    <nav class="foot__legal">
+      <a href="#">Privacy Policy</a><span>|</span>
+      <a href="#">Terms of Service</a><span>|</span>
+      <a href="#">Sitemap</a>
+    </nav>
+    <div class="foot__pay">
+      <!-- real card marks, drawn inline so they stay crisp and need no CDN -->
+      <span class="pay" title="Visa">
+        <svg viewBox="0 0 48 16" aria-label="Visa">
+          <path fill="#1A1F71" d="M18.9.9 12.4 15h-4L5.2 3.4c-.2-.8-.4-1-1-1.4A17 17 0 0 0 .8.9L.9.4h6.4c.9 0 1.6.6 1.8 1.6l1.7 8.8L15 .4h3.9ZM34.3 10.4c0-3.8-5.2-4-5.2-5.7 0-.5.5-1 1.6-1.2.6-.1 2.1-.2 3.9.6l.7-3a10.7 10.7 0 0 0-3.7-.7c-3.9 0-6.6 2-6.6 5 0 2.2 1.9 3.4 3.4 4.1 1.5.7 2 1.2 2 1.9 0 1-1.2 1.4-2.3 1.5-2 0-3.1-.5-4-.9l-.7 3.1c1 .4 2.7.8 4.5.8 4.1 0 6.8-2 6.8-5.2M44.4 15H48L44.9.4h-3.3c-.7 0-1.4.4-1.7 1.1L34.1 15h4l.8-2.2h4.9l.5 2.2Zm-4.3-5.2 2-5.5 1.2 5.5h-3.2ZM24.3.4 21.1 15h-3.8L20.5.4h3.8Z"/>
+        </svg>
+      </span>
+      <span class="pay" title="Mastercard">
+        <svg viewBox="0 0 48 30" aria-label="Mastercard">
+          <circle cx="18" cy="15" r="12" fill="#EB001B"/>
+          <circle cx="30" cy="15" r="12" fill="#F79E1B"/>
+          <path fill="#FF5F00" d="M24 5.4a12 12 0 0 0 0 19.2 12 12 0 0 0 0-19.2Z"/>
+        </svg>
+      </span>
+      <span class="pay" title="Apple Pay">
+        <svg viewBox="0 0 60 26" aria-label="Apple Pay">
+          <path fill="#000" d="M12.6 3.9c-.7.9-1.9 1.6-3 1.5-.2-1.2.4-2.4 1-3.2C11.3 1.3 12.6.6 13.6.5c.1 1.3-.4 2.5-1 3.4Zm1 1.6c-1.7-.1-3.1.9-3.9.9-.8 0-2-.9-3.3-.9C4.7 5.5 3.1 6.5 2.2 8c-1.7 3-.5 7.5 1.2 10 .9 1.2 1.9 2.6 3.2 2.5 1.3 0 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.2 3.1-2.5.9-1.4 1.3-2.8 1.4-2.9 0 0-2.7-1-2.7-4.1 0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3-2-3.6-2.1Z"/>
+          <path fill="#000" d="M24.9 2.1c3.4 0 5.8 2.4 5.8 5.8s-2.4 5.8-5.9 5.8h-3.8v6h-2.7V2.1h6.6Zm-3.9 9.4h3.2c2.4 0 3.7-1.3 3.7-3.5s-1.3-3.5-3.7-3.5H21v7ZM31.4 16.1c0-2.3 1.7-3.6 4.8-3.8l3.4-.2v-1c0-1.4-.9-2.2-2.5-2.2-1.5 0-2.5.7-2.7 1.8h-2.5c.1-2.3 2.1-4 5.2-4 3.1 0 5.1 1.6 5.1 4.2v8.8h-2.5v-2.1h-.1a4.5 4.5 0 0 1-4 2.2c-2.5 0-4.2-1.5-4.2-3.7Zm8.2-1.2v-1l-3 .2c-1.5.1-2.4.8-2.4 1.9s.9 1.8 2.2 1.8c1.8 0 3.2-1.2 3.2-2.9ZM43.4 24.3v-2.1a7 7 0 0 0 1 .1c1.2 0 1.9-.5 2.3-1.8l.2-.8-4.5-12.5h2.8l3.1 10.1h.1l3.1-10.1h2.8l-4.7 13.1c-1 3-2.2 4-4.8 4a9 9 0 0 1-1.4-.1Z"/>
+        </svg>
+      </span>
+      <span class="pay" title="Card">
+        <svg viewBox="0 0 48 30" aria-label="Card">
+          <rect x="1" y="3" width="46" height="24" rx="3.5" fill="#2E3A46"/>
+          <rect x="1" y="8.5" width="46" height="4.5" fill="#1B242C"/>
+          <rect x="5" y="18" width="11" height="3" rx="1.5" fill="#8C9AA6"/>
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  <div class="madeby">
+    <p>
+      Powered by
+      <a href="https://wa.me/201211179625" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2.4A9.6 9.6 0 0 0 3.6 17l-1 3.6 3.7-1a9.6 9.6 0 1 0 5.7-17.2Zm5.6 13.7c-.24.68-1.4 1.3-1.93 1.35-.5.05-.9.24-3.05-.64-2.6-1.07-4.3-3.68-4.43-3.86-.13-.18-1.06-1.4-1.06-2.68 0-1.27.67-1.9.9-2.16.24-.26.52-.32.7-.32.17 0 .35 0 .5.01.16.01.38-.06.6.46.24.56.8 1.95.87 2.1.07.14.12.31.02.5-.1.19-.15.3-.29.46-.14.16-.3.36-.42.48-.14.14-.29.29-.13.57.17.29.75 1.24 1.62 2 1.12 1 2.07 1.32 2.36 1.47.29.14.46.12.64-.07.18-.2.75-.86.95-1.16.2-.29.4-.24.66-.14.27.1 1.7.8 2 .95.28.14.47.21.54.33.07.12.07.7-.17 1.38Z"/>
+        </svg>
+        Kreem Aly
+      </a>
+    </p>
+  </div>
+</footer>
+
+
+<script src="site-data.js"></script>
+<script src="hero.js"></script>
+</body>
+</html>
