@@ -6,10 +6,11 @@
 <title>Women's Fragrances — Wateen Perfumes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="hero.css">
 <link rel="stylesheet" href="category.css">
 <link rel="stylesheet" href="shop.css">
+<link rel="stylesheet" href="rtl.css">
 <link rel="icon" href="assets/logo.png">
 </head>
 <body class="cat-page">
@@ -575,6 +576,7 @@
 </footer>
 
 
+<script src="i18n.js"></script>
 <script src="site-data.js"></script>
 <script src="hero.js"></script>
 <script>
@@ -733,14 +735,14 @@
       '<article class="card" style="--d:' + (i % 4) + '" data-id="' + p.id + '">' +
         '<div class="card__media">' +
           badge +
-          '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy">' +
+          '<img src="' + p.img + '" alt="' + pName(p) + '" loading="lazy">' +
         '</div>' +
         '<button class="card__wish" data-wish="' + p.id + '" aria-label="Add to wishlist">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/></svg>' +
         '</button>' +
-        '<p class="card__brand">' + p.brand + '</p>' +
-        '<h3 class="card__name"><a href="product.html?id=' + p.id + '">' + p.name + '</a></h3>' +
-        '<p class="card__type">' + p.type + '</p>' +
+        '<p class="card__brand">' + pBrand(p) + '</p>' +
+        '<h3 class="card__name"><a href="product.html?id=' + p.id + '">' + pName(p) + '</a></h3>' +
+        '<p class="card__type">' + t(p.type) + '</p>' +
         '<p class="card__rating">' + p.rating + ' <i>(' + p.reviews + ')</i></p>' +
         '<p class="card__price' + (onSale ? ' card__price--sale' : '') + '">' + priceHtml + '</p>' +
         '<div class="card__buy"><button class="add" data-add="' + p.id + '"><span class="add__fill"></span><span class="add__label">ADD TO CART</span></button></div>' +

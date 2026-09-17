@@ -567,11 +567,11 @@
           '<div class="card__media">' +
             '<span class="card__badge">BEST SELLER</span>' +
             cornerBadge +
-            '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy">' +
+            '<img src="' + p.img + '" alt="' + pName(p) + '" loading="lazy">' +
           '</div>' +
-          '<p class="card__brand">' + p.brand + '</p>' +
-          '<h3 class="card__name">' + p.name + '</h3>' +
-          '<p class="card__type">' + p.type + '</p>' +
+          '<p class="card__brand">' + pBrand(p) + '</p>' +
+          '<h3 class="card__name">' + pName(p) + '</h3>' +
+          '<p class="card__type">' + t(p.type) + '</p>' +
           '<p class="card__price' + (onSale ? ' card__price--sale' : '') + '">' + priceHtml + '</p>' +
           '<div class="card__buy">' +
             '<button class="add">' +
@@ -688,10 +688,10 @@
       if (!p) return '';
       return (
         '<div class="cartd__item" data-id="' + p.id + '">' +
-          '<div class="cartd__itemImg"><img src="' + p.img + '" alt="' + p.name + '"></div>' +
+          '<div class="cartd__itemImg"><img src="' + p.img + '" alt="' + pName(p) + '"></div>' +
           '<div class="cartd__itemInfo">' +
-            '<b>' + p.brand + '</b>' +
-            '<i>' + p.name + '</i>' +
+            '<b>' + pBrand(p) + '</b>' +
+            '<i>' + pName(p) + '</i>' +
             '<i>EDP &middot; ' + p.size + '</i>' +
             '<div class="cartd__qty">' +
               '<button type="button" data-act="dec" aria-label="Decrease quantity">&minus;</button>' +
@@ -811,7 +811,11 @@
     var card = btn.closest('.card, .pd__info, .wlCard');
     var nameEl = card ? card.querySelector('.card__name, .pd__name') : null;
     var name = nameEl ? nameEl.textContent.trim() : null;
-    var product = name ? CATALOG.filter(function (p) { return p.name === name; })[0] : null;
+    // cards show the Arabic name when the site is in Arabic, so match on
+    // either language rather than only the English name
+    var product = name ? CATALOG.filter(function (p) {
+      return p.name === name || p.nameAr === name;
+    })[0] : null;
     if (product) addToCart(product.id, 1);
     else if (CATALOG[0]) addToCart(CATALOG[0].id, 1); // fallback demo product
     openCart();
@@ -829,11 +833,14 @@
     return text.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   }
 
+  // matches on the English or Arabic name, since which one is on screen
+  // depends on the active language
   function findByName(name) {
     if (!name) return null;
     var clean = name.trim().toLowerCase();
     for (var i = 0; i < CATALOG.length; i++) {
       if (CATALOG[i].name.toLowerCase() === clean) return CATALOG[i];
+      if (CATALOG[i].nameAr && CATALOG[i].nameAr.trim() === name.trim()) return CATALOG[i];
     }
     // loose match for rail links whose text carries extra words ("Shuhrah EDP")
     for (var j = 0; j < CATALOG.length; j++) {
@@ -969,10 +976,10 @@
       list.map(function (p) {
         return (
           '<div class="searchm__row" data-id="' + p.id + '" style="cursor:pointer">' +
-            '<div class="searchm__rowImg"><img src="' + p.img + '" alt="' + p.name + '"></div>' +
+            '<div class="searchm__rowImg"><img src="' + p.img + '" alt="' + pName(p) + '"></div>' +
             '<div class="searchm__rowInfo">' +
-              '<b>' + p.brand + '</b>' +
-              '<i>' + p.name + ' &middot; ' + p.type + '</i>' +
+              '<b>' + pBrand(p) + '</b>' +
+              '<i>' + pName(p) + ' &middot; ' + t(p.type) + '</i>' +
               '<em>' + p.rating + ' (' + p.reviews + ')</em>' +
             '</div>' +
             '<span class="searchm__rowPrice">' + fmt(p.price) + ' EGP</span>' +

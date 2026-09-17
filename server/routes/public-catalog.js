@@ -50,7 +50,9 @@ function toLegacyShape(p, settings) {
     img: p.images[0] ? p.images[0].url : '',
     img2: p.images[1] ? p.images[1].url : (p.images[0] ? p.images[0].url : ''),
     images: p.images.map(i => i.url),
-    desc: p.description, notes: p.notes, family: p.family, year: p.year, origin: p.origin,
+    desc: p.description, descAr: p.descriptionAr,
+    catAr: primaryCat ? primaryCat.name_ar : null,
+    notes: p.notes, family: p.family, year: p.year, origin: p.origin,
     sku: p.sku, gender: p.gender, tag: p.tagHtml,
     bestSeller: p.bestSeller, featured: p.featured, newArrival: p.newArrival,
     onSale: (p.discountActive && p.discountPercent > 0) || globalSaleOn,
@@ -69,7 +71,8 @@ function assembleProduct(row, variantsByProduct, imagesByProduct, categoriesByPr
 
   return {
     id: row.id, slug: row.slug, name: row.name, nameAr: row.name_ar, brand, type: row.type, sku: row.sku,
-    description: row.description, gender: row.gender, family: row.family, origin: row.origin, year: row.year,
+    description: row.description, descriptionAr: row.description_ar,
+    gender: row.gender, family: row.family, origin: row.origin, year: row.year,
     notes: { top: row.notes_top, heart: row.notes_heart, base: row.notes_base }, tagHtml: row.tag_html,
     rating: row.rating, reviewsCount: row.reviews_count, bestSeller: !!row.best_seller,
     featured: !!row.featured, newArrival: !!row.new_arrival, discountPercent: row.discount_percent,
@@ -97,7 +100,7 @@ async function loadAllProductRelations(productIds) {
     db.prepare(`SELECT * FROM product_variants WHERE product_id IN (${placeholders}) ORDER BY sort_order, id`).all(...productIds),
     db.prepare(`SELECT * FROM product_images WHERE product_id IN (${placeholders}) ORDER BY sort_order, id`).all(...productIds),
     db.prepare(`
-      SELECT pc.product_id, c.id, c.slug, c.name, pc.is_primary FROM product_categories pc
+      SELECT pc.product_id, c.id, c.slug, c.name, c.name_ar, pc.is_primary FROM product_categories pc
       JOIN categories c ON c.id = pc.category_id WHERE pc.product_id IN (${placeholders}) ORDER BY pc.is_primary DESC
     `).all(...productIds),
     db.prepare('SELECT id, name, name_ar FROM brands').all()

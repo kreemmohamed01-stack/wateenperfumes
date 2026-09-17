@@ -6,9 +6,10 @@
 <title>Shuhrah — RASASI | Wateen Perfumes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="hero.css">
 <link rel="stylesheet" href="product.css">
+<link rel="stylesheet" href="rtl.css">
 <link rel="icon" href="assets/logo.png">
 </head>
 <body class="product-page" id="productPage">
@@ -661,6 +662,7 @@
 </div>
 
 
+<script src="i18n.js"></script>
 <script src="site-data.js"></script>
 <script>
 /* ════════════════════════════════════════════════
@@ -693,19 +695,19 @@
   var catHref = { men: 'men.html', women: 'women.html', unisex: 'unisex.html' };
 
   // ---- page title + breadcrumb ----
-  document.title = product.name + ' — ' + product.brand + ' | Wateen Perfumes';
+  document.title = pName(product) + ' — ' + pBrand(product) + ' | Wateen Perfumes';
   var crumb = document.getElementById('pdCrumb');
   if (crumb) {
     var cat = product.cat;
     crumb.innerHTML =
       '<a href="index.html">Home</a><span>›</span>' +
       (catHref[cat] ? '<a href="' + catHref[cat] + '">' + catLabel[cat] + '</a><span>›</span>' : '') +
-      '<b>' + product.name + '</b>';
+      '<b>' + pName(product) + '</b>';
   }
 
   // ---- gallery: the product's own two photos — main + one more ----
   var mainImg = document.getElementById('pdMainImg');
-  if (mainImg) { mainImg.src = product.img; mainImg.alt = product.name + ' by ' + product.brand; }
+  if (mainImg) { mainImg.src = product.img; mainImg.alt = pName(product) + ' — ' + pBrand(product); }
 
   var thumbSrcs = [
     { src: product.img, label: 'main photo' },
@@ -713,10 +715,11 @@
   ];
   var thumbsEl = document.getElementById('pdThumbs');
   if (thumbsEl) {
-    thumbsEl.innerHTML = thumbSrcs.map(function (t, i) {
+    // named "th" rather than "t" so it doesn't shadow the global translator
+    thumbsEl.innerHTML = thumbSrcs.map(function (th, i) {
       return (
-        '<button class="pd__thumb' + (i === 0 ? ' is-active' : '') + '" aria-label="Show ' + t.label + '">' +
-          '<img src="' + t.src + '" alt="' + product.name + ' ' + t.label + '">' +
+        '<button class="pd__thumb' + (i === 0 ? ' is-active' : '') + '" aria-label="Show ' + th.label + '">' +
+          '<img src="' + th.src + '" alt="' + pName(product) + ' ' + th.label + '">' +
         '</button>'
       );
     }).join('');
@@ -724,12 +727,12 @@
 
   // ---- info column ----
   var setText = function (id, text) { var el = document.getElementById(id); if (el) el.textContent = text; };
-  setText('pdBrand', product.brand);
-  setText('pdName', product.name);
-  setText('pdType', product.type.toUpperCase());
+  setText('pdBrand', pBrand(product));
+  setText('pdName', pName(product));
+  setText('pdType', isAr() ? t(product.type) : product.type.toUpperCase());
 
   var ratingEl = document.getElementById('pdRating');
-  if (ratingEl) ratingEl.innerHTML = product.rating + ' <i>(' + product.reviews + ' reviews)</i>';
+  if (ratingEl) ratingEl.innerHTML = product.rating + ' <i>(' + product.reviews + ' ' + t('reviews') + ')</i>';
 
   var priceEl = document.getElementById('pdPrice');
   if (priceEl) { priceEl.dataset.value = product.price; priceEl.textContent = '0'; }
@@ -753,7 +756,7 @@
   var lowStockEl = document.getElementById('pdLowStock');
   if (lowStockEl && product.isLowStock) lowStockEl.style.display = '';
 
-  setText('pdDesc', product.desc);
+  setText('pdDesc', pDesc(product));
 
   var sizesEl = document.getElementById('pdSizes');
   var sizeLabelEl = document.querySelector('.pd__sizeLabel');
@@ -773,13 +776,13 @@
   setText('pdNoteHeart', product.notes.heart);
   setText('pdNoteBase', product.notes.base);
   setText('pdFamily', product.family);
-  setText('pdConcentration', product.type);
+  setText('pdConcentration', t(product.type));
   setText('pdYear', product.year);
 
-  setText('pdDetailBrand', product.brand);
-  setText('pdDetailName', product.name);
-  setText('pdDetailType', product.type);
-  setText('pdDetailSize', product.size);
+  setText('pdDetailBrand', pBrand(product));
+  setText('pdDetailName', pName(product));
+  setText('pdDetailType', t(product.type));
+  setText('pdDetailSize', t(product.size));
   setText('pdDetailGender', product.gender);
   setText('pdDetailOrigin', product.origin);
   setText('pdDetailSku', product.sku);

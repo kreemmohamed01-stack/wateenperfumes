@@ -1,0 +1,153 @@
+/* ════════════════════════════════════════════════
+   WATEEN PERFUMES — ARABIC / RTL
+   Loaded on every page; everything here is scoped to
+   html.is-ar, so in English it costs nothing and changes
+   nothing. The goal is a correct mirror, not a redesign:
+   image order, grids and components keep their structure.
+   ════════════════════════════════════════════════ */
+
+html.is-ar body{
+  /* Jost has no Arabic glyphs, so Arabic text would fall back to a random
+     system font. Cairo covers Arabic properly and keeps the Latin fallback
+     for brand names that stay in Latin script. */
+  font-family:'Cairo', 'Jost', 'Segoe UI', Tahoma, sans-serif;
+}
+
+html.is-ar h1, html.is-ar h2, html.is-ar h3, html.is-ar h4,
+html.is-ar .shead__title, html.is-ar .phero__title{
+  font-family:'Cairo', 'Cormorant Garamond', serif;
+  font-weight:600;
+}
+
+/* Arabic reads smaller at the same px size, so nudge body copy up a little */
+html.is-ar .card__name{ font-size:1.02em; }
+html.is-ar .pd__desc{ font-size:15px; line-height:2; }
+html.is-ar .policy__body p, html.is-ar .policy__list li{ line-height:2; }
+
+/* ---- letter-spacing must go: it breaks Arabic joined script ---- */
+html.is-ar .nav__links a,
+html.is-ar .nav__tag,
+html.is-ar .announce__track span,
+html.is-ar .btn__label,
+html.is-ar .add__label,
+html.is-ar .card__brand,
+html.is-ar .card__type,
+html.is-ar .shead__eyebrow,
+html.is-ar .shead__sub,
+html.is-ar .phero__desc,
+html.is-ar .phero__tag,
+html.is-ar .pd__brand,
+html.is-ar .pd__type,
+html.is-ar .pd__sizeLabel,
+html.is-ar .foot__col h4,
+html.is-ar .coCard__title,
+html.is-ar .coPlace__label,
+html.is-ar .policy__eyebrow,
+html.is-ar .drawer__links a,
+html.is-ar .searchm__title,
+html.is-ar .searchm__sub,
+html.is-ar .shopResults__count,
+html.is-ar .shopFilters__head,
+html.is-ar .card__badge{
+  letter-spacing:0;
+}
+
+/* ---- the announcement marquee scrolls the other way ---- */
+html.is-ar .announce__track{ animation-direction:reverse; }
+
+/* ---- nav ---- */
+html.is-ar .nav__cap--left{ padding-right:0; padding-left:70px; }
+html.is-ar .nav__cap--right{ padding-left:0; padding-right:70px; }
+html.is-ar .nav__tag{ text-align:right; }
+
+/* ---- the language button ---- */
+.langSlot{ display:inline-flex; align-items:center; }
+.langBtn{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:7px 12px;
+  border:1px solid rgba(58,50,42,.18);
+  border-radius:20px;
+  background:transparent;
+  color:var(--ink);
+  font-size:11px; font-weight:500; line-height:1;
+  transition:border-color .18s var(--ease), color .18s var(--ease), background .18s var(--ease);
+}
+.langBtn svg{ width:14px; height:14px; flex:0 0 auto; }
+.langBtn b{ font-weight:600; font-size:11.5px; }
+.langBtn:hover{ border-color:var(--gold); color:var(--gold-deep); background:rgba(185,139,82,.06); }
+.nav__pill--mob .langSlot .langBtn{ border:0; padding:6px 8px; }
+.coHead__inner .langSlot{ margin-inline-end:14px; }
+@media (max-width:1180px){ .nav__cur + .langSlot, .langSlot{ margin:0 2px; } }
+
+/* ---- directional icons: arrows should point the way the text reads ---- */
+html.is-ar .btn__arrow,
+html.is-ar .backBtn svg,
+html.is-ar .viewAll svg,
+html.is-ar .coHead__back svg,
+html.is-ar .policy__more svg,
+html.is-ar .col__hint svg{
+  transform:scaleX(-1);
+}
+html.is-ar .backBtn:hover svg{ transform:scaleX(-1) translateX(-3px); }
+
+/* the breadcrumb separator is a "›" glyph — mirror it too */
+html.is-ar .crumb__inner span{ transform:scaleX(-1); display:inline-block; }
+
+/* ---- forms: labels and inputs read right-to-left ---- */
+html.is-ar input,
+html.is-ar select,
+html.is-ar textarea{ text-align:right; }
+html.is-ar .coInput__ico{ left:auto; right:14px; }
+html.is-ar .coInput input,
+html.is-ar .coInput select{ padding-right:44px; padding-left:16px; }
+html.is-ar .coInput__caret{ right:auto; left:16px; }
+
+html.is-ar .searchm__bar input{ text-align:right; }
+html.is-ar .shopSearch svg{ left:auto; right:13px; }
+html.is-ar .shopSearch input{ padding-right:34px; padding-left:34px; text-align:right; }
+html.is-ar .shopSearch__clear{ right:auto; left:8px; }
+
+/* ---- product page ---- */
+html.is-ar .pd__info{ text-align:right; }
+html.is-ar .pd__lowStock{ margin:0 10px 10px 0; }
+html.is-ar .pd__detailsTable th,
+html.is-ar .pd__detailsTable td{ text-align:right; }
+html.is-ar .pd__rule{ background:linear-gradient(270deg,rgba(143,102,51,.55),transparent); }
+
+/* ---- policy page ---- */
+html.is-ar .policy__list li{ padding-left:0; padding-right:22px; }
+html.is-ar .policy__list li::before{ left:auto; right:0; }
+html.is-ar .policy__note{ border-left:0; border-right:2px solid var(--gold); }
+
+/* ---- checkout ---- */
+html.is-ar .coPolicy__body li{ padding-left:0; padding-right:18px; }
+html.is-ar .coPolicy__body li::before{ left:auto; right:0; }
+
+/* ---- footer ---- */
+html.is-ar .foot__col{ text-align:right; }
+
+/* ---- keep numbers, prices and codes left-to-right ----
+   Arabic pages still read prices, phone numbers and SKUs as
+   Latin numerals; without this the browser can reorder the
+   digits and punctuation around them. */
+html.is-ar .card__price,
+html.is-ar .pd__price,
+html.is-ar .coTotals,
+html.is-ar .coSummary__row,
+html.is-ar .cartd__itemPrice,
+html.is-ar .shopPrice__labels,
+html.is-ar .searchm__rowPrice,
+html.is-ar .miniRow__right,
+html.is-ar .card__rating,
+html.is-ar .pd__rating{
+  direction:ltr;
+}
+/* …but those blocks still need to sit on the correct side */
+html.is-ar .card__price,
+html.is-ar .card__rating{ text-align:right; }
+html.is-ar .pd__price,
+html.is-ar .pd__rating{ justify-content:flex-start; }
+
+/* the rating stars are a glyph run — keep them in visual order */
+html.is-ar .card__rating,
+html.is-ar .pd__rating{ unicode-bidi:isolate; }
