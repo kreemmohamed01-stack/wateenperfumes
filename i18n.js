@@ -636,7 +636,68 @@
     'Returns & Exchange': 'الاستبدال والاسترجاع',
     'STAY CONNECTED': 'ابقَ على تواصل',
     'SHOP': 'تسوّق',
-    'ABOUT': 'عن الموقع'
+    'ABOUT': 'عن الموقع',
+
+    // product-detail bits with no dedicated Arabic field on the product object
+    'Out of Stock': 'غير متوفّر',
+    'Low Stock': 'الكمية محدودة',
+    'available': 'قطعة متبقية',
+    'Men': 'رجالي',
+    'Women': 'حريمي',
+    'Unisex': 'للجنسين',
+    'UAE': 'الإمارات',
+    'UK': 'المملكة المتحدة'
+  };
+
+  // fragrance-note ingredient words: stored as free-text comma lists with no
+  // Arabic column, so each term is translated individually and rejoined —
+  // same approach as tFamily() below, extended to a much longer vocabulary
+  var NOTES = {
+    'Almond':'لوز','Almond Macaron':'ماكارون اللوز','Amber':'عنبر','Ambergris':'عنبر بحري',
+    'Amberwood':'خشب العنبر','Apple':'تفاح','Apricot':'مشمش','Aquatic Notes':'نفحات مائية',
+    'Aromatic Herbs':'أعشاب عطرية','Bamboo Accord':'مسحة الخيزران','Benzoin':'بنزوين',
+    'Bergamot':'برغموت','Black Pepper':'فلفل أسود','Blackcurrant':'كشمش أسود','Blueberry':'توت أزرق',
+    'Bourbon Accord':'مسحة البوربون','Brazilian Pink Pepper':'فلفل وردي برازيلي','Brown Butter':'زبدة بنية',
+    'Brown Sugar':'سكر بني','Bukhoor Accord':'مسحة البخور','Butter':'زبدة','Candied Fruit':'فاكهة مسكّرة',
+    'Caramel':'كراميل','Caramelized Milk':'حليب مكرمل','Cardamom':'هيل','Cashmere Wood':'خشب الكشمير',
+    'Cedarwood':'خشب الأرز','Chiffon Cake':'كيكة الشيفون','Chocolate':'شوكولاتة','Chocolate Ganache':'غاناش الشوكولاتة',
+    'Cinnamon':'قرفة','Citrus':'حمضيات','Clove':'قرنفل','Cocoa':'كاكاو','Coconut':'جوز الهند',
+    'Coconut Milk':'حليب جوز الهند','Coffee':'قهوة','Condensed Milk':'حليب مكثّف','Cookie Dough':'عجينة الكوكيز',
+    'Cotton Candy':'غزل البنات','Cranberry':'توت بري','Cream':'كريمة','Damask Rose':'الورد الدمشقي',
+    'Dark Chocolate':'شوكولاتة داكنة','Dark Woods':'أخشاب داكنة','Dates':'تمر','Dhan Al Oud':'دهن العود',
+    'Driftwood':'خشب الطافي','Dry Spices':'توابل جافة','Egyptian Thyme':'زعتر مصري','Espresso':'إسبريسو',
+    'Floral Accord':'مسحة زهرية','Floral Notes':'نفحات زهرية','Florals':'أزهار','Frankincense':'لبان',
+    'Freesia':'فريزيا','French Black Truffle':'كمأة سوداء فرنسية','French Vanilla':'فانيليا فرنسية',
+    'Gardenia':'غاردينيا','Geranium':'غرنوقي','Grapefruit':'جريب فروت','Green Apple':'تفاح أخضر',
+    'Green Notes':'نفحات خضراء','Green Tea':'شاي أخضر','Hazelnut':'بندق','Heliotrope':'هليوتروب',
+    'Honey':'عسل','Incense':'بخور','Indian Sandalwood':'صندل هندي','Iranian Saffron':'زعفران إيراني',
+    'Iris':'سوسن','Jasmine':'ياسمين','Labdanum':'لادانم','Ladyfinger':'بسكويت الليدي فينجر',
+    'Lavender':'لافندر','Leather':'جلد','Lemon':'ليمون','Light Florals':'أزهار خفيفة','Light Woods':'أخشاب خفيفة',
+    'Lily':'زنبق','Litchi':'ليتشي','Macaron Shell':'قشرة الماكارون','Magnolia':'ماغنوليا','Mahonial':'ماهونيال',
+    'Mandarin':'يوسفي','Mango':'مانجو','Maple':'قيقب','Marine Notes':'نفحات بحرية','Marshmallow':'مارشميلو',
+    'Mascarpone':'ماسكاربوني','Matcha':'ماتشا','Mint':'نعناع','Mixed Berries':'توت مشكّل','Musk':'مسك',
+    'Myrrh':'مُرّ','Nutmeg':'جوزة الطيب','Orange':'برتقال','Orange Blossom':'زهر البرتقال','Oud':'عود',
+    'Passion Fruit':'فاكهة الآلام','Patchouli':'باتشولي','Peach':'خوخ','Pear':'كمثرى','Pecan':'جوز البقان',
+    'Peony':'فاوانيا','Pepper':'فلفل','Pink Pepper':'فلفل وردي','Pink Peppercorn':'حبة فلفل وردي',
+    'Plum':'برقوق','Pomegranate':'رمان','Praline':'برالين','Raspberry':'توت العليق','Red Berries':'توت أحمر',
+    'Red Fruits':'فواكه حمراء','Rose':'ورد','Rosewood':'خشب الورد','Saffron':'زعفران','Sandalwood':'صندل',
+    'Sea Notes':'نفحات بحرية','Sea Salt':'ملح البحر','Shortbread':'شورت بريد','Sichuan Pepper':'فلفل سيتشوان',
+    'Smoked Woods':'أخشاب مدخّنة','Soft Florals':'أزهار ناعمة','Sorbet Accord':'مسحة السوربيه',
+    'Spices':'توابل','Sponge Cake':'كيك إسفنجي','Starfruit':'فاكهة النجمة','Steamed Milk':'حليب مبخّر',
+    'Strawberry':'فراولة','Sugar':'سكر','Sugar Syrup':'شراب السكر','Sugarcane':'قصب السكر',
+    'Taif Rose':'ورد الطائف','Tangerine':'يوسفي','Tobacco':'تبغ','Tobacco Leaf':'ورق التبغ','Toffee':'توفي',
+    'Tonka Bean':'حبة التونكا','Tuberose':'زنبق ليلي','Vanilla':'فانيليا','Vanilla Cream':'كريمة الفانيليا',
+    'Vanilla Orchid':'أوركيد الفانيليا','Vetiver':'نجيل الطيب','Violet':'بنفسج','Violet Leaf':'ورق البنفسج',
+    'Water Notes':'نفحات مائية','White Florals':'أزهار بيضاء','White Flowers':'زهور بيضاء','White Musk':'مسك أبيض',
+    'White Oud':'عود أبيض','Woods':'أخشاب','Ylang-Ylang':'إيلنغ إيلنغ'
+  };
+
+  window.tNotes = function (str) {
+    if (window.LANG !== 'ar' || !str) return str;
+    return String(str).split(',').map(function (part) {
+      var trimmed = part.trim();
+      return Object.prototype.hasOwnProperty.call(NOTES, trimmed) ? NOTES[trimmed] : trimmed;
+    }).join('، ');
   };
 
   window.t = function (s) {
@@ -756,8 +817,22 @@
       var cur = document.querySelector('.nav__cur');
       if (cur && cur.parentNode) slots.push({ parent: cur.parentNode, before: cur });
     }
-    var mobPill = document.querySelector('.nav__pill--mob');
-    if (mobPill) slots.push({ parent: mobPill, before: null });
+    // mobile: right beside the burger/menu icon, not the search/cart pill.
+    // .nav__mobTop is a 2-item space-between flex row (burger vs. pill; the
+    // logo is centred absolutely and doesn't count), so the burger and the
+    // language button are wrapped together as one flex item rather than
+    // added as a 3rd top-level child, which would throw off that spacing.
+    var burger = document.querySelector('.nav__burger');
+    if (burger && burger.parentNode) {
+      var burgerWrap = document.createElement('span');
+      burgerWrap.className = 'nav__burgerWrap';
+      burger.parentNode.insertBefore(burgerWrap, burger);
+      burgerWrap.appendChild(burger);
+      slots.push({ parent: burgerWrap, before: null });
+    } else {
+      var mobPill = document.querySelector('.nav__pill--mob');
+      if (mobPill) slots.push({ parent: mobPill, before: null });
+    }
     // checkout has its own slim header
     var coHead = document.querySelector('.coHead__secure');
     if (coHead && coHead.parentNode) slots.push({ parent: coHead.parentNode, before: coHead });

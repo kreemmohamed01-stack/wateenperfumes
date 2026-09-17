@@ -134,8 +134,13 @@ body.cat-page .langBtn,
   box-shadow:none;
 }
 
-.nav__pill--mob .langSlot .langBtn{ border-color:rgba(58,50,42,.18); padding:6px 10px; background:transparent; box-shadow:none; }
-.nav__pill--mob .langSlot{ margin:0 4px; }
+/* mobile: sits right beside the burger/menu icon, not the search/cart pill.
+   .nav__burgerWrap holds the burger button + langSlot as one flex unit so
+   the row's original 2-item space-between spacing (burger vs. pill) still
+   holds, with the centred logo unaffected since it's positioned absolutely. */
+.nav__burgerWrap{ display:flex; align-items:center; gap:10px; }
+.nav__mobTop .langSlot{ margin:0; }
+.nav__mobTop .langSlot .langBtn{ border-color:rgba(58,50,42,.18); padding:6px 10px; background:transparent; box-shadow:none; }
 .coHead__inner .langSlot{ margin-inline-end:14px; margin-inline-start:0; }
 @media (max-width:1180px){ .langSlot{ margin:0 8px; } }
 

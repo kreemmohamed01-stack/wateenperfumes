@@ -700,7 +700,7 @@
   if (crumb) {
     var cat = product.cat;
     crumb.innerHTML =
-      '<a href="index.html">Home</a><span>›</span>' +
+      '<a href="index.html">' + t('Home') + '</a><span>›</span>' +
       (catHref[cat] ? '<a href="' + catHref[cat] + '">' + catLabel[cat] + '</a><span>›</span>' : '') +
       '<b>' + pName(product) + '</b>';
   }
@@ -774,9 +774,9 @@
   setText('pdAboutText', isAr()
     ? pDesc(product) + ' ' + pName(product) + ' من ' + pBrand(product) + '، صُنع لمن يقدّرون الفخامة والتفرّد.'
     : product.desc + ' ' + product.brand + '’s ' + product.name + ' is crafted for those who value luxury and individuality.');
-  setText('pdNoteTop', product.notes.top);
-  setText('pdNoteHeart', product.notes.heart);
-  setText('pdNoteBase', product.notes.base);
+  setText('pdNoteTop', tNotes(product.notes.top));
+  setText('pdNoteHeart', tNotes(product.notes.heart));
+  setText('pdNoteBase', tNotes(product.notes.base));
   setText('pdFamily', tFamily(product.family));
   setText('pdConcentration', t(product.type));
   setText('pdYear', product.year);
@@ -785,8 +785,8 @@
   setText('pdDetailName', pName(product));
   setText('pdDetailType', t(product.type));
   setText('pdDetailSize', t(product.size));
-  setText('pdDetailGender', product.gender);
-  setText('pdDetailOrigin', product.origin);
+  setText('pdDetailGender', t(product.gender));
+  setText('pdDetailOrigin', t(product.origin));
   setText('pdDetailSku', product.sku);
 
   var stockEl = document.getElementById('pdStock');
@@ -794,12 +794,12 @@
     var avail = Number(product.stock) || 0;
     if (avail <= 0) {
       stockEl.classList.add('is-out');
-      stockEl.innerHTML = '<i></i>Out of Stock';
+      stockEl.innerHTML = '<i></i>' + t('Out of Stock');
     } else if (product.isLowStock) {
       stockEl.classList.add('is-low');
-      stockEl.innerHTML = '<i></i>Low Stock &mdash; ' + avail + ' available';
+      stockEl.innerHTML = '<i></i>' + t('Low Stock') + ' &mdash; ' + avail + ' ' + t('available');
     } else {
-      stockEl.innerHTML = '<i></i>In Stock &mdash; ' + avail + ' available';
+      stockEl.innerHTML = '<i></i>' + t('In Stock') + ' &mdash; ' + avail + ' ' + t('available');
     }
   }
 
@@ -910,15 +910,15 @@
         return (
           '<article class="card" style="--d:' + i + '">' +
             '<a href="product.html?id=' + p.id + '" class="card__mediaLink">' +
-              '<div class="card__media"><img src="' + p.img + '" alt="' + p.name + '" loading="lazy"></div>' +
+              '<div class="card__media"><img src="' + p.img + '" alt="' + pName(p) + '" loading="lazy"></div>' +
             '</a>' +
             '<a href="product.html?id=' + p.id + '" class="card__link">' +
-              '<p class="card__brand">' + p.brand + '</p>' +
-              '<h3 class="card__name">' + p.name + '</h3>' +
+              '<p class="card__brand">' + pBrand(p) + '</p>' +
+              '<h3 class="card__name">' + pName(p) + '</h3>' +
             '</a>' +
-            '<p class="card__type">' + p.type + '</p>' +
+            '<p class="card__type">' + t(p.type) + '</p>' +
             '<p class="card__rating">' + p.rating + ' <i>(' + p.reviews + ')</i></p>' +
-            '<p class="card__price">EGP <span class="roll" data-value="' + p.price + '">0</span></p>' +
+            '<p class="card__price">' + t('EGP') + ' <span class="roll" data-value="' + p.price + '">0</span></p>' +
           '</article>'
         );
       }).join('');
