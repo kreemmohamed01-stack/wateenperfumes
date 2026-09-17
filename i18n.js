@@ -738,14 +738,10 @@
   window.setLang = setLang;
 
   function buildSwitcher() {
-    var label = window.LANG === 'ar' ? 'EN' : 'ع';
+    var label = window.LANG === 'ar' ? 'EN' : 'AR';
     var title = window.LANG === 'ar' ? 'English' : 'العربية';
     var html =
       '<button class="langBtn" type="button" aria-label="' + title + '" title="' + title + '">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">' +
-          '<circle cx="12" cy="12" r="9"/>' +
-          '<path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18" stroke-linecap="round"/>' +
-        '</svg>' +
         '<b>' + label + '</b>' +
       '</button>';
 

@@ -102,19 +102,18 @@ html.is-ar .hero__line{ font-weight:900; }
 .langSlot{ display:inline-flex; align-items:center; margin:0 18px; }
 .langBtn{
   position:relative;
-  display:inline-flex; align-items:center; gap:7px;
-  padding:7px 14px 7px 12px;
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:7px 15px;
   border:1px solid rgba(185,139,82,.35);
   border-radius:999px;
   background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.8), 0 6px 14px -10px rgba(94,68,40,.45);
   color:var(--ink-soft);
-  font-size:11px; font-weight:500; line-height:1; letter-spacing:.02em;
+  font-size:11px; font-weight:500; line-height:1;
   transition:border-color .2s var(--ease), color .2s var(--ease),
              background .2s var(--ease), box-shadow .2s var(--ease), transform .15s var(--ease);
 }
-.langBtn svg{ width:14px; height:14px; flex:0 0 auto; color:var(--gold-deep); }
-.langBtn b{ font-weight:700; font-size:11px; letter-spacing:.06em; color:var(--ink); }
+.langBtn b{ font-weight:700; font-size:11px; letter-spacing:.08em; color:var(--ink); }
 .langBtn:hover{
   border-color:var(--gold);
   color:var(--gold-deep);
