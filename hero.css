@@ -713,34 +713,39 @@ a{ text-decoration:none; color:inherit; }
   color:var(--ink-soft);
 }
 
-/* ---- signature credit line at the very bottom of the drawer ---- */
+/* ---- signature credit line at the very bottom of the drawer ----
+   The drawer background is light, so unlike the dark footer strip this
+   glass plaque runs on a dark tint of its own — otherwise white "Powered
+   by" text would disappear against the cream panel. */
 .drawer__credit{
   display:inline-flex;
   align-items:center;
-  gap:6px;
-  margin-top:16px;
-  padding-top:14px;
-  border-top:1px solid rgba(58,50,42,.12);
+  gap:8px;
+  margin-top:18px;
+  padding:9px 18px;
+  border-radius:999px;
+  background:linear-gradient(180deg, rgba(35,28,20,.92), rgba(20,16,12,.92));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08), 0 8px 18px -12px rgba(30,20,10,.5);
 }
 .drawer__credit__star{ color:var(--gold); font-size:8px; }
 .drawer__credit__label{
   font-family:'Cormorant Garamond', serif;
-  font-style:italic;
-  font-size:10px;
-  letter-spacing:.18em;
+  font-style:normal;
+  font-size:10.5px;
+  letter-spacing:.16em;
   text-transform:uppercase;
-  color:var(--ink-soft);
+  color:#fff;
 }
 .drawer__credit__name{
   font-family:'Cormorant Garamond', serif;
   font-weight:600;
-  font-size:12px;
+  font-size:12.5px;
   letter-spacing:.16em;
-  background:linear-gradient(120deg, var(--gold-deep), var(--gold) 50%, var(--gold-deep));
+  background:linear-gradient(120deg, var(--gold-light), #fff5e0 50%, var(--gold-light));
   -webkit-background-clip:text;
   background-clip:text;
-  -webkit-text-fill-color:var(--gold-deep);
-  color:var(--gold-deep);
+  -webkit-text-fill-color:var(--gold-light);
+  color:var(--gold-light);
   transition:letter-spacing .22s var(--ease);
 }
 .drawer__credit:hover .drawer__credit__name{ letter-spacing:.22em; }
@@ -3360,13 +3365,14 @@ a{ text-decoration:none; color:inherit; }
 }
 
 /* ---- "powered by" credit strip ----
-   Thin, wide-tracked type on both halves reads as a quiet signature line
-   rather than a UI label; the star is the only ornament, echoing the gold
-   accents used elsewhere in the footer/nav. */
+   The line sits inside its own glass capsule so it reads as a deliberate
+   signature plaque rather than a plain footer caption; "Powered by" is
+   solid white for legibility against the dark footer, "Kreem Aly" keeps
+   the gold-gradient treatment as the accent. */
 .madeby{
   position:relative;
   z-index:2;
-  padding:16px 0;
+  padding:22px 0;
   text-align:center;
   background:#14100c;
 }
@@ -3374,14 +3380,23 @@ a{ text-decoration:none; color:inherit; }
   margin:0;
   display:inline-flex;
   align-items:center;
-  gap:8px;
+  gap:9px;
+  padding:10px 22px;
+  border-radius:999px;
+  background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 8px 20px -14px rgba(0,0,0,.6);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
   font-family:'Cormorant Garamond', serif;
-  font-size:12px;
-  letter-spacing:.24em;
+  font-size:12.5px;
+  letter-spacing:.2em;
   font-weight:400;
-  font-style:italic;
-  color:rgba(232,221,205,.4);
+  font-style:normal;
   text-transform:uppercase;
+}
+.madeby__label{
+  color:#fff;
 }
 .madeby__star{
   color:var(--gold);
@@ -3395,7 +3410,7 @@ a{ text-decoration:none; color:inherit; }
   font-family:'Cormorant Garamond', serif;
   font-style:normal;
   font-weight:600;
-  font-size:13px;
+  font-size:13.5px;
   letter-spacing:.2em;
   background:linear-gradient(120deg, var(--gold-light), #fff5e0 45%, var(--gold-light));
   -webkit-background-clip:text;
