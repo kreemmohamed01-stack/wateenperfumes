@@ -59,8 +59,8 @@
 
     if (!cart.length) {
       wrap.innerHTML =
-        '<p class="coEmpty">Your cart is empty.<br>' +
-        '<a href="shop.html">Browse the collection</a></p>';
+        '<p class="coEmpty">' + t('Your cart is empty.') + '<br>' +
+        '<a href="shop.html">' + t('Browse the collection') + '</a></p>';
       return;
     }
 
@@ -69,20 +69,20 @@
       if (!p) return '';
       return (
         '<div class="coItem" data-id="' + p.id + '">' +
-          '<div class="coItem__media"><img src="' + p.img + '" alt="' + p.name + '"></div>' +
+          '<div class="coItem__media"><img src="' + p.img + '" alt="' + pName(p) + '"></div>' +
           '<div class="coItem__body">' +
-            '<h3 class="coItem__name">' + p.name + '</h3>' +
-            '<p class="coItem__meta">' + p.type + ' · ' + p.size + '</p>' +
+            '<h3 class="coItem__name">' + pName(p) + '</h3>' +
+            '<p class="coItem__meta">' + t(p.type) + ' · ' + t(p.size) + '</p>' +
             '<div class="coItem__foot">' +
               '<span class="coQty">' +
                 '<button type="button" data-act="dec" aria-label="Decrease quantity">−</button>' +
                 '<span>' + line.qty + '</span>' +
                 '<button type="button" data-act="inc" aria-label="Increase quantity">+</button>' +
               '</span>' +
-              '<span class="coItem__price">' + fmt(p.price * line.qty) + ' EGP</span>' +
+              '<span class="coItem__price">' + fmt(p.price * line.qty) + ' ' + t('EGP') + '</span>' +
             '</div>' +
           '</div>' +
-          '<button type="button" class="coItem__x" data-act="remove" aria-label="Remove ' + p.name + '">' +
+          '<button type="button" class="coItem__x" data-act="remove" aria-label="Remove ' + pName(p) + '">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
               '<path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>' +
             '</svg>' +
@@ -130,32 +130,36 @@
   }
 
   function renderTotals() {
-    var t = totals();
+    // named "tot" rather than "t" so it doesn't shadow the global translator
+    var tot = totals();
+    var egp = t('EGP');
+    var itemWord = isAr() ? 'عنصر' : (tot.count === 1 ? 'item' : 'items');
 
-    $('coCount').textContent    = '(' + t.count + ' item' + (t.count === 1 ? '' : 's') + ')';
-    $('coSubtotal').textContent = fmt(t.subtotal) + ' EGP';
-    $('coShipping').textContent = t.shipping === 0 ? 'FREE' : fmt(t.shipping) + ' EGP';
-    $('coDiscount').textContent = '- ' + fmt(t.discount) + ' EGP';
-    $('coTotal').textContent    = fmt(t.total) + ' EGP';
+    $('coCount').textContent    = '(' + tot.count + ' ' + itemWord + ')';
+    $('coSubtotal').textContent = fmt(tot.subtotal) + ' ' + egp;
+    $('coShipping').textContent = tot.shipping === 0 ? t('FREE') : fmt(tot.shipping) + ' ' + egp;
+    $('coDiscount').textContent = '- ' + fmt(tot.discount) + ' ' + egp;
+    $('coTotal').textContent    = fmt(tot.total) + ' ' + egp;
 
     // the shipping option mirrors whatever the order currently qualifies for
     var shipPrice = $('coShipPrice');
-    if (shipPrice) shipPrice.textContent = t.shipping === 0 ? 'FREE' : fmt(t.shipping) + ' EGP';
+    if (shipPrice) shipPrice.textContent = tot.shipping === 0 ? t('FREE') : fmt(tot.shipping) + ' ' + egp;
 
     // shipping is watches-free / perfume-flat-by-governorate now, not a
     // subtotal threshold — the progress bar no longer applies
     var noteTitle = $('coShipNoteTitle');
     var noteAway = $('coShipAway');
     if (noteTitle && noteAway) {
-      if (!t.hasNonWatch && t.count > 0) {
-        noteTitle.textContent = 'FREE SHIPPING ON WATCHES';
-        noteAway.textContent = 'Applied to this order.';
-      } else if (t.hasNonWatch) {
+      if (!tot.hasNonWatch && tot.count > 0) {
+        noteTitle.textContent = t('FREE SHIPPING ON WATCHES');
+        noteAway.textContent = t('Applied to this order.');
+      } else if (tot.hasNonWatch) {
         var gov = ($('coGov') && $('coGov').value) || '';
-        noteTitle.textContent = 'PERFUME SHIPPING: ' + fmt(perfumeShippingFee()) + ' EGP';
-        noteAway.textContent = gov ? ('Rate for ' + gov + '.') : 'Select your governorate for the exact rate.';
+        var govLabel = gov ? t(gov) : '';
+        noteTitle.textContent = t('PERFUME SHIPPING:') + ' ' + fmt(perfumeShippingFee()) + ' ' + egp;
+        noteAway.textContent = gov ? (t('Rate for') + ' ' + govLabel + '.') : t('Select your governorate for the exact rate.');
       } else {
-        noteTitle.textContent = 'FREE SHIPPING ON WATCHES';
+        noteTitle.textContent = t('FREE SHIPPING ON WATCHES');
         noteAway.textContent = '';
       }
     }
@@ -165,7 +169,7 @@
 
     // the InstaPay panel quotes the exact amount to transfer
     var payAmount = $('coPayAmount');
-    if (payAmount) payAmount.textContent = fmt(t.total) + ' EGP';
+    if (payAmount) payAmount.textContent = fmt(tot.total) + ' ' + egp;
   }
 
   function render() {
@@ -221,37 +225,37 @@
       out.classList.remove('is-ok', 'is-bad');
 
       if (!code) {
-        out.textContent = 'Enter a code first.';
+        out.textContent = t('Enter a code first.');
         out.classList.add('is-on', 'is-bad');
         return;
       }
 
-      var t = totals();
+      var tot = totals();
       var productIds = cart.map(function (line) { var p = findProduct(line.id); return p ? p.dbId : null; }).filter(Boolean);
 
       promoBtn.disabled = true;
       fetch('/api/public/coupons/validate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: code, subtotal: t.subtotal, productIds: productIds })
+        body: JSON.stringify({ code: code, subtotal: tot.subtotal, productIds: productIds })
       })
         .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
         .then(function (result) {
           promoBtn.disabled = false;
           if (!result.ok) {
             promo = null;
-            out.textContent = result.data.error || 'That code is not valid.';
+            out.textContent = result.data.error || t('That code is not valid.');
             out.classList.add('is-on', 'is-bad');
             renderTotals();
             return;
           }
           promo = result.data;
-          out.textContent = code + ' applied — ' + promo.label + '.';
+          out.textContent = code + ' ' + t('applied —') + ' ' + promo.label + '.';
           out.classList.add('is-on', 'is-ok');
           renderTotals();
         })
         .catch(function () {
           promoBtn.disabled = false;
-          out.textContent = 'Could not check that code — try again.';
+          out.textContent = t('Could not check that code — try again.');
           out.classList.add('is-on', 'is-bad');
         });
     });
@@ -387,19 +391,19 @@
     if (!el) return true;
     var val = (el.value || '').trim();
 
-    if (!val) { setError(id, 'This field is required.'); return false; }
+    if (!val) { setError(id, t('This field is required.')); return false; }
 
     if ((id === 'coPhone' || id === 'coInstaFrom') && val.replace(/\D/g, '').length < 10) {
-      setError(id, 'Enter a valid phone number.'); return false;
+      setError(id, t('Enter a valid phone number.')); return false;
     }
     if (id === 'coCardNum' && val.replace(/\D/g, '').length !== 16) {
-      setError(id, 'Enter the 16-digit card number.'); return false;
+      setError(id, t('Enter the 16-digit card number.')); return false;
     }
     if (id === 'coCardExp' && !/^\d{2}\s?\/\s?\d{2}$/.test(val)) {
-      setError(id, 'Use MM / YY.'); return false;
+      setError(id, t('Use MM / YY.')); return false;
     }
     if (id === 'coCardCvc' && val.length < 3) {
-      setError(id, 'Enter the 3-digit code.'); return false;
+      setError(id, t('Enter the 3-digit code.')); return false;
     }
 
     setError(id, '');
@@ -423,13 +427,15 @@
 
   /* ---------- receipt ---------- */
 
-  var PAY_LABEL = {
-    cod:      'Cash on Delivery',
-    instapay: 'InstaPay',
-    card:     'Credit / Debit Card'
-  };
+  function payLabel(method) {
+    if (method === 'cod') return t('Cash on Delivery');
+    if (method === 'instapay') return t('InstaPay');
+    if (method === 'card') return t('Credit / Debit Card');
+    return method;
+  }
 
-  function buildReceipt(num, method, t, lines) {
+  // "tot" rather than "t" so it doesn't shadow the global translator
+  function buildReceipt(num, method, tot, lines) {
     $('coRcNum').textContent = '#' + num;
 
     $('coRcDate').textContent = new Date().toLocaleString('en-GB', {
@@ -437,16 +443,16 @@
       hour: '2-digit', minute: '2-digit'
     });
 
-    $('coRcPay').textContent = PAY_LABEL[method] || method;
+    $('coRcPay').textContent = payLabel(method);
 
     // each method carries its own reference line
     var refRow = $('coRcRefRow');
     if (method === 'instapay') {
-      $('coRcRefLabel').textContent = 'Paid From';
+      $('coRcRefLabel').textContent = t('Paid From');
       $('coRcRef').textContent = ($('coInstaFrom').value || '').trim();
       refRow.hidden = false;
     } else if (method === 'card') {
-      $('coRcRefLabel').textContent = 'Card';
+      $('coRcRefLabel').textContent = t('Card');
       var digits = ($('coCardNum').value || '').replace(/\D/g, '');
       // only ever the last four — the full number is never stored or shown
       $('coRcRef').textContent = digits ? '•••• •••• •••• ' + digits.slice(-4) : '—';
@@ -470,7 +476,7 @@
     $('coRcItems').innerHTML = lines.map(function (l) {
       return (
         '<tr>' +
-          '<td>' + l.name + '<i>' + l.brand + ' · ' + l.size + '</i></td>' +
+          '<td>' + l.displayName + '<i>' + l.displayBrand + ' · ' + t(l.size) + '</i></td>' +
           '<td>' + l.qty + '</td>' +
           '<td>' + fmt(l.price * l.qty) + '</td>' +
         '</tr>'
@@ -478,27 +484,28 @@
     }).join('');
 
     // money
+    var egp = t('EGP');
     var sums = [
-      '<p><span>Subtotal</span><b>' + fmt(t.subtotal) + ' EGP</b></p>',
-      '<p><span>Shipping</span><b>' + (t.shipping === 0 ? 'FREE' : fmt(t.shipping) + ' EGP') + '</b></p>'
+      '<p><span>' + t('Subtotal') + '</span><b>' + fmt(tot.subtotal) + ' ' + egp + '</b></p>',
+      '<p><span>' + t('Shipping') + '</span><b>' + (tot.shipping === 0 ? t('FREE') : fmt(tot.shipping) + ' ' + egp) + '</b></p>'
     ];
-    if (t.discount > 0) {
-      sums.push('<p><span>Discount</span><b>- ' + fmt(t.discount) + ' EGP</b></p>');
+    if (tot.discount > 0) {
+      sums.push('<p><span>' + t('Discount') + '</span><b>- ' + fmt(tot.discount) + ' ' + egp + '</b></p>');
     }
     $('coRcSums').innerHTML = sums.join('');
-    $('coRcTotal').textContent = fmt(t.total) + ' EGP';
+    $('coRcTotal').textContent = fmt(tot.total) + ' ' + egp;
 
     // a short line that says what actually happens next for this method
     var note = $('coRcNote');
     if (method === 'cod') {
-      note.innerHTML = '<b>Cash on Delivery:</b> please have ' + fmt(t.total) +
-        ' EGP ready when your order arrives.';
+      note.innerHTML = '<b>' + t('Cash on Delivery:') + '</b> ' + t('please have') + ' ' + fmt(tot.total) +
+        ' ' + egp + ' ' + t('ready when your order arrives.');
     } else if (method === 'instapay') {
-      note.innerHTML = '<b>InstaPay:</b> transfer ' + fmt(t.total) + ' EGP to ' +
-        '<b>01027380269</b>. Your order is confirmed once the transfer is received.';
+      note.innerHTML = '<b>' + t('InstaPay:') + '</b> ' + t('transfer') + ' ' + fmt(tot.total) + ' ' + egp + ' ' + t('to') + ' ' +
+        '<b>01027380269</b>. ' + t('Your order is confirmed once the transfer is received.');
     } else {
-      note.innerHTML = '<b>Card:</b> payment of ' + fmt(t.total) +
-        ' EGP was authorised for this order.';
+      note.innerHTML = '<b>' + t('Card:') + '</b> ' + t('payment of') + ' ' + fmt(tot.total) +
+        ' ' + egp + ' ' + t('was authorised for this order.');
     }
   }
 
@@ -557,12 +564,20 @@
       var snapshot = totals();
       var lines = cart.map(function (line) {
         var p = findProduct(line.id);
-        return p ? { name: p.name, brand: p.brand, size: p.size, qty: line.qty, price: p.price, productId: p.dbId, image: p.img } : null;
+        // "name"/"brand" stay in English for the order record sent to the
+        // backend (admin dashboard, WhatsApp notification, etc. all expect
+        // consistent English data); the on-screen receipt reads the
+        // language-aware copies below instead of these two fields
+        return p ? {
+          name: p.name, brand: p.brand, size: p.size, qty: line.qty, price: p.price,
+          productId: p.dbId, image: p.img,
+          displayName: pName(p), displayBrand: pBrand(p)
+        } : null;
       }).filter(Boolean);
 
       var place = $('coPlace');
       place.classList.add('is-busy');
-      place.querySelector('.coPlace__label').textContent = 'PLACING ORDER…';
+      place.querySelector('.coPlace__label').textContent = t('PLACING ORDER…');
 
       var orderPayload = {
         customer: {
@@ -594,7 +609,7 @@
         .then(function (result) {
           if (!result.ok) {
             place.classList.remove('is-busy');
-            place.querySelector('.coPlace__label').textContent = 'PLACE ORDER';
+            place.querySelector('.coPlace__label').textContent = t('PLACE ORDER');
             alert(result.data.error || 'Could not place your order — please try again.');
             return;
           }
@@ -613,7 +628,7 @@
         })
         .catch(function () {
           place.classList.remove('is-busy');
-          place.querySelector('.coPlace__label').textContent = 'PLACE ORDER';
+          place.querySelector('.coPlace__label').textContent = t('PLACE ORDER');
           alert('Could not reach the server — please check your connection and try again.');
         });
     });

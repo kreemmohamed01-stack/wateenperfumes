@@ -77,15 +77,18 @@
               </svg>
               <select id="coGov" name="governorate" required>
                 <option value="">Select governorate</option>
-                <option>Cairo</option><option>Giza</option><option>Alexandria</option>
-                <option>Qalyubia</option><option>Dakahlia</option><option>Sharqia</option>
-                <option>Gharbia</option><option>Monufia</option><option>Beheira</option>
-                <option>Kafr El Sheikh</option><option>Damietta</option><option>Port Said</option>
-                <option>Ismailia</option><option>Suez</option>
-                <option>Beni Suef</option><option>Faiyum</option>
-                <option>Minya</option><option>Asyut</option><option>Sohag</option>
-                <option>Qena</option><option>Luxor</option><option>Aswan</option>
-                <option>Red Sea</option>
+                <!-- value stays the fixed English governorate name (matched against
+                     shipping_rates_by_governorate and stored on the order) even
+                     when the visible label is translated to Arabic -->
+                <option value="Cairo">Cairo</option><option value="Giza">Giza</option><option value="Alexandria">Alexandria</option>
+                <option value="Qalyubia">Qalyubia</option><option value="Dakahlia">Dakahlia</option><option value="Sharqia">Sharqia</option>
+                <option value="Gharbia">Gharbia</option><option value="Monufia">Monufia</option><option value="Beheira">Beheira</option>
+                <option value="Kafr El Sheikh">Kafr El Sheikh</option><option value="Damietta">Damietta</option><option value="Port Said">Port Said</option>
+                <option value="Ismailia">Ismailia</option><option value="Suez">Suez</option>
+                <option value="Beni Suef">Beni Suef</option><option value="Faiyum">Faiyum</option>
+                <option value="Minya">Minya</option><option value="Asyut">Asyut</option><option value="Sohag">Sohag</option>
+                <option value="Qena">Qena</option><option value="Luxor">Luxor</option><option value="Aswan">Aswan</option>
+                <option value="Red Sea">Red Sea</option>
               </select>
               <svg class="coInput__caret" viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path d="M1 1.8 6 6.4l5-4.6" stroke-linecap="round" stroke-linejoin="round"/>

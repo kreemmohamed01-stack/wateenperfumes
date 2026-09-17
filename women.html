@@ -620,12 +620,16 @@
   function buildCheckGroup(containerId, items, countFn, stateKey) {
     var el = document.getElementById(containerId);
     if (!el) return;
+    // the checkbox's value/filter matching always stays keyed on the real
+    // English value; only scent-family labels are translated for display —
+    // brand names stay in Latin script, matching how they are shown everywhere else
+    var translateLabel = stateKey === 'families' ? tFamily : function (x) { return x; };
     el.innerHTML = items.map(function (item) {
       var count = countFn(item);
       return (
         '<label class="shopChk">' +
           '<input type="checkbox" value="' + item + '" data-filter="' + stateKey + '">' +
-          '<span>' + item + '</span><i>(' + count + ')</i>' +
+          '<span>' + translateLabel(item) + '</span><i>(' + count + ')</i>' +
         '</label>'
       );
     }).join('');
@@ -708,9 +712,9 @@
     if (!chips) return;
     var items = [];
     state.brands.forEach(function (v) { items.push({ key: 'brands', val: v, label: v }); });
-    state.families.forEach(function (v) { items.push({ key: 'families', val: v, label: v }); });
+    state.families.forEach(function (v) { items.push({ key: 'families', val: v, label: tFamily(v) }); });
     state.sizes.forEach(function (v) { items.push({ key: 'sizes', val: v, label: v }); });
-    if (state.maxPrice < maxPossiblePrice) items.push({ key: 'price', val: '', label: 'Up to ' + fmt(state.maxPrice) + ' EGP' });
+    if (state.maxPrice < maxPossiblePrice) items.push({ key: 'price', val: '', label: t('Up to') + ' ' + fmt(state.maxPrice) + ' ' + t('EGP') });
 
     chips.innerHTML = items.map(function (it) {
       return (
@@ -726,11 +730,11 @@
     var onSale = p.compareAtPrice && Number(p.compareAtPrice) > Number(p.price);
     var isLow = !!p.isLowStock;
     var badge = isLow
-      ? '<span class="card__badge card__badge--low">LOW STOCK</span>'
-      : (onSale ? '<span class="card__badge card__badge--sale">SALE</span>' : '');
+      ? '<span class="card__badge card__badge--low">' + t('LOW STOCK') + '</span>'
+      : (onSale ? '<span class="card__badge card__badge--sale">' + t('SALE') + '</span>' : '');
     var priceHtml = onSale
-      ? '<span class="card__priceNow">EGP ' + fmt(p.price) + '</span><span class="card__priceWas">EGP ' + fmt(p.compareAtPrice) + '</span>'
-      : 'EGP ' + fmt(p.price);
+      ? '<span class="card__priceNow">' + t('EGP') + ' ' + fmt(p.price) + '</span><span class="card__priceWas">' + t('EGP') + ' ' + fmt(p.compareAtPrice) + '</span>'
+      : t('EGP') + ' ' + fmt(p.price);
     return (
       '<article class="card" style="--d:' + (i % 4) + '" data-id="' + p.id + '">' +
         '<div class="card__media">' +
@@ -745,7 +749,7 @@
         '<p class="card__type">' + t(p.type) + '</p>' +
         '<p class="card__rating">' + p.rating + ' <i>(' + p.reviews + ')</i></p>' +
         '<p class="card__price' + (onSale ? ' card__price--sale' : '') + '">' + priceHtml + '</p>' +
-        '<div class="card__buy"><button class="add" data-add="' + p.id + '"><span class="add__fill"></span><span class="add__label">ADD TO CART</span></button></div>' +
+        '<div class="card__buy"><button class="add" data-add="' + p.id + '"><span class="add__fill"></span><span class="add__label">' + t('ADD TO CART') + '</span></button></div>' +
       '</article>'
     );
   }

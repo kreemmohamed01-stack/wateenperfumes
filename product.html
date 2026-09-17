@@ -775,7 +775,7 @@
   setText('pdNoteTop', product.notes.top);
   setText('pdNoteHeart', product.notes.heart);
   setText('pdNoteBase', product.notes.base);
-  setText('pdFamily', product.family);
+  setText('pdFamily', tFamily(product.family));
   setText('pdConcentration', t(product.type));
   setText('pdYear', product.year);
 
@@ -812,15 +812,15 @@
       return (
         '<article class="card" style="--d:' + i + '">' +
           '<a href="product.html?id=' + p.id + '" class="card__mediaLink">' +
-            '<div class="card__media"><img src="' + p.img + '" alt="' + p.name + '" loading="lazy"></div>' +
+            '<div class="card__media"><img src="' + p.img + '" alt="' + pName(p) + '" loading="lazy"></div>' +
           '</a>' +
           '<a href="product.html?id=' + p.id + '" class="card__link">' +
-            '<p class="card__brand">' + p.brand + '</p>' +
-            '<h3 class="card__name">' + p.name + '</h3>' +
+            '<p class="card__brand">' + pBrand(p) + '</p>' +
+            '<h3 class="card__name">' + pName(p) + '</h3>' +
           '</a>' +
-          '<p class="card__type">' + p.type + '</p>' +
+          '<p class="card__type">' + t(p.type) + '</p>' +
           '<p class="card__rating">' + p.rating + ' <i>(' + p.reviews + ')</i></p>' +
-          '<p class="card__price">EGP <span class="roll" data-value="' + p.price + '">0</span></p>' +
+          '<p class="card__price">' + t('EGP') + ' <span class="roll" data-value="' + p.price + '">0</span></p>' +
         '</article>'
       );
     }).join('');

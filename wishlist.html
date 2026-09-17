@@ -552,17 +552,17 @@
             '</button>' +
             '<div class="wlCard__media">' +
               '<span class="wlCard__ribbon">' + p.family + '</span>' +
-              '<a href="product.html?id=' + p.id + '"><img src="' + p.img + '" alt="' + p.name + '"></a>' +
+              '<a href="product.html?id=' + p.id + '"><img src="' + p.img + '" alt="' + pName(p) + '"></a>' +
             '</div>' +
             '<div class="wlCard__body">' +
-              '<p class="wlCard__brand">' + p.brand + '</p>' +
-              '<h3 class="wlCard__name"><a href="product.html?id=' + p.id + '">' + p.name + '</a></h3>' +
-              '<p class="wlCard__type">' + p.type + '</p>' +
+              '<p class="wlCard__brand">' + pBrand(p) + '</p>' +
+              '<h3 class="wlCard__name"><a href="product.html?id=' + p.id + '">' + pName(p) + '</a></h3>' +
+              '<p class="wlCard__type">' + t(p.type) + '</p>' +
               '<p class="wlCard__rating">' + p.rating + ' <i>(' + p.reviews + ')</i></p>' +
-              '<p class="wlCard__price">EGP ' + fmt(p.price) + '</p>' +
+              '<p class="wlCard__price">' + t('EGP') + ' ' + fmt(p.price) + '</p>' +
               '<div class="wlCard__buy">' +
                 '<button class="add" data-add="' + p.id + '">' +
-                  '<span class="add__fill"></span><span class="add__label">ADD TO CART</span>' +
+                  '<span class="add__fill"></span><span class="add__label">' + t('ADD TO CART') + '</span>' +
                 '</button>' +
               '</div>' +
             '</div>' +

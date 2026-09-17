@@ -557,15 +557,15 @@
       var onSale = p.compareAtPrice && Number(p.compareAtPrice) > Number(p.price);
       var isLow = !!p.isLowStock;
       var cornerBadge = isLow
-        ? '<span class="card__badge card__badge--low" style="left:auto;right:10px;top:auto;bottom:10px">LOW STOCK</span>'
-        : (onSale ? '<span class="card__badge card__badge--sale" style="top:auto;bottom:10px">SALE</span>' : '');
+        ? '<span class="card__badge card__badge--low" style="left:auto;right:10px;top:auto;bottom:10px">' + t('LOW STOCK') + '</span>'
+        : (onSale ? '<span class="card__badge card__badge--sale" style="top:auto;bottom:10px">' + t('SALE') + '</span>' : '');
       var priceHtml = onSale
-        ? '<span class="card__priceNow">EGP <span class="roll" data-value="' + p.price + '">0</span></span><span class="card__priceWas">EGP ' + Number(p.compareAtPrice).toLocaleString('en-US') + '</span>'
-        : 'EGP <span class="roll" data-value="' + p.price + '">0</span>';
+        ? '<span class="card__priceNow">' + t('EGP') + ' <span class="roll" data-value="' + p.price + '">0</span></span><span class="card__priceWas">' + t('EGP') + ' ' + Number(p.compareAtPrice).toLocaleString('en-US') + '</span>'
+        : t('EGP') + ' <span class="roll" data-value="' + p.price + '">0</span>';
       return (
         '<article class="card" style="--d:' + (i % 4) + '" data-id="' + p.id + '">' +
           '<div class="card__media">' +
-            '<span class="card__badge">BEST SELLER</span>' +
+            '<span class="card__badge">' + t('BEST SELLER') + '</span>' +
             cornerBadge +
             '<img src="' + p.img + '" alt="' + pName(p) + '" loading="lazy">' +
           '</div>' +
@@ -580,7 +580,7 @@
                 '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">' +
                   '<path d="M4.5 7.5h15l-1.2 12.2a1.6 1.6 0 0 1-1.6 1.4H7.3a1.6 1.6 0 0 1-1.6-1.4L4.5 7.5Z" stroke-linejoin="round"/>' +
                   '<path d="M8.8 10V6.6a3.2 3.2 0 0 1 6.4 0V10" stroke-linecap="round"/>' +
-                '</svg>ADD TO CART</span>' +
+                '</svg>' + t('ADD TO CART') + '</span>' +
             '</button>' +
             '<button class="wish" aria-label="Add to wishlist">' +
               '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">' +
@@ -692,7 +692,7 @@
           '<div class="cartd__itemInfo">' +
             '<b>' + pBrand(p) + '</b>' +
             '<i>' + pName(p) + '</i>' +
-            '<i>EDP &middot; ' + p.size + '</i>' +
+            '<i>' + t(p.type) + ' &middot; ' + t(p.size) + '</i>' +
             '<div class="cartd__qty">' +
               '<button type="button" data-act="dec" aria-label="Decrease quantity">&minus;</button>' +
               '<span>' + line.qty + '</span>' +
@@ -703,7 +703,7 @@
             '<button class="cartd__itemRemove" data-act="remove" aria-label="Remove item">' +
               '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/></svg>' +
             '</button>' +
-            '<span class="cartd__itemPrice">' + fmt(p.price * line.qty) + ' EGP</span>' +
+            '<span class="cartd__itemPrice">' + fmt(p.price * line.qty) + ' ' + t('EGP') + '</span>' +
           '</div>' +
         '</div>'
       );
@@ -717,8 +717,8 @@
 
     if (shipMsg) {
       shipMsg.innerHTML = remaining > 0
-        ? 'Add <b>' + fmt(remaining) + ' EGP</b> more for free shipping'
-        : '<b>You’ve unlocked free shipping!</b>';
+        ? t('Add') + ' <b>' + fmt(remaining) + ' ' + t('EGP') + '</b> ' + t('more for free shipping')
+        : '<b>' + t('You’ve unlocked free shipping!') + '</b>';
     }
     if (shipFill) shipFill.style.width = Math.min((subtotal / FREE_SHIP_AT) * 100, 100) + '%';
     if (shipHave) shipHave.textContent = fmt(Math.min(subtotal, FREE_SHIP_AT));
@@ -726,9 +726,9 @@
     var subEl = document.getElementById('cartSubtotal');
     var feeEl = document.getElementById('cartShippingFee');
     var totalEl = document.getElementById('cartTotal');
-    if (subEl) subEl.textContent = fmt(subtotal) + ' EGP';
-    if (feeEl) feeEl.textContent = shipping === 0 ? 'FREE' : fmt(shipping) + ' EGP';
-    if (totalEl) totalEl.textContent = fmt(subtotal + shipping) + ' EGP';
+    if (subEl) subEl.textContent = fmt(subtotal) + ' ' + t('EGP');
+    if (feeEl) feeEl.textContent = shipping === 0 ? t('FREE') : fmt(shipping) + ' ' + t('EGP');
+    if (totalEl) totalEl.textContent = fmt(subtotal + shipping) + ' ' + t('EGP');
   }
 
   var itemsRoot = document.getElementById('cartItems');
@@ -870,11 +870,16 @@
     var product = nameEl ? findByName(nameEl.textContent) : null;
     if (!product) return;
     mini.setAttribute('href', 'product.html?id=' + product.id);
-    // the price printed in this rail card is hand-authored markup — always
-    // override it with the product's real live price so it can never drift
-    // from what the category page / checkout actually charges
+    // the brand/name/price printed in this rail card is hand-authored
+    // English markup — always override with the product's real live data
+    // (in whichever language is active) so it can never drift from what
+    // the category page / checkout actually charges, and reads correctly
+    // when the site is switched to Arabic
+    var brandEl = mini.querySelector('b');
+    if (brandEl) brandEl.textContent = pBrand(product);
+    nameEl.textContent = pName(product);
     var priceEl = mini.querySelector('i');
-    if (priceEl) priceEl.textContent = 'EGP ' + Number(product.price).toLocaleString('en-US');
+    if (priceEl) priceEl.textContent = t('EGP') + ' ' + Number(product.price).toLocaleString('en-US');
   });
 
 
@@ -1027,8 +1032,8 @@
       var addBtn = e.target.closest('.searchm__rowAdd');
       if (addBtn) {
         addToCart(addBtn.dataset.id, 1);
-        addBtn.textContent = 'ADDED ✓';
-        setTimeout(function () { addBtn.textContent = 'ADD TO CART'; }, 1200);
+        addBtn.textContent = t('ADDED ✓');
+        setTimeout(function () { addBtn.textContent = t('ADD TO CART'); }, 1200);
         return;
       }
       var wishBtn = e.target.closest('.searchm__rowWish');

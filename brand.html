@@ -623,11 +623,11 @@
     var onSale = p.compareAtPrice && Number(p.compareAtPrice) > Number(p.price);
     var isLow = !!p.isLowStock;
     var badge = isLow
-      ? '<span class="card__badge card__badge--low">LOW STOCK</span>'
-      : (onSale ? '<span class="card__badge card__badge--sale">SALE</span>' : '');
+      ? '<span class="card__badge card__badge--low">' + t('LOW STOCK') + '</span>'
+      : (onSale ? '<span class="card__badge card__badge--sale">' + t('SALE') + '</span>' : '');
     var priceHtml = onSale
-      ? '<span class="card__priceNow">EGP ' + fmt(p.price) + '</span><span class="card__priceWas">EGP ' + fmt(p.compareAtPrice) + '</span>'
-      : 'EGP ' + fmt(p.price);
+      ? '<span class="card__priceNow">' + t('EGP') + ' ' + fmt(p.price) + '</span><span class="card__priceWas">' + t('EGP') + ' ' + fmt(p.compareAtPrice) + '</span>'
+      : t('EGP') + ' ' + fmt(p.price);
     return (
       '<article class="card" style="--d:' + (i % 4) + '" data-id="' + p.id + '">' +
         '<div class="card__media">' +
@@ -642,7 +642,7 @@
         '<p class="card__type">' + t(p.type) + '</p>' +
         '<p class="card__rating">' + p.rating + ' <i>(' + p.reviews + ')</i></p>' +
         '<p class="card__price' + (onSale ? ' card__price--sale' : '') + '">' + priceHtml + '</p>' +
-        '<div class="card__buy"><button class="add" data-add="' + p.id + '"><span class="add__fill"></span><span class="add__label">ADD TO CART</span></button></div>' +
+        '<div class="card__buy"><button class="add" data-add="' + p.id + '"><span class="add__fill"></span><span class="add__label">' + t('ADD TO CART') + '</span></button></div>' +
       '</article>'
     );
   }
