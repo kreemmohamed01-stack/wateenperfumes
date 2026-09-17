@@ -713,6 +713,38 @@ a{ text-decoration:none; color:inherit; }
   color:var(--ink-soft);
 }
 
+/* ---- signature credit line at the very bottom of the drawer ---- */
+.drawer__credit{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid rgba(58,50,42,.12);
+}
+.drawer__credit__star{ color:var(--gold); font-size:8px; }
+.drawer__credit__label{
+  font-family:'Cormorant Garamond', serif;
+  font-style:italic;
+  font-size:10px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.drawer__credit__name{
+  font-family:'Cormorant Garamond', serif;
+  font-weight:600;
+  font-size:12px;
+  letter-spacing:.16em;
+  background:linear-gradient(120deg, var(--gold-deep), var(--gold) 50%, var(--gold-deep));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:var(--gold-deep);
+  color:var(--gold-deep);
+  transition:letter-spacing .22s var(--ease);
+}
+.drawer__credit:hover .drawer__credit__name{ letter-spacing:.22em; }
+
 @keyframes drawerIn{
   to{ opacity:1; transform:translateX(0); }
 }
@@ -3327,33 +3359,55 @@ a{ text-decoration:none; color:inherit; }
   box-shadow:0 8px 16px -8px rgba(60,42,26,.45);
 }
 
-/* ---- "powered by" credit strip ---- */
+/* ---- "powered by" credit strip ----
+   Thin, wide-tracked type on both halves reads as a quiet signature line
+   rather than a UI label; the star is the only ornament, echoing the gold
+   accents used elsewhere in the footer/nav. */
 .madeby{
   position:relative;
   z-index:2;
-  padding:14px 0;
+  padding:16px 0;
   text-align:center;
   background:#14100c;
 }
 .madeby p{
   margin:0;
-  font-size:10.5px;
-  letter-spacing:.14em;
-  font-weight:300;
-  color:rgba(232,221,205,.5);
-}
-.madeby a{
   display:inline-flex;
   align-items:center;
-  gap:6px;
-  margin-left:6px;
-  font-weight:500;
-  letter-spacing:.16em;
-  color:var(--gold-light);
-  transition:color .22s var(--ease), gap .22s var(--ease);
+  gap:8px;
+  font-family:'Cormorant Garamond', serif;
+  font-size:12px;
+  letter-spacing:.24em;
+  font-weight:400;
+  font-style:italic;
+  color:rgba(232,221,205,.4);
+  text-transform:uppercase;
 }
-.madeby a svg{ width:13px; height:13px; }
-.madeby a:hover{ color:var(--gold); gap:8px; }
+.madeby__star{
+  color:var(--gold);
+  font-size:9px;
+  font-style:normal;
+}
+.madeby a.madeby__name{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  font-family:'Cormorant Garamond', serif;
+  font-style:normal;
+  font-weight:600;
+  font-size:13px;
+  letter-spacing:.2em;
+  background:linear-gradient(120deg, var(--gold-light), #fff5e0 45%, var(--gold-light));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:var(--gold-light);
+  -webkit-text-fill-color:var(--gold-light);
+  transition:letter-spacing .25s var(--ease), -webkit-text-fill-color .25s var(--ease);
+}
+.madeby a.madeby__name:hover{
+  letter-spacing:.28em;
+  -webkit-text-fill-color:#fff5e0;
+}
 
 
 /* ════════════════════════════════════════════════
