@@ -91,7 +91,7 @@ function wrap(executor) {
           // adding RETURNING unconditionally would break UPDATE/DELETE and tables
           // without an "id" PK (product_categories, settings), so it's opt-in here.
           const isPlainInsert = /^\s*insert\s+into\s+(\w+)/i.test(text) && !/returning/i.test(text);
-          const noIdTable = /^\s*insert\s+into\s+(product_categories|settings|coupon_redemptions)\b/i.test(text);
+          const noIdTable = /^\s*insert\s+into\s+(product_categories|settings|coupon_redemptions|visitor_presence)\b/i.test(text);
           const finalText = (isPlainInsert && !noIdTable) ? text.replace(/;?\s*$/, ' RETURNING id') : text;
           const res = await executor.query(finalText, values);
           return { changes: res.rowCount, lastInsertRowid: res.rows[0] ? res.rows[0].id : undefined };

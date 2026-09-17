@@ -22,6 +22,7 @@ const settingsRoutes = require('./routes/settings');
 const overviewRoutes = require('./routes/overview');
 const publicCatalogRoutes = require('./routes/public-catalog');
 const staffRoutes = require('./routes/staff');
+const analyticsRoutes = require('./routes/analytics');
 
 const app = express();
 app.disable('x-powered-by');
@@ -38,7 +39,9 @@ app.post('/api/public/coupons/validate', (req, res, next) => couponRoutes.valida
 app.get('/api/public/coupons/featured', (req, res, next) => couponRoutes.featuredPublic(req, res, next));
 app.post('/api/public/reviews', (req, res, next) => reviewRoutes.submitPublic(req, res, next));
 
-/* ---------- admin API (auth required inside each router) ---------- */
+/* ---------- admin API (auth required inside each router) ----------
+   analytics is mounted here even though its /collect endpoint is public:
+   that one route opts out of auth itself, the rest require it. */
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
@@ -53,6 +56,7 @@ app.use('/api/activity', activityRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/overview', overviewRoutes);
 app.use('/api/staff', staffRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // locally (node server/server.js) this Express app also serves the static
 // site and uploaded images directly. On Vercel, static files and /admin are

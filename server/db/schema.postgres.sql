@@ -263,6 +263,36 @@ CREATE TABLE IF NOT EXISTS activity_log (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- ── visitor analytics ────────────────────────────────────────────
+-- One row per pageview from a visitor that passed the bot filter.
+-- visitor_id is a salted hash of IP + user-agent, never the raw IP,
+-- so repeat visits can be counted without storing anything that
+-- identifies a person.
+CREATE TABLE IF NOT EXISTS page_views (
+  id          BIGSERIAL PRIMARY KEY,
+  visitor_id  TEXT NOT NULL,
+  session_id  TEXT NOT NULL,
+  path        TEXT NOT NULL,
+  referrer    TEXT,
+  country     TEXT,
+  device      TEXT,
+  is_new      BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Last-seen heartbeat per visitor, used for the "online right now" count.
+-- One row per visitor, refreshed in place rather than appended.
+CREATE TABLE IF NOT EXISTS visitor_presence (
+  visitor_id  TEXT PRIMARY KEY,
+  path        TEXT,
+  last_seen   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_pv_created ON page_views(created_at);
+CREATE INDEX IF NOT EXISTS idx_pv_visitor ON page_views(visitor_id);
+CREATE INDEX IF NOT EXISTS idx_pv_session ON page_views(session_id);
+CREATE INDEX IF NOT EXISTS idx_presence_seen ON visitor_presence(last_seen);
+
 CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
 CREATE INDEX IF NOT EXISTS idx_products_brand ON products(brand_id);
 CREATE INDEX IF NOT EXISTS idx_variants_product ON product_variants(product_id);

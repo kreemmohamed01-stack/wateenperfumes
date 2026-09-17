@@ -18,7 +18,12 @@ window.PageOverview = async function () {
         <h2 class="hero__title">Welcome back, ${escapeHtml(firstName())}</h2>
         <p class="hero__sub">Here's what's happening with your store today.</p>
       </div>
-      <div class="hero__slogan">MORE THAN A FRAGRANCE<br>A BETTER YOU</div>
+      <div class="hero__acts">
+        <a href="#/analytics" class="livePill" id="overviewLivePill">
+          <span class="livePill__dot"></span>
+          <b id="overviewLiveCount">—</b> online now
+        </a>
+      </div>
     </div>
 
     <div class="kpiGrid" id="kpiGrid">${Array.from({length:5}).map(()=>'<div class="skeleton" style="height:126px;border-radius:14px"></div>').join('')}</div>
@@ -94,14 +99,18 @@ window.PageOverview = async function () {
 
   wireRevenueSeg();
 
-  const [kpis, series, recentOrders, topProducts, lowStock, statusCounts] = await Promise.all([
+  const [kpis, series, recentOrders, topProducts, lowStock, statusCounts, liveVisitors] = await Promise.all([
     api.get('/overview/kpis'),
     api.get('/overview/revenue-series?range=30d'),
     api.get('/overview/recent-orders'),
     api.get('/overview/top-products'),
     api.get('/overview/low-stock'),
-    api.getSilent('/overview/status-counts').catch(() => null)
+    api.getSilent('/overview/status-counts').catch(() => null),
+    api.getSilent('/analytics/live').catch(() => null)
   ]);
+
+  const liveEl = document.getElementById('overviewLiveCount');
+  if (liveEl) liveEl.textContent = liveVisitors ? fmtNumber(liveVisitors.online) : '0';
 
   renderKpis(kpis);
   renderRevenueChart(series);
