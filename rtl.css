@@ -60,24 +60,85 @@ html.is-ar .nav__cap--left{ padding-right:0; padding-left:70px; }
 html.is-ar .nav__cap--right{ padding-left:0; padding-right:70px; }
 html.is-ar .nav__tag{ text-align:right; }
 
-/* ---- the language button ---- */
-.langSlot{ display:inline-flex; align-items:center; }
-.langBtn{
-  display:inline-flex; align-items:center; gap:6px;
-  padding:7px 12px;
-  border:1px solid rgba(58,50,42,.18);
-  border-radius:20px;
-  background:transparent;
-  color:var(--ink);
-  font-size:11px; font-weight:500; line-height:1;
-  transition:border-color .18s var(--ease), color .18s var(--ease), background .18s var(--ease);
+/* ---- homepage hero: keep the English layout's exact positions ----
+   The hero's headline/subtitle sit on the left with the bottle art on the
+   right, and a vertical "SCENTS CREATE STORIES" strip is pinned to the
+   physical right edge with `right:`. Letting the browser's default RTL
+   reflow apply here pushes the headline into that same right-hand strip
+   and clips it — so this section is deliberately kept LTR-anchored even
+   in Arabic. Only the words change; nothing moves. */
+html.is-ar .hero__content{
+  direction:ltr;
+  text-align:left;
 }
-.langBtn svg{ width:14px; height:14px; flex:0 0 auto; }
-.langBtn b{ font-weight:600; font-size:11.5px; }
-.langBtn:hover{ border-color:var(--gold); color:var(--gold-deep); background:rgba(185,139,82,.06); }
-.nav__pill--mob .langSlot .langBtn{ border:0; padding:6px 8px; }
-.coHead__inner .langSlot{ margin-inline-end:14px; }
-@media (max-width:1180px){ .nav__cur + .langSlot, .langSlot{ margin:0 2px; } }
+html.is-ar .hero__title,
+html.is-ar .hero__sub{
+  direction:rtl;
+  text-align:right;
+  unicode-bidi:isolate;
+}
+/* .hero__eyebrow is itself a flex row (rule line + text): keep the row's
+   own direction ltr so "flex-start" still means the physical left edge,
+   and only flip direction on the text run inside it — otherwise the whole
+   row (and the text with it) jumps to the box's right edge instead of
+   just having its Arabic characters shape correctly */
+html.is-ar .hero__eyebrow{ direction:ltr; justify-content:flex-start; }
+html.is-ar .hero__eyebrowText{ direction:rtl; unicode-bidi:isolate; }
+/* Arabic headline words are much shorter than "A FEELING" / "THAT STAYS",
+   so without a width cap the block (and text-align:right inside it)
+   stretches across the whole content column and reads as pinned to the
+   far right, colliding with the vertical strip. Cap it to roughly the
+   width the English line naturally occupies. */
+html.is-ar .hero__title{ max-width:640px; }
+/* the English headline is a light-touch serif that relies on huge scale for
+   presence; Arabic script needs real weight to read clearly over a busy
+   photo background, so the translated headline goes as heavy as the font
+   allows rather than keeping the English weight */
+html.is-ar .hero__line{ font-weight:900; }
+
+/* ---- the language button: a small gold-rimmed glass pill that sits
+   right beside the nav links, echoing the same capsule language as the
+   search/wishlist/cart icon pill next to it ---- */
+.langSlot{ display:inline-flex; align-items:center; margin:0 18px; }
+.langBtn{
+  position:relative;
+  display:inline-flex; align-items:center; gap:7px;
+  padding:7px 14px 7px 12px;
+  border:1px solid rgba(185,139,82,.35);
+  border-radius:999px;
+  background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8), 0 6px 14px -10px rgba(94,68,40,.45);
+  color:var(--ink-soft);
+  font-size:11px; font-weight:500; line-height:1; letter-spacing:.02em;
+  transition:border-color .2s var(--ease), color .2s var(--ease),
+             background .2s var(--ease), box-shadow .2s var(--ease), transform .15s var(--ease);
+}
+.langBtn svg{ width:14px; height:14px; flex:0 0 auto; color:var(--gold-deep); }
+.langBtn b{ font-weight:700; font-size:11px; letter-spacing:.06em; color:var(--ink); }
+.langBtn:hover{
+  border-color:var(--gold);
+  color:var(--gold-deep);
+  background:linear-gradient(180deg, #fff, rgba(247,223,160,.28));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 10px 20px -12px rgba(185,139,82,.55);
+  transform:translateY(-1px);
+}
+.langBtn:hover b{ color:var(--gold-deep); }
+.langBtn:active{ transform:translateY(0); }
+
+/* on the plain opaque navbars (product/category pages, scrolled state) the
+   glass tint would look chalky against solid white, so keep it as a crisp
+   gold-line outline there instead */
+body.product-page .langBtn,
+body.cat-page .langBtn,
+.nav.is-stuck .langBtn{
+  background:#fff;
+  box-shadow:none;
+}
+
+.nav__pill--mob .langSlot .langBtn{ border-color:rgba(58,50,42,.18); padding:6px 10px; background:transparent; box-shadow:none; }
+.nav__pill--mob .langSlot{ margin:0 4px; }
+.coHead__inner .langSlot{ margin-inline-end:14px; margin-inline-start:0; }
+@media (max-width:1180px){ .langSlot{ margin:0 8px; } }
 
 /* ---- directional icons: arrows should point the way the text reads ---- */
 html.is-ar .btn__arrow,

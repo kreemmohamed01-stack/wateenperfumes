@@ -742,17 +742,24 @@
     var title = window.LANG === 'ar' ? 'English' : 'العربية';
     var html =
       '<button class="langBtn" type="button" aria-label="' + title + '" title="' + title + '">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">' +
           '<circle cx="12" cy="12" r="9"/>' +
           '<path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18" stroke-linecap="round"/>' +
         '</svg>' +
         '<b>' + label + '</b>' +
       '</button>';
 
-    // desktop: next to the currency button. mobile: in the icon pill.
+    // desktop: right beside the nav menu links, before the search/cart icons.
+    // mobile: in the icon pill next to search/wishlist/cart.
     var slots = [];
-    var cur = document.querySelector('.nav__cur');
-    if (cur && cur.parentNode) slots.push({ parent: cur.parentNode, before: cur });
+    var navLinksRight = document.querySelector('.nav__cap--right .nav__links');
+    var pill = document.querySelector('.nav__cap--right .nav__pill');
+    if (navLinksRight && navLinksRight.parentNode && pill) {
+      slots.push({ parent: navLinksRight.parentNode, before: pill });
+    } else {
+      var cur = document.querySelector('.nav__cur');
+      if (cur && cur.parentNode) slots.push({ parent: cur.parentNode, before: cur });
+    }
     var mobPill = document.querySelector('.nav__pill--mob');
     if (mobPill) slots.push({ parent: mobPill, before: null });
     // checkout has its own slim header

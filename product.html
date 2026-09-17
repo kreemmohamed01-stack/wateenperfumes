@@ -6,7 +6,7 @@
 <title>Shuhrah — RASASI | Wateen Perfumes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="hero.css">
 <link rel="stylesheet" href="product.css">
 <link rel="stylesheet" href="rtl.css">
@@ -771,7 +771,9 @@
   }
 
   // ---- about / notes / details ----
-  setText('pdAboutText', product.desc + ' ' + product.brand + '’s ' + product.name + ' is crafted for those who value luxury and individuality.');
+  setText('pdAboutText', isAr()
+    ? pDesc(product) + ' ' + pName(product) + ' من ' + pBrand(product) + '، صُنع لمن يقدّرون الفخامة والتفرّد.'
+    : product.desc + ' ' + product.brand + '’s ' + product.name + ' is crafted for those who value luxury and individuality.');
   setText('pdNoteTop', product.notes.top);
   setText('pdNoteHeart', product.notes.heart);
   setText('pdNoteBase', product.notes.base);
