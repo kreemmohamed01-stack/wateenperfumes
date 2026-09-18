@@ -716,6 +716,7 @@
     { src: product.img, label: 'main photo' },
     { src: product.img2 || product.img, label: 'second photo' }
   ];
+  if (product.img3) thumbSrcs.push({ src: product.img3, label: 'third photo' });
   var thumbsEl = document.getElementById('pdThumbs');
   if (thumbsEl) {
     // named "th" rather than "t" so it doesn't shadow the global translator

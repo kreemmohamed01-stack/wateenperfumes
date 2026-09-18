@@ -1559,6 +1559,548 @@ var CATALOG = [
     tag: 'CLASSIC<br>PRECISE<br>TIMELESS'
   },
 
+  /* ---- ACCESSORIES ---- */
+  {
+    id: 'wateen-gold-wire-wrap-ring', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Wire Wrap Ring', nameAr: 'خاتم الأسلاك الذهبية', type: 'Ring',
+    size: 'One Size', sizes: ['One Size'],
+    price: 100, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/gold-wire-wrap-ring.png', img2: 'assets/accessories/gold-wire-wrap-ring-2.jpeg', img3: 'assets/accessories/gold-wire-wrap-ring-3.jpeg',
+    desc: 'A gold-tone wire-wrapped ring with an artful, hand-woven texture — sculptural, light, and endlessly wearable.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-gold-wire-wrap-ring',
+    tag: 'SCULPTURAL<br>HANDCRAFTED<br>GOLD'
+  },
+  {
+    id: 'wateen-open-wire-ring', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Open Wire Ring', nameAr: 'خاتم الأسلاك المفتوح', type: 'Ring',
+    size: 'One Size', sizes: ['One Size'],
+    price: 100, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/gold-open-wire-ring.png', img2: 'assets/accessories/gold-open-wire-ring.png',
+    desc: 'A polished open-cuff ring in warm gold tones, with a ribbed swirl that catches the light from every angle.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-open-wire-ring',
+    tag: 'BOLD<br>POLISHED<br>MODERN'
+  },
+  {
+    id: 'wateen-twin-wire-rings', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Twin Ribbed Rings', nameAr: 'خاتمان مضلعان', type: 'Ring',
+    size: 'One Size', sizes: ['One Size'],
+    price: 100, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/twin-gold-wire-rings.png', img2: 'assets/accessories/twin-gold-wire-rings.png',
+    desc: 'A pair of finely ribbed gold-tone rings, designed to be stacked or worn solo for a subtle statement.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-twin-wire-rings',
+    tag: 'STACKABLE<br>RIBBED<br>ELEGANT'
+  },
+  {
+    id: 'wateen-braided-cuff-ring', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Braided Cuff Ring', nameAr: 'خاتم مضفر', type: 'Ring',
+    size: 'One Size', sizes: ['One Size'],
+    price: 100, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/braided-cuff-ring.png', img2: 'assets/accessories/braided-cuff-ring.png',
+    desc: 'A cuff-style ring with fine braided wire detailing, effortlessly elegant on its own or layered with rings.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-braided-cuff-ring',
+    tag: 'BRAIDED<br>REFINED<br>GOLD'
+  },
+  {
+    id: 'wateen-interlaced-gold-cuff', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Interlaced Gold Cuff', nameAr: 'كف متشابك مذهب', type: 'Cuff',
+    size: 'One Size', sizes: ['One Size'],
+    price: 120, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/interlaced-gold-cuff.png', img2: 'assets/accessories/interlaced-gold-cuff.png',
+    desc: 'An open cuff woven from crossing gold-tone strands, striking a balance between bold and delicate.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-interlaced-gold-cuff',
+    tag: 'WOVEN<br>STATEMENT<br>GOLD'
+  },
+  {
+    id: 'wateen-interlaced-gold-cuff-textured', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Textured Interlace Cuff', nameAr: 'كف متشابك بملمس', type: 'Cuff',
+    size: 'One Size', sizes: ['One Size'],
+    price: 120, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/interlaced-gold-cuff-2.png', img2: 'assets/accessories/interlaced-gold-cuff-2.png',
+    desc: 'A textured take on the interlaced cuff, with beaded and smooth strands crossing for extra dimension.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-interlaced-gold-cuff-textured',
+    tag: 'TEXTURED<br>WOVEN<br>LUXE'
+  },
+  {
+    id: 'wateen-dual-strand-crystal-bracelet', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Dual Strand Crystal Bracelet', nameAr: 'سوار كريستال مزدوج', type: 'Bracelet',
+    size: 'One Size', sizes: ['One Size'],
+    price: 130, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/dual-strand-crystal-bracelet.jpeg', img2: 'assets/accessories/dual-strand-crystal-bracelet.jpeg',
+    desc: 'A layered bracelet pairing a crystal tennis chain with a delicate beaded strand for everyday sparkle.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-dual-strand-crystal-bracelet',
+    tag: 'LAYERED<br>SPARKLING<br>DELICATE'
+  },
+  {
+    id: 'wateen-starburst-lariat-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Starburst Lariat Necklace', nameAr: 'عقد نجمي متدلي', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 130, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/starburst-lariat-necklace.jpeg', img2: 'assets/accessories/starburst-lariat-necklace.jpeg',
+    desc: 'A pave starburst pendant with a slender trailing chain, finished by a matching star drop.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-starburst-lariat-necklace',
+    tag: 'CELESTIAL<br>SPARKLING<br>DELICATE'
+  },
+  {
+    id: 'wateen-butterfly-charm-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Butterfly Charm Necklace', nameAr: 'عقد الفراشة', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 130, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/butterfly-charm-necklace.jpeg', img2: 'assets/accessories/butterfly-charm-necklace.jpeg',
+    desc: 'A paperclip chain necklace scattered with pave butterfly charms for a light, playful movement.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-butterfly-charm-necklace',
+    tag: 'PLAYFUL<br>SPARKLING<br>LIGHT'
+  },
+  {
+    id: 'wateen-moonlit-star-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Moonlit Star Necklace', nameAr: 'عقد القمر والنجوم', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 130, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/moonlit-star-necklace.jpeg', img2: 'assets/accessories/moonlit-star-necklace.jpeg',
+    desc: 'A dainty chain dressed with crescent moon and star charms, dreamy enough for everyday layering.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-moonlit-star-necklace',
+    tag: 'DREAMY<br>CELESTIAL<br>DAINTY'
+  },
+  {
+    id: 'wateen-laurel-wreath-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Laurel Wreath Necklace', nameAr: 'عقد إكليل الغار', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 150, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/laurel-wreath-necklace.jpeg', img2: 'assets/accessories/laurel-wreath-necklace-2.jpeg',
+    desc: 'A wreath-shaped pendant set with sparkling marquise stones, classic and quietly luxurious.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-laurel-wreath-necklace',
+    tag: 'CLASSIC<br>SPARKLING<br>ELEGANT'
+  },
+  {
+    id: 'wateen-vine-teardrop-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Vine Teardrop Necklace', nameAr: 'عقد الكرمة والدمعة', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 180, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/vine-teardrop-necklace.jpeg', img2: 'assets/accessories/vine-teardrop-necklace.jpeg',
+    desc: 'A delicate vine-branch pendant cradling a sparkling teardrop stone, soft and romantic.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-vine-teardrop-necklace',
+    tag: 'ROMANTIC<br>DELICATE<br>SPARKLING'
+  },
+  {
+    id: 'wateen-pink-teardrop-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Pink Teardrop Necklace', nameAr: 'عقد الدمعة الوردية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 180, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/pink-teardrop-necklace.jpeg', img2: 'assets/accessories/pink-teardrop-necklace.jpeg',
+    desc: 'A pink crystal teardrop framed in pave stones, hanging from a fine gold chain for a soft pop of colour.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-pink-teardrop-necklace',
+    tag: 'FEMININE<br>COLOURFUL<br>SPARKLING'
+  },
+  {
+    id: 'wateen-angel-wings-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Angel Wings Necklace', nameAr: 'عقد جناحي الملاك', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 180, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/angel-wings-necklace.jpeg', img2: 'assets/accessories/angel-wings-necklace.jpeg',
+    desc: 'A pair of pave-set angel wings resting side by side, symbolic and beautifully detailed.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-angel-wings-necklace',
+    tag: 'SYMBOLIC<br>SPARKLING<br>DETAILED'
+  },
+  {
+    id: 'wateen-crystal-cluster-dangle-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Crystal Cluster Dangle Necklace', nameAr: 'عقد الكريستال المتدلي', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 180, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/crystal-cluster-dangle-necklace.jpeg', img2: 'assets/accessories/crystal-cluster-dangle-necklace.jpeg',
+    desc: 'A cluster of marquise crystals gathered at the collarbone, with a slender chain trailing beneath.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-crystal-cluster-dangle-necklace',
+    tag: 'SPARKLING<br>DELICATE<br>MODERN'
+  },
+  {
+    id: 'wateen-bow-flower-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Bow & Flower Necklace', nameAr: 'عقد الفيونكة والزهرة', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 180, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/bow-flower-necklace.jpeg', img2: 'assets/accessories/bow-flower-necklace.jpeg',
+    desc: 'A sweet pave bow pendant with a flower charm dangling beneath, sweet and delicately feminine.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-bow-flower-necklace',
+    tag: 'SWEET<br>FEMININE<br>DELICATE'
+  },
+  {
+    id: 'wateen-marquise-drop-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Marquise Drop Necklace', nameAr: 'عقد الماركيز المتدلي', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 180, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/marquise-drop-necklace.jpeg', img2: 'assets/accessories/marquise-drop-necklace-2.jpeg',
+    desc: 'A cluster of marquise and round crystals with a single dangling stone, catching light from every side.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-marquise-drop-necklace',
+    tag: 'SPARKLING<br>ELEGANT<br>REFINED'
+  },
+  {
+    id: 'wateen-clover-pendant-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Clover Pendant Necklace', nameAr: 'عقد ورقة النفل', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 180, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/clover-pendant-necklace.jpeg', img2: 'assets/accessories/clover-pendant-necklace.jpeg',
+    desc: 'Dainty pave-set charms trail along a fine chain, finished by a lucky clover pendant.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-clover-pendant-necklace',
+    tag: 'LUCKY<br>DAINTY<br>SPARKLING'
+  },
+  {
+    id: 'wateen-heart-charm-bracelet', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Heart Charm Bracelet', nameAr: 'سوار قلوب متدلية', type: 'Bracelet',
+    size: 'One Size', sizes: ['One Size'],
+    price: 200, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/heart-charm-bracelet.jpeg', img2: 'assets/accessories/heart-charm-bracelet.jpeg',
+    desc: 'A paperclip chain bracelet with pink and clear crystal heart charms dangling along its length.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-heart-charm-bracelet',
+    tag: 'ROMANTIC<br>SPARKLING<br>PLAYFUL'
+  },
+  {
+    id: 'wateen-crescent-moon-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Crescent Moon Necklace', nameAr: 'عقد الهلال المزدوج', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 200, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/crescent-moon-necklace.jpeg', img2: 'assets/accessories/crescent-moon-necklace.jpeg',
+    desc: 'A beaded gold chain punctuated by twin pave crescent moons, subtly celestial and easy to wear daily.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-crescent-moon-necklace',
+    tag: 'CELESTIAL<br>SUBTLE<br>DAILY'
+  },
+  {
+    id: 'wateen-crystal-teardrop-cluster-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Crystal Teardrop Cluster Necklace', nameAr: 'عقد تجمع الكريستال', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 200, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/crystal-teardrop-cluster-necklace.jpeg', img2: 'assets/accessories/crystal-teardrop-cluster-necklace-2.jpeg',
+    desc: 'A cascade of clear crystals gathering into a single radiant teardrop, bridal-worthy and bright.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-crystal-teardrop-cluster-necklace',
+    tag: 'RADIANT<br>BRIDAL<br>SPARKLING'
+  },
+  {
+    id: 'wateen-pink-heart-pendant-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Pink Heart Pendant Necklace', nameAr: 'عقد القلب الوردي', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 200, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/pink-heart-pendant-necklace.jpeg', img2: 'assets/accessories/pink-heart-pendant-necklace.jpeg',
+    desc: 'A curved pave bar holds a pink crystal heart, soft and romantic against a fine gold chain.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-pink-heart-pendant-necklace',
+    tag: 'ROMANTIC<br>SOFT<br>SPARKLING'
+  },
+  {
+    id: 'wateen-arabic-medallion-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Arabic Medallion Necklace', nameAr: 'عقد الميدالية العربية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 200, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/arabic-medallion-necklace.jpeg', img2: 'assets/accessories/arabic-medallion-necklace-2.jpeg',
+    desc: 'An engraved gold medallion with Arabic calligraphy, framed in crystal and hung from a beaded chain.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-arabic-medallion-necklace',
+    tag: 'HERITAGE<br>ENGRAVED<br>MEANINGFUL'
+  },
+  {
+    id: 'wateen-emerald-butterfly-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Emerald Butterfly Necklace', nameAr: 'عقد الفراشة الزمردية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 200, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/emerald-butterfly-necklace.jpeg', img2: 'assets/accessories/emerald-butterfly-necklace.jpeg',
+    desc: 'A butterfly pendant set with emerald-green baguettes and clear pave, vivid and full of movement.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-emerald-butterfly-necklace',
+    tag: 'VIVID<br>SPARKLING<br>STATEMENT'
+  },
+  {
+    id: 'wateen-star-trail-lariat', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Star Trail Lariat', nameAr: 'عقد مسار النجوم', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 220, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/star-trail-lariat.jpeg', img2: 'assets/accessories/star-trail-lariat-2.jpeg',
+    desc: 'A pave starburst pendant leading into a trailing chain finished with a smaller star, a modern lariat silhouette.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-star-trail-lariat',
+    tag: 'MODERN<br>CELESTIAL<br>SPARKLING'
+  },
+  {
+    id: 'wateen-charm-cluster-bracelet', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Charm Cluster Bracelet', nameAr: 'سوار تجمع الشارمات', type: 'Bracelet',
+    size: 'One Size', sizes: ['One Size'],
+    price: 220, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/charm-cluster-bracelet.jpeg', img2: 'assets/accessories/charm-cluster-bracelet.jpeg',
+    desc: 'A chunky chain bracelet gathering a star, a butterfly, and a teardrop charm, then giving way to a woven leaf link.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-charm-cluster-bracelet',
+    tag: 'EYE-CATCHING<br>LAYERED<br>PLAYFUL'
+  },
+  {
+    id: 'wateen-northern-star-lariat', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Northern Star Lariat', nameAr: 'عقد النجمة الشمالية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/northern-star-lariat.jpeg', img2: 'assets/accessories/northern-star-lariat.jpeg',
+    desc: 'Two starburst charms sit above a long trailing chain finished with a third, an asymmetric celestial lariat.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-northern-star-lariat',
+    tag: 'CELESTIAL<br>ASYMMETRIC<br>MODERN'
+  },
+  {
+    id: 'wateen-celestial-charm-bracelet', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Celestial Charm Bracelet', nameAr: 'سوار الشارمات السماوية', type: 'Bracelet',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/celestial-charm-bracelet.jpeg', img2: 'assets/accessories/celestial-charm-bracelet.jpeg',
+    desc: 'A woven chain bracelet dotted with a star, butterfly, and teardrop charm for a bohemian layered look.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-celestial-charm-bracelet',
+    tag: 'BOHEMIAN<br>LAYERED<br>PLAYFUL'
+  },
+  {
+    id: 'wateen-beaded-tennis-bracelet', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Beaded Tennis Bracelet', nameAr: 'سوار التنس المحبب', type: 'Bracelet',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/beaded-tennis-bracelet.jpeg', img2: 'assets/accessories/beaded-tennis-bracelet.jpeg',
+    desc: 'A crystal tennis chain centred with a single sparkling stone, framed by delicate beaded links.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-beaded-tennis-bracelet',
+    tag: 'SPARKLING<br>CLASSIC<br>DELICATE'
+  },
+  {
+    id: 'wateen-crystal-cluster-bracelet', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Crystal Cluster Bracelet', nameAr: 'سوار تجمع الكريستال', type: 'Bracelet',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/crystal-cluster-bracelet.jpeg', img2: 'assets/accessories/crystal-cluster-bracelet.jpeg',
+    desc: 'Delicate hearts and a dainty chain layer together, dusted with tiny crystals for a soft romantic finish.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-crystal-cluster-bracelet',
+    tag: 'ROMANTIC<br>LAYERED<br>SOFT'
+  },
+  {
+    id: 'wateen-tennis-teardrop-bracelet', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Tennis Teardrop Bracelet', nameAr: 'سوار التنس بالدمعة', type: 'Bracelet',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/tennis-teardrop-bracelet.jpeg', img2: 'assets/accessories/tennis-teardrop-bracelet.jpeg',
+    desc: 'A crystal-set link bracelet finished by a bezel teardrop charm, sparkling from wrist to clasp.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-tennis-teardrop-bracelet',
+    tag: 'SPARKLING<br>REFINED<br>CLASSIC'
+  },
+  {
+    id: 'wateen-heart-lariat-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Heart Lariat Necklace', nameAr: 'عقد القلب المتدلي', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/heart-lariat-necklace.png', img2: 'assets/accessories/heart-lariat-necklace.png',
+    desc: 'A crystal-set heart charm rests along a beaded chain that drops into a slender lariat tail.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-heart-lariat-necklace',
+    tag: 'ROMANTIC<br>MODERN<br>SPARKLING'
+  },
+  {
+    id: 'wateen-eight-point-star-pendant', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Eight-Point Star Pendant', nameAr: 'قلادة النجمة الثمانية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/eight-point-star-pendant.jpeg', img2: 'assets/accessories/eight-point-star-pendant.jpeg',
+    desc: 'A radiant eight-point star pendant fully paved in crystal, hung from a beaded chain for maximum sparkle.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-eight-point-star-pendant',
+    tag: 'RADIANT<br>CELESTIAL<br>BOLD'
+  },
+  {
+    id: 'wateen-star-trio-lariat', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Star Trio Lariat', nameAr: 'عقد ثلاثي النجوم', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/star-trio-lariat.png', img2: 'assets/accessories/star-trio-lariat.png',
+    desc: 'Three pave stars cascade from a fine chain in a graceful lariat drop, light and easy to layer.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-star-trio-lariat',
+    tag: 'CELESTIAL<br>GRACEFUL<br>LAYERABLE'
+  },
+  {
+    id: 'wateen-crescent-moon-charm-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Crescent Moon Charm Necklace', nameAr: 'عقد شارم الهلال', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/crescent-moon-charm-necklace.jpeg', img2: 'assets/accessories/crescent-moon-charm-necklace.jpeg',
+    desc: 'A paperclip chain necklace with a mixed pin-link closure and pave crescent moon and star charms.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-crescent-moon-charm-necklace',
+    tag: 'CELESTIAL<br>MIXED-LINK<br>MODERN'
+  },
+  {
+    id: 'wateen-tennis-chain-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Tennis Chain Necklace', nameAr: 'عقد سلسلة التنس', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/tennis-chain-necklace.png', img2: 'assets/accessories/tennis-chain-necklace.png',
+    desc: 'A dazzling crystal tennis chain necklace, dense with round-cut stones for a red-carpet finish.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-tennis-chain-necklace',
+    tag: 'DAZZLING<br>LUXE<br>CLASSIC'
+  },
+  {
+    id: 'wateen-paperclip-chain-pendant', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Paperclip Chain Pendant', nameAr: 'قلادة السلسلة الحلقية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/paperclip-chain-pendant.jpeg', img2: 'assets/accessories/paperclip-chain-pendant.jpeg',
+    desc: 'A bold paperclip chain holds a pave-edged rectangular pendant, contemporary and confident.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-paperclip-chain-pendant',
+    tag: 'BOLD<br>CONTEMPORARY<br>SPARKLING'
+  },
+  {
+    id: 'wateen-moon-star-drop-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Moon & Star Drop Necklace', nameAr: 'عقد القمر والنجمة المتدلية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/moon-star-drop-necklace.jpeg', img2: 'assets/accessories/moon-star-drop-necklace.jpeg',
+    desc: 'A dainty chain scattered with tiny stars and finished by a delicate crescent moon drop.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-moon-star-drop-necklace',
+    tag: 'DAINTY<br>CELESTIAL<br>SOFT'
+  },
+  {
+    id: 'wateen-scattered-star-pendant', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Scattered Star Pendant', nameAr: 'قلادة النجوم المتناثرة', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/scattered-star-pendant.jpeg', img2: 'assets/accessories/scattered-star-pendant.jpeg',
+    desc: 'Four gold star charms scatter unevenly along a fine chain for an easy, undone celestial look.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-scattered-star-pendant',
+    tag: 'CELESTIAL<br>UNDONE<br>LIGHT'
+  },
+  {
+    id: 'wateen-tiered-heart-pendant', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Tiered Heart Pendant', nameAr: 'قلادة القلوب المتدرجة', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 250, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/tiered-heart-pendant.jpeg', img2: 'assets/accessories/tiered-heart-pendant.jpeg',
+    desc: 'A cascading line of pink and clear crystal hearts drops from a fine chain, sweet and eye-catching.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-tiered-heart-pendant',
+    tag: 'SWEET<br>CASCADING<br>SPARKLING'
+  },
+  {
+    id: 'wateen-beaded-flower-tassel-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Beaded Flower Tassel Necklace', nameAr: 'عقد الزهرة المشرشبة', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 280, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/beaded-flower-tassel-necklace.jpeg', img2: 'assets/accessories/beaded-flower-tassel-necklace.jpeg',
+    desc: 'A textured beaded chain leads to a crystal flower charm with a playful double tassel drop.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-beaded-flower-tassel-necklace',
+    tag: 'PLAYFUL<br>TEXTURED<br>UNIQUE'
+  },
+  {
+    id: 'wateen-layered-star-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Layered Star Necklace', nameAr: 'عقد النجوم المتراكبة', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 300, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/layered-star-necklace.jpeg', img2: 'assets/accessories/layered-star-necklace.jpeg',
+    desc: 'Two fine chains layer together, one holding a small star charm, the other a bold starburst pendant.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-layered-star-necklace',
+    tag: 'LAYERED<br>CELESTIAL<br>MODERN'
+  },
+  {
+    id: 'wateen-dual-star-chain-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Dual Star Chain Necklace', nameAr: 'عقد السلسلة النجمية المزدوجة', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 300, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/dual-star-chain-necklace.jpeg', img2: 'assets/accessories/dual-star-chain-necklace-2.jpeg',
+    desc: 'Moon and star charms punctuate a mixed paperclip and curb chain, finished with a dangling star pendant.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-dual-star-chain-necklace',
+    tag: 'CELESTIAL<br>MIXED-CHAIN<br>BOLD'
+  },
+  {
+    id: 'wateen-pave-link-pendant-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Pave Link Pendant Necklace', nameAr: 'عقد الحلقات المرصعة', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 350, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/pave-link-pendant-necklace.jpeg', img2: 'assets/accessories/pave-link-pendant-necklace.jpeg',
+    desc: 'Oversized oval links, some plain gold, some pave-set, build into a striking textured pendant necklace.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-pave-link-pendant-necklace',
+    tag: 'STATEMENT<br>TEXTURED<br>BOLD'
+  },
+  {
+    id: 'wateen-marquise-leaf-dangle-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Marquise Leaf Dangle Necklace', nameAr: 'عقد الأوراق الماركيزية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 350, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/marquise-leaf-dangle-necklace.jpeg', img2: 'assets/accessories/marquise-leaf-dangle-necklace-2.jpeg',
+    desc: 'A crossing pave bar leads into a cascade of marquise leaf-shaped links ending in a pave teardrop.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-marquise-leaf-dangle-necklace',
+    tag: 'STATEMENT<br>SPARKLING<br>ELEGANT'
+  },
+  {
+    id: 'wateen-bold-link-pendant-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Bold Link Pendant Necklace', nameAr: 'عقد الحلقات الجريئة', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 400, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/bold-link-pendant-necklace.jpeg', img2: 'assets/accessories/bold-link-pendant-necklace.jpeg',
+    desc: 'Chunky curb-chain links twist into a sculptural pendant with a diamond-cut finish, bold and architectural.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-bold-link-pendant-necklace',
+    tag: 'ARCHITECTURAL<br>BOLD<br>SCULPTURAL'
+  },
+  {
+    id: 'wateen-two-tone-star-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Two-Tone Star Necklace', nameAr: 'عقد النجمة الثنائية اللون', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 500, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/two-tone-star-necklace.jpeg', img2: 'assets/accessories/two-tone-star-necklace.jpeg',
+    desc: 'A heavy oval-link chain in gold and silver tones carries a pave north star pendant for a bold finish.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-two-tone-star-necklace',
+    tag: 'TWO-TONE<br>BOLD<br>LUXE'
+  },
+  {
+    id: 'wateen-hamsa-evil-eye-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Hamsa Evil Eye Necklace', nameAr: 'عقد يد فاطمة والعين', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 500, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/hamsa-evil-eye-necklace.jpeg', img2: 'assets/accessories/hamsa-evil-eye-necklace.jpeg',
+    desc: 'A bold curb-chain necklace holding a pave hamsa hand with a hand-painted evil eye centre, protective and striking.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-hamsa-evil-eye-necklace',
+    tag: 'PROTECTIVE<br>SYMBOLIC<br>BOLD'
+  },
+  {
+    id: 'wateen-marquise-drop-chain-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Marquise Drop Chain Necklace', nameAr: 'عقد السلسلة بالدمعة الماركيزية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 500, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/marquise-drop-chain-necklace.jpeg', img2: 'assets/accessories/marquise-drop-chain-necklace.jpeg',
+    desc: 'A heavy paperclip chain builds into a pave marquise link cascade, finished by an oversized pendant drop.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-marquise-drop-chain-necklace',
+    tag: 'STATEMENT<br>LUXE<br>SPARKLING'
+  },
+  {
+    id: 'wateen-layered-heart-lariat', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Layered Heart Lariat', nameAr: 'عقد القلب المتراكب', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/layered-heart-lariat.png', img2: 'assets/accessories/layered-heart-lariat.png',
+    desc: 'A pave heart charm layers over a beaded lariat chain, romantic with a modern drop silhouette.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-layered-heart-lariat',
+    tag: 'ROMANTIC<br>LAYERED<br>MODERN'
+  },
+  {
+    id: 'wateen-star-drop-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Star Drop Necklace', nameAr: 'عقد النجمة المتدلية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/star-drop-necklace.png', img2: 'assets/accessories/star-drop-necklace.png',
+    desc: 'Five pave stars step down a fine chain in a graduating cascade, finished by the smallest star drop.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-star-drop-necklace',
+    tag: 'CELESTIAL<br>GRADUATING<br>DELICATE'
+  },
+  {
+    id: 'wateen-star-trail-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Star Trail Necklace', nameAr: 'عقد مسار النجوم الطويل', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★☆', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/star-trail-necklace.png', img2: 'assets/accessories/star-trail-necklace.png',
+    desc: 'A long lariat chain scattered with pave and polished stars, effortlessly boho with plenty of movement.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-star-trail-necklace',
+    tag: 'BOHO<br>CELESTIAL<br>FLOWING'
+  },
+  {
+    id: 'wateen-fringe-lariat-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Fringe Lariat Necklace', nameAr: 'عقد الشرابة المتدلية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 225, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/fringe-lariat-necklace.png', img2: 'assets/accessories/fringe-lariat-necklace.png',
+    desc: 'Slim pave fringe bars hang along the collarbone, cascading into a longer central fringe for dramatic movement.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-fringe-lariat-necklace',
+    tag: 'DRAMATIC<br>SPARKLING<br>MOVEMENT'
+  },
+  {
+    id: 'wateen-starburst-link-necklace', brand: 'WATEEN LUX', brandAr: 'واتين لوكس', name: 'Starburst Link Necklace', nameAr: 'عقد الحلقات النجمية', type: 'Necklace',
+    size: 'One Size', sizes: ['One Size'],
+    price: 325, rating: '★★★★★', reviews: 0, cat: 'accessories',
+    img: 'assets/accessories/starburst-link-necklace.png', img2: 'assets/accessories/starburst-link-necklace.png',
+    desc: 'A weighty gold link chain with pave-set connectors carries a radiant starburst pendant, bold and luminous.',
+    notes: { top: '', heart: '', base: '' },
+    family: 'Accessory', year: '2026', origin: 'UAE', sku: 'wateen-starburst-link-necklace',
+    tag: 'LUMINOUS<br>BOLD<br>LUXE'
+  },
+
   /* ════════════════════════════════════════════════
      WOMEN'S & UNISEX CATALOG
      Matched to reference distributor listings.
