@@ -1011,11 +1011,28 @@
 
     var list = CATALOG;
     if (q) {
-      list = CATALOG.filter(function (p) {
-        var haystack = [p.name, p.brand, p.cat, p.nameAr, p.brandAr, p.family, p.type]
-          .filter(Boolean).join(' ').toLowerCase();
-        return haystack.indexOf(q) !== -1;
-      });
+      // rank so the product actually being searched for surfaces first:
+      // an exact/near match on its own name outranks a match that only
+      // hit on brand, category or scent family — those still show, just
+      // lower, instead of mixing in at whatever order CATALOG happens to be
+      list = CATALOG
+        .map(function (p) {
+          var name = (p.name || '').toLowerCase();
+          var nameAr = (p.nameAr || '').toLowerCase();
+          var rank;
+          if (name === q || nameAr === q) rank = 0;
+          else if (name.indexOf(q) === 0 || nameAr.indexOf(q) === 0) rank = 1;
+          else if (name.indexOf(q) !== -1 || nameAr.indexOf(q) !== -1) rank = 2;
+          else {
+            var rest = [p.brand, p.cat, p.brandAr, p.family, p.type]
+              .filter(Boolean).join(' ').toLowerCase();
+            rank = rest.indexOf(q) !== -1 ? 3 : -1;
+          }
+          return { p: p, rank: rank };
+        })
+        .filter(function (r) { return r.rank !== -1; })
+        .sort(function (a, b) { return a.rank - b.rank; })
+        .map(function (r) { return r.p; });
     }
     renderResults(list);
   }
