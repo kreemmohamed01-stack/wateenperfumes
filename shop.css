@@ -512,3 +512,8 @@ body.shop-page .crumb{ padding-top:88px; }
 
   .shopPager button{ min-width:30px; height:30px; font-size:10px; }
 }
+
+/* ---- accessories: product photos read small in a square padded box, so
+   give them noticeably less inset than perfume bottles get, matching the
+   card size/grid rhythm every other category already uses ---- */
+.accessories-page .shopGrid .card__media img{ padding:4%; }

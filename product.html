@@ -694,6 +694,8 @@
 
   if (!product) return; // catalog.js failed to load — nothing to render
 
+  if (product.cat === 'accessories') document.body.classList.add('accessories-page');
+
   var catLabel = { men: 'Men', women: 'Women', unisex: 'Unisex' };
   var catHref = { men: 'men.html', women: 'women.html', unisex: 'unisex.html' };
 
