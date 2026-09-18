@@ -646,7 +646,181 @@
     'Women': 'حريمي',
     'Unisex': 'للجنسين',
     'UAE': 'الإمارات',
-    'UK': 'المملكة المتحدة'
+    'UK': 'المملكة المتحدة',
+
+    // ---- footer: Customer Care + legal links ----
+    'Wholesale Orders': 'طلبات الجملة',
+    'Shipping Policy': 'سياسة الشحن',
+    'Terms & Conditions': 'الشروط والأحكام',
+    'Terms &amp; Conditions': 'الشروط والأحكام',
+    'Privacy Policy': 'سياسة الخصوصية',
+    'Terms of Service': 'الشروط والأحكام',
+    'Sitemap': 'خريطة الموقع',
+
+    // ---- wholesale.html ----
+    'Wholesale Orders — Wateen Perfumes': 'طلبات الجملة — واتين بيرفيومز',
+    'Wholesale': 'طلبات',
+    'Orders': 'الجملة',
+    'Wateen Perfumes is your first destination for luxury fragrances at wholesale prices. We are proud to offer top authentic brands at competitive prices and premium quality, to strengthen your own brand and delight your customers.':
+      'واتين بيرفيومز وجهتك الأولى للعطور الفاخرة بأسعار الجملة. نحن فخورون بتقديم أرقى الماركات الأصلية بأسعار تنافسية وجودة عالية، لتعزيز هويتك التجارية وإسعاد عملائك.',
+    'Who Can Order Wholesale': 'مين يقدر يطلب بالجملة',
+    'Our wholesale program is open to retail shops, resellers, gift stores, corporate gifting, and anyone looking to stock authentic fragrances in bulk.':
+      'برنامج الجملة لدينا متاح لمحلات التجزئة، الموزعين، متاجر الهدايا، الهدايا المؤسسية، وأي شخص يريد توفير عطور أصلية بكميات كبيرة.',
+    "What's Available": 'المتاح لدينا',
+    "A wide, ever-growing range covering men's, women's, and unisex fragrances, along with our best-selling houses — so you can offer a well-rounded selection to your own customers.":
+      'تشكيلة واسعة ومتجدّدة تغطّي عطور الرجال والنساء والعطور المشتركة، بالإضافة لأشهر دورنا مبيعاً — لتقدّم لعملائك مجموعة متكاملة.',
+    'Wholesale Pricing & Terms': 'أسعار وشروط الجملة',
+    'Wholesale Pricing &amp; Terms': 'أسعار وشروط الجملة',
+    'Wholesale orders have their own pricing and terms, agreed directly with our team based on quantity and product mix. These terms are separate from our standard retail return policy unless otherwise agreed in writing.':
+      'طلبات الجملة لها أسعار وشروط منفصلة، يتم الاتفاق عليها مباشرة مع فريقنا حسب الكمية ونوعية المنتجات. هذه الشروط منفصلة عن سياسة الاسترجاع الخاصة بالتجزئة إلا إذا تم الاتفاق على غير ذلك كتابياً.',
+    'How to Order': 'إزاي تطلب',
+    "Message us on WhatsApp with the products and quantities you're interested in.": 'ابعتلنا على واتساب بالمنتجات والكميات اللي حابب تطلبها.',
+    'Our team will share current wholesale pricing and availability.': 'فريقنا هيبعتلك أسعار الجملة الحالية والمتاح منها.',
+    "Once agreed, we'll confirm payment and delivery details with you directly.": 'بعد الاتفاق، هنأكّد معاك تفاصيل الدفع والتوصيل مباشرة.',
+    'Grow Your Brand With Us': 'عزّز علامتك التجارية معنا',
+    'Boost your brand today — reach out and take advantage of our wholesale offers.': 'عزّز علامتك التجارية الآن — تواصل معنا واستفد من عروض الجملة.',
+    'WHOLESALE ORDERS — WHATSAPP': 'طلبات الجملة — واتساب',
+
+    // ---- shipping-policy.html ----
+    'Shipping Policy — Wateen Perfumes': 'سياسة الشحن — واتين بيرفيومز',
+    'We deliver to every governorate in Egypt. Shipping is currently available within Egypt only.':
+      'بنوصّل الطلبات لكل محافظات جمهورية مصر العربية. الشحن حالياً داخل مصر فقط.',
+    'Order Processing': 'تجهيز الطلب',
+    'We prepare your order within 1–2 business days of confirmation. Business days run Saturday through Thursday, excluding public holidays.':
+      'بنجهّز طلبك خلال يوم إلى يومين عمل من تأكيد الطلب. أيام العمل من السبت إلى الخميس، ما عدا الإجازات الرسمية.',
+    'For Instapay payments, preparation begins once we receive and verify your transfer screenshot.':
+      'لو كان الدفع عن طريق إنستاباي، بيبدأ التجهيز بعد استلام سكرين شوت التحويل والتأكد منه.',
+    'Delivery Time': 'مدة التوصيل',
+    'Delivery takes 2–5 business days depending on your governorate. Greater Cairo, Alexandria, and the Delta are usually faster, while more remote governorates may take up to the maximum.':
+      'التوصيل بياخد من يومين إلى خمسة أيام عمل حسب المحافظة. القاهرة الكبرى والإسكندرية والدلتا عادةً أسرع، والمحافظات البعيدة ممكن توصل للحد الأقصى.',
+    "During peak periods (holidays, major promotions) delivery may take an extra day or two, and we'll let you know if a delay happens.":
+      'في مواسم الضغط (الأعياد، العروض الكبيرة) ممكن تزيد المدة يوم أو يومين، وهنبلغك لو حصل تأخير.',
+    'Shipping Fees': 'مصاريف الشحن',
+    'Shipping fees are calculated automatically at checkout based on your governorate, and shown to you before you confirm your order.':
+      'مصاريف الشحن بتتحسب أوتوماتيك في صفحة إتمام الطلب حسب المحافظة، وبتظهرلك قبل ما تأكد الطلب.',
+    'Tracking Your Order': 'متابعة الشحنة',
+    'Once your order ships, our courier or our team will contact you on the mobile number registered with your order to arrange a delivery time. Please make sure this number is correct and reachable.':
+      'أول ما الطلب يتشحن، هيتواصل معاك مندوب الشحن أو فريقنا على رقم الموبايل المسجل في الطلب لتحديد ميعاد التسليم. من فضلك تأكد إن الرقم صحيح وشغال.',
+    'On Delivery': 'عند الاستلام',
+    'Inspect the package before accepting it. If the outer packaging is visibly opened or damaged, please refuse the delivery and contact us immediately.':
+      'افحص الكرتونة قبل ما تستلم. لو العبوة الخارجية مفتوحة أو متضررة بشكل واضح، ارفض الاستلام وكلمنا فورًا.',
+    'For cash-on-delivery orders, please have the full amount ready, including shipping fees.':
+      'لو الدفع عند الاستلام، جهّز المبلغ كامل شامل مصاريف الشحن.',
+    'If no one is available to receive the order after two delivery attempts, it will be returned to us, and re-shipping will carry a new shipping fee.':
+      'لو مفيش حد استلم بعد محاولتين تواصل من شركة الشحن، الطلب بيرجعلنا، وإعادة الشحن بتكون بمصاريف شحن جديدة.',
+    "For any question about your shipment, reach out to our customer service team and we'll be happy to assist you.":
+      'لأي استفسار عن شحنتك، تواصل مع فريق خدمة العملاء وسنكون سعداء بمساعدتك.',
+
+    // ---- terms.html ----
+    'Terms &amp; Conditions — Wateen Perfumes': 'الشروط والأحكام — واتين بيرفيومز',
+    'Terms & Conditions — Wateen Perfumes': 'الشروط والأحكام — واتين بيرفيومز',
+    'Terms &': 'الشروط',
+    'Conditions': 'والأحكام',
+    'By using the Wateen Perfumes website or ordering through it, you agree to the following terms. Please read them before placing your order.':
+      'باستخدامك لموقع واتين بيرفيومز أو الطلب من خلاله، فأنت توافق على الشروط التالية. من فضلك اقرأها قبل ما تطلب.',
+    'Who We Are': 'من نحن',
+    'Wateen Perfumes is an online store selling authentic fragrances, watches, and accessories, curated from trusted, authorized distributors.':
+      'واتين بيرفيومز متجر إلكتروني لبيع العطور الأصلية والساعات والإكسسوارات، منتقاة من موزعين معتمدين وموثوقين.',
+    'Products & Prices': 'المنتجات والأسعار',
+    'Products &amp; Prices': 'المنتجات والأسعار',
+    'Every product listed is 100% authentic, sourced from official distributors.': 'كل المنتجات المعروضة أصلية 100% ومصدرها الموزع الرسمي.',
+    'Prices are in Egyptian pounds and include VAT, but exclude shipping fees, which are shown at checkout.':
+      'الأسعار بالجنيه المصري وشاملة ضريبة القيمة المضافة، وغير شاملة مصاريف الشحن اللي بتظهر في صفحة إتمام الطلب.',
+    'Prices and offers may change at any time. The price that applies is the one shown when your order is confirmed.':
+      'الأسعار والعروض قابلة للتغيير في أي وقت. السعر الساري هو اللي كان معروض وقت تأكيد طلبك.',
+    "Product photos are for illustration; there may be slight differences in color or packaging depending on the production batch.":
+      'صور المنتجات للتوضيح، وممكن يكون فيه فرق بسيط في اللون أو شكل العبوة حسب دفعة الإنتاج.',
+    'If a clear pricing error occurs, we reserve the right to cancel the order and notify you before shipping.':
+      'لو حصل خطأ واضح في سعر منتج، من حقنا نلغي الطلب ونبلغك قبل الشحن.',
+    'Orders & Confirmation': 'الطلب والتأكيد',
+    'Orders &amp; Confirmation': 'الطلب والتأكيد',
+    "Your order is confirmed once our team contacts you, or once we receive your Instapay transfer screenshot.":
+      'الطلب بيتأكد بعد ما فريقنا يتواصل معاك أو بعد استلام سكرين شوت التحويل في حالة الدفع بإنستاباي.',
+    "We reserve the right to refuse or cancel any order if the product is unavailable, the details provided are incomplete, or there's doubt about the validity of the payment — we'll notify you if this happens.":
+      'من حقنا نرفض أو نلغي أي طلب لو المنتج غير متاح، أو البيانات غير مكتملة، أو في شك في صحة عملية الدفع، وهنبلغك في الحالة دي.',
+    'You are responsible for the accuracy of the name, address, and phone number on your order.':
+      'أنت مسؤول عن صحة الاسم والعنوان ورقم الموبايل في الطلب.',
+    'Payment': 'الدفع',
+    'Cash on Delivery: pay our courier in cash for the order total plus shipping fees.':
+      'الدفع عند الاستلام: بتدفع للمندوب نقدًا قيمة الطلب ومصاريف الشحن.',
+    "Instapay: transfer the order total to our account and send us the transfer screenshot on WhatsApp. Your order is prepared once the transfer is confirmed.":
+      'إنستاباي: بتحوّل قيمة الطلب على حسابنا وتبعتلنا سكرين شوت التحويل على واتساب. الطلب بيتجهز بعد التأكد من التحويل.',
+    'We will never ask you for your card details or a password over WhatsApp or email.':
+      'لا نطلب منك أبدًا بيانات بطاقتك البنكية أو كلمة سر على واتساب أو الإيميل.',
+    'Shipping & Returns': 'الشحن والاسترجاع',
+    'Shipping &amp; Returns': 'الشحن والاسترجاع',
+    'Both pages are part of these terms.': 'الصفحتين جزء من الشروط دي.',
+    'Wholesale orders have their own pricing and terms, agreed directly with our team, and are not covered by our individual-customer return policy unless otherwise agreed in writing.':
+      'طلبات الجملة ليها أسعار وشروط منفصلة بيتم الاتفاق عليها مباشرة مع فريقنا، ولا تخضع لسياسة الاسترجاع الخاصة بالأفراد إلا لو تم الاتفاق على غير كده كتابيًا.',
+    'Account & Data': 'الحساب والبيانات',
+    'Account &amp; Data': 'الحساب والبيانات',
+    'You are responsible for keeping your account details confidential.': 'أنت مسؤول عن الحفاظ على سرية بيانات حسابك على الموقع.',
+    'We use your data (name, address, phone number, email) only to fulfil your order and to contact you about it, and never sell or share it with anyone outside the shipping and payment partners needed to complete your order.':
+      'بنستخدم بياناتك (الاسم، العنوان، الموبايل، الإيميل) لتنفيذ طلبك والتواصل معاك بخصوصه فقط، ولا نبيعها أو نشاركها مع أي طرف خارج شركات الشحن وبوابات الدفع اللازمة لتنفيذ الطلب.',
+    'Signing up for our newsletter is optional and you can unsubscribe at any time.':
+      'الاشتراك في النشرة البريدية اختياري وتقدر تلغيه في أي وقت.',
+    'Intellectual Property': 'الملكية الفكرية',
+    'The Wateen Perfumes name, logo, and the website\'s design and content belong to us. The names and logos of the brands we sell belong to their respective owners. No content from this site may be copied or used commercially without our written permission.':
+      'اسم واتين بيرفيومز والشعار وتصميم الموقع ومحتواه ملك لنا. أسماء وشعارات العلامات التجارية المعروضة ملك لأصحابها. لا يجوز نسخ أي محتوى من الموقع أو استخدامه تجاريًا بدون إذن كتابي.',
+    'Limits of Liability': 'حدود المسؤولية',
+    'We are committed to delivering your product in its original condition. Our liability on any order does not exceed the value of the products paid for in that order.':
+      'نلتزم بتوصيل المنتج بحالته الأصلية. مسؤوليتنا في أي طلب لا تتجاوز قيمة المنتجات المدفوعة في الطلب نفسه.',
+    'We are not responsible for delays caused by circumstances beyond our control, such as weather, public holidays, or courier disruptions, and we\'ll do our best to keep you informed if a delay occurs.':
+      'لسنا مسؤولين عن التأخير الناتج عن ظروف خارجة عن إرادتنا مثل الأحوال الجوية أو الإجازات الرسمية أو أعطال شركات الشحن، وهنبذل جهدنا نبلغك في حينه.',
+    'Fragrances are personal products, and how a scent develops on skin varies from person to person — this is not a product defect.':
+      'العطور منتجات شخصية، والتفاعل مع البشرة يختلف من شخص لآخر وده مش عيب في المنتج.',
+    'Changes to These Terms': 'تعديل الشروط',
+    'We may update these terms from time to time. The version published on our website at the time you place your order is the one that applies to it.':
+      'ممكن نعدّل الشروط دي من وقت للتاني. النسخة المنشورة على الموقع وقت تقديم طلبك هي اللي بتسري عليه.',
+    'Governing Law': 'القانون الحاكم',
+    'These terms are governed by the laws of the Arab Republic of Egypt, including Consumer Protection Law No. 181 of 2018, and any dispute falls under the jurisdiction of the Egyptian courts.':
+      'تخضع هذه الشروط لقوانين جمهورية مصر العربية، بما في ذلك قانون حماية المستهلك رقم 181 لسنة 2018، وأي نزاع يكون من اختصاص المحاكم المصرية.',
+    'Contact Us': 'تواصل معنا',
+    'WhatsApp or call:': 'واتساب أو اتصال:',
+    'Daily, from 9 AM to 11 PM.': 'يوميًا من 9 صباحًا إلى 11 مساءً.',
+    'If you have any question about these terms, please contact our customer service team and we will be happy to assist you.':
+      'إذا كان لديك أي سؤال بخصوص هذه الشروط، يُرجى التواصل مع فريق خدمة العملاء وسنكون سعداء بمساعدتك.',
+
+    // ---- privacy-policy.html ----
+    'Privacy Policy — Wateen Perfumes': 'سياسة الخصوصية — واتين بيرفيومز',
+    'Your trust matters to us. This page explains what information we collect, why we collect it, and how we protect it.':
+      'ثقتك تهمّنا. هذه الصفحة توضّح البيانات التي نجمعها، وسبب جمعها، وكيف نحميها.',
+    'Information We Collect': 'البيانات التي نجمعها',
+    "When you place an order or contact us, we collect your name, address, phone number, and email address — only what's needed to process your order and stay in touch with you about it.":
+      'عند تقديم طلب أو التواصل معنا، نجمع اسمك وعنوانك ورقم هاتفك وبريدك الإلكتروني — فقط ما يلزم لتنفيذ طلبك والتواصل معك بخصوصه.',
+    'How We Use Your Information': 'كيف نستخدم بياناتك',
+    "We use your data solely to fulfil and deliver your order, communicate with you about it, and — if you've opted in — send you our newsletter. We never sell your data to anyone.":
+      'نستخدم بياناتك فقط لتنفيذ وتوصيل طلبك، والتواصل معك بخصوصه، و— إذا اشتركت — إرسال نشرتنا البريدية. لا نبيع بياناتك لأي طرف على الإطلاق.',
+    'Who We Share It With': 'مع من نشارك بياناتك',
+    'We only share the details necessary to complete your order with our shipping couriers and payment partners (such as Instapay). We do not share your information with any other third party.':
+      'نشارك فقط البيانات اللازمة لتنفيذ طلبك مع شركات الشحن وشركاء الدفع (مثل إنستاباي). لا نشارك بياناتك مع أي طرف آخر.',
+    'Payment Security': 'أمان الدفع',
+    'We never ask for your card details or account passwords over WhatsApp, email, or any messaging platform. If you ever receive such a request claiming to be from us, please do not respond and let us know.':
+      'لا نطلب منك أبدًا بيانات بطاقتك البنكية أو كلمات السر على واتساب أو الإيميل أو أي وسيلة تواصل. لو استلمت طلباً مشابهاً بزعم أنه منّا، من فضلك لا تستجب وأخبرنا فوراً.',
+    'Newsletter': 'النشرة البريدية',
+    'Subscribing to our newsletter is entirely optional, and you can unsubscribe at any time using the link in any email we send, or by contacting us directly.':
+      'الاشتراك في نشرتنا البريدية اختياري تمامًا، ويمكنك إلغاء الاشتراك في أي وقت من خلال الرابط في أي رسالة نرسلها، أو بالتواصل معنا مباشرة.',
+    'Cookies': 'ملفات تعريف الارتباط',
+    'Our website uses basic cookies to keep your cart and wishlist working correctly across pages. We do not use cookies to track you across other websites.':
+      'يستخدم موقعنا ملفات تعريف ارتباط أساسية لضمان عمل سلة التسوق وقائمة الأمنيات بشكل صحيح بين الصفحات. لا نستخدم ملفات تعريف الارتباط لتتبعك في مواقع أخرى.',
+    'Your Rights': 'حقوقك',
+    'You can ask us at any time to see, correct, or delete the personal information we hold about you by contacting our customer service team.':
+      'يمكنك في أي وقت أن تطلب منّا رؤية أو تصحيح أو حذف بياناتك الشخصية لدينا بالتواصل مع فريق خدمة العملاء.',
+    'Questions About Your Data?': 'أسئلة حول بياناتك؟',
+    'If you have any question about how we handle your information, please contact our customer service team and we will be happy to assist you.':
+      'إذا كان لديك أي سؤال حول كيفية تعاملنا مع بياناتك، يُرجى التواصل مع فريق خدمة العملاء وسنكون سعداء بمساعدتك.',
+
+    // ---- sitemap.html ----
+    'Sitemap — Wateen Perfumes': 'خريطة الموقع — واتين بيرفيومز',
+    "Every page on Wateen Perfumes, in one place.": 'كل صفحات موقع واتين بيرفيومز، في مكان واحد.',
+    'Customer Care': 'خدمة العملاء',
+    'Account & Legal': 'الحساب والقوانين',
+    'Account &amp; Legal': 'الحساب والقوانين',
+    'All Products': 'كل المنتجات',
+    'Checkout': 'إتمام الطلب',
+    "Can't Find What You're Looking For?": 'مش لاقي ما تبحث عنه؟',
+    "Reach out to our customer service team and we'll be happy to help you find it.":
+      'تواصل مع فريق خدمة العملاء وسنكون سعداء بمساعدتك في إيجاده.'
   };
 
   // fragrance-note ingredient words: stored as free-text comma lists with no
