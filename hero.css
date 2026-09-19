@@ -1260,25 +1260,6 @@ a{ text-decoration:none; color:inherit; }
 .searchm__foot p b{ display:block; font-size:13px; letter-spacing:.03em; color:var(--ink); margin-bottom:2px; }
 .searchm__foot .ghost{ flex:0 0 auto; margin-top:0; white-space:nowrap; }
 
-@media (max-width:640px){
-  .searchm__row{
-    grid-template-columns:76px 1fr auto;
-    grid-template-areas:
-      "img info price"
-      "img info add"
-      "img info wish";
-    row-gap:6px;
-  }
-  .searchm__rowImg{ width:76px; height:76px; grid-area:img; }
-  .searchm__rowInfo{ grid-area:info; }
-  .searchm__rowInfo b{ font-size:16px; }
-  .searchm__rowInfo i{ font-size:13px; }
-  .searchm__rowPrice{ grid-area:price; font-size:16px; }
-  .searchm__rowAdd{ grid-area:add; justify-self:start; }
-  .searchm__rowWish{ grid-area:wish; justify-self:start; }
-}
-
-
 /* ═══════════════ HERO ═══════════════ */
 
 .hero{
@@ -3744,10 +3725,12 @@ a{ text-decoration:none; color:inherit; }
   }
   .searchm__sideBlock{ margin-bottom:18px; flex:0 0 auto; min-width:150px; }
   .searchm__results{ padding:18px; }
-  .searchm__row{ grid-template-columns:64px 1fr auto; row-gap:8px; }
-  .searchm__rowImg{ width:64px; height:64px; }
+  .searchm__row{ grid-template-columns:80px 1fr auto; row-gap:8px; padding:16px 8px; }
+  .searchm__rowImg{ width:80px; height:80px; }
+  .searchm__rowInfo b{ font-size:16px; }
+  .searchm__rowInfo i{ font-size:13px; }
   .searchm__rowWish{ grid-row:1; grid-column:3; }
-  .searchm__rowPrice{ grid-column:2 / 3; }
+  .searchm__rowPrice{ grid-column:2 / 3; font-size:16px; }
   .searchm__rowAdd{ grid-column:2 / 3; justify-self:start; }
   .searchm__foot{
     flex-direction:column;
