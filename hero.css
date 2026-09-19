@@ -1983,6 +1983,9 @@ a{ text-decoration:none; color:inherit; }
   background:#fff;
   border-radius:6px;
   margin-top:34px;
+  /* a bit bigger than the shared 320px card default, just for this rail */
+  flex:0 0 350px;
+  height:350px;
 }
 .best .card__badge{
   position:absolute;
@@ -2043,6 +2046,11 @@ a{ text-decoration:none; color:inherit; }
   transform:scale(1.11) translateY(-4px);
   filter:drop-shadow(0 20px 26px rgba(94,68,40,.3));
 }
+
+/* Best Sellers: slightly less inset than the shared card default, so the
+   bottle reads a bit bigger inside its plate — scoped to .best only, every
+   other grid that reuses .card__media keeps the original 12% breathing room */
+.best .card__media img{ padding:8%; }
 
 .card__brand{
   margin:0 0 7px;
@@ -2169,7 +2177,7 @@ a{ text-decoration:none; color:inherit; }
   grid-template-columns:repeat(4,1fr);
   gap:14px;
   /* a compact, centred grid — noticeably smaller than a full-bleed layout */
-  max-width:640px;
+  max-width:720px;
   margin:0 auto;
 }
 .tile--wide{ grid-column:1 / -1; }
@@ -3461,6 +3469,8 @@ a{ text-decoration:none; color:inherit; }
   .grid--products{ grid-template-columns:repeat(2,1fr); gap:26px 14px; }
   .card{ padding:10px 6px 14px; }
   .card__media{ flex:0 0 170px; height:170px; margin-bottom:10px; }
+  /* best sellers only: a bit bigger than the shared card default above */
+  .best .card__media{ flex:0 0 200px; height:200px; }
   .card__name{ font-size:15px; line-height:1.25; }
   .card__type{ font-size:10px; margin-bottom:8px; }
   .card__brand{ font-size:8px; letter-spacing:.14em; margin-bottom:5px; }
@@ -3477,8 +3487,8 @@ a{ text-decoration:none; color:inherit; }
   /* ---- categories: 2 across, watches full width ---- */
   .cats{ padding:70px 0 66px; }
   .cats__grid{ grid-template-columns:1fr 1fr; gap:12px; max-width:none; }
-  .tile{ grid-column:auto; aspect-ratio:1 / 1.16; }
-  .tile--wide{ grid-column:1 / -1; aspect-ratio:1.9 / 1; }
+  .tile{ grid-column:auto; aspect-ratio:1 / 1.32; }
+  .tile--wide{ grid-column:1 / -1; aspect-ratio:1.6 / 1; }
   .tile__body{ left:18px; right:18px; bottom:18px; }
   .tile__name{ font-size:1.32rem; margin-bottom:6px; }
   .tile__desc{ font-size:9px; letter-spacing:.18em; }
@@ -3547,9 +3557,9 @@ a{ text-decoration:none; color:inherit; }
   /* the copy runs on one line; the HTML carries a space before each <br>
      so the words never jam together when the break is hidden */
   .col__sub br{ display:none; }
-  .mini{ flex:0 0 calc((100% - 40px) / 2.6); }
+  .mini{ flex:0 0 calc((100% - 40px) / 2.3); }
   /* one variable drives the box height and the photo height together */
-  .mini{ --ph-h:104px; }
+  .mini{ --ph-h:124px; }
   .mini__ph{ margin-bottom:12px; }
   .mini b{ font-size:7.5px; letter-spacing:.16em; }
   .mini em{ font-size:10.5px; }
@@ -3659,6 +3669,7 @@ a{ text-decoration:none; color:inherit; }
 @media (max-width:420px){
   .grid--products{ gap:18px 10px; }
   .card__media{ flex:0 0 150px; height:150px; }
+  .best .card__media{ flex:0 0 175px; height:175px; }
   .card__name{ font-size:14px; }
   .tile__name{ font-size:1.14rem; }
   .mini{ flex:0 0 calc((100% - 30px) / 2.2); }
