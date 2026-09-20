@@ -4,6 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shop All — Wateen Perfumes</title>
+<meta name="description" content="Browse the full Wateen Perfumes collection — authentic men's, women's and unisex fragrances, designer watches and accessories, all in one place with fast delivery across Egypt.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Wateen Perfumes">
+<link rel="canonical" href="/shop.html" data-seo-url="1">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Wateen Perfumes">
+<meta property="og:title" content="Shop All — Wateen Perfumes">
+<meta property="og:description" content="Browse the full Wateen Perfumes collection — authentic men's, women's and unisex fragrances, designer watches and accessories, all in one place with fast delivery across Egypt.">
+<meta property="og:url" content="/shop.html" data-seo-url="1">
+<meta property="og:image" content="assets/logo.png" data-seo-url="1">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ar_EG">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Shop All — Wateen Perfumes">
+<meta name="twitter:description" content="Browse the full Wateen Perfumes collection — authentic men's, women's and unisex fragrances, designer watches and accessories, all in one place with fast delivery across Egypt.">
+<meta name="twitter:image" content="assets/logo.png" data-seo-url="1">
+<meta name="theme-color" content="#12100d">
+<script src="seo-config.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
@@ -763,7 +783,7 @@
       ? '<span class="card__priceNow">' + t('EGP') + ' ' + fmt(p.price) + '</span><span class="card__priceWas">' + t('EGP') + ' ' + fmt(p.compareAtPrice) + '</span>'
       : t('EGP') + ' ' + fmt(p.price);
     return (
-      '<article class="card" style="--d:' + (i % 4) + '" data-id="' + p.id + '">' +
+      '<article class="card' + (p.cat === 'watches' ? ' is-watch' : '') + '" style="--d:' + (i % 4) + '" data-id="' + p.id + '">' +
         '<div class="card__media">' +
           badge +
           '<img src="' + p.img + '" alt="' + pName(p) + '" loading="lazy">' +

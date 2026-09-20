@@ -2,6 +2,7 @@
   "version": 2,
   "buildCommand": null,
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api" }
+    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/sitemap.xml", "destination": "/api" }
   ]
 }

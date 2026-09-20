@@ -517,3 +517,22 @@ body.shop-page .crumb{ padding-top:88px; }
    give them noticeably less inset than perfume bottles get, matching the
    card size/grid rhythm every other category already uses ---- */
 .accessories-page .shopGrid .card__media img{ padding:4%; }
+
+/* ---- watches: every card media box gets the same stone-podium backdrop
+   (a shared studio scene, not a per-watch photo) so the whole grid reads as
+   one consistent, premium display case instead of bare white squares.
+   .watches-page covers watches.html, where every card is a watch; .is-watch
+   (set per-card by the JS that builds each card) covers shop.html and brand
+   pages, where watches are mixed in alongside perfumes/accessories.
+   The product-page gallery gets the matching treatment in product.css. ---- */
+.watches-page .shopGrid .card__media,
+.watches-page .pgrid .card__media,
+.shopGrid .card.is-watch .card__media{
+  background:#e9e0d2 url('assets/bg/watches.webp') center/cover no-repeat;
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 10px 26px -14px rgba(58,45,30,.35);
+}
+.watches-page .shopGrid .card__media img,
+.watches-page .pgrid .card__media img,
+.shopGrid .card.is-watch .card__media img{ padding:14%; }

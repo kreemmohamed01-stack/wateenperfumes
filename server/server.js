@@ -21,6 +21,7 @@ const activityRoutes = require('./routes/activity');
 const settingsRoutes = require('./routes/settings');
 const overviewRoutes = require('./routes/overview');
 const publicCatalogRoutes = require('./routes/public-catalog');
+const { sitemapHandler } = require('./routes/public-catalog');
 const staffRoutes = require('./routes/staff');
 const analyticsRoutes = require('./routes/analytics');
 
@@ -38,6 +39,12 @@ app.post('/api/public/orders', (req, res, next) => orderRoutes.createPublicOrder
 app.post('/api/public/coupons/validate', (req, res, next) => couponRoutes.validatePublic(req, res, next));
 app.get('/api/public/coupons/featured', (req, res, next) => couponRoutes.featuredPublic(req, res, next));
 app.post('/api/public/reviews', (req, res, next) => reviewRoutes.submitPublic(req, res, next));
+
+// sitemap.xml is generated live from the DB (products/brands change over
+// time), so it's served through the API rather than as a static file. On
+// Vercel, vercel.json rewrites /sitemap.xml to this same function.
+app.get('/sitemap.xml', sitemapHandler);
+app.get('/api/sitemap.xml', sitemapHandler);
 
 /* ---------- admin API (auth required inside each router) ----------
    analytics is mounted here even though its /collect endpoint is public:

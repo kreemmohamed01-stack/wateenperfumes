@@ -4,6 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shuhrah — RASASI | Wateen Perfumes</title>
+<!-- description/canonical/OG/Twitter content + the JSON-LD block below are filled in per-product by the script at the bottom of this page (search "SEO: fill in product meta") once the product loads -->
+<meta name="description" id="metaDesc" content="Shop authentic luxury fragrances at Wateen Perfumes with fast delivery across Egypt.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Wateen Perfumes">
+<link rel="canonical" id="metaCanonical" href="/product.html" data-seo-url="1">
+<!-- Open Graph -->
+<meta property="og:type" content="product">
+<meta property="og:site_name" content="Wateen Perfumes">
+<meta property="og:title" id="metaOgTitle" content="Wateen Perfumes">
+<meta property="og:description" id="metaOgDesc" content="Shop authentic luxury fragrances at Wateen Perfumes with fast delivery across Egypt.">
+<meta property="og:url" id="metaOgUrl" content="/product.html" data-seo-url="1">
+<meta property="og:image" id="metaOgImage" content="assets/logo.png" data-seo-url="1">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ar_EG">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" id="metaTwTitle" content="Wateen Perfumes">
+<meta name="twitter:description" id="metaTwDesc" content="Shop authentic luxury fragrances at Wateen Perfumes with fast delivery across Egypt.">
+<meta name="twitter:image" id="metaTwImage" content="assets/logo.png" data-seo-url="1">
+<meta name="theme-color" content="#12100d">
+<script src="seo-config.js" defer></script>
+<script type="application/ld+json" id="productJsonLd">{}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
@@ -700,12 +722,65 @@
   if (!product) return; // catalog.js failed to load — nothing to render
 
   if (product.cat === 'accessories') document.body.classList.add('accessories-page');
+  if (product.cat === 'watches') document.body.classList.add('watches-page');
 
   var catLabel = { men: 'Men', women: 'Women', unisex: 'Unisex' };
   var catHref = { men: 'men.html', women: 'women.html', unisex: 'unisex.html' };
 
   // ---- page title + breadcrumb ----
   document.title = pName(product) + ' — ' + pBrand(product) + ' | Wateen Perfumes';
+
+  // ---- SEO: fill in product meta (description/canonical/OG/Twitter/JSON-LD) ----
+  // Always uses the English name/brand/description for these tags — crawlers
+  // index one canonical version of the page regardless of the visitor's
+  // client-side language toggle, so this intentionally ignores window.LANG.
+  (function seoFillProductMeta(){
+    var url = 'product.html?id=' + encodeURIComponent(product.id);
+    var title = product.name + ' — ' + product.brand + ' | Wateen Perfumes';
+    var rawDesc = product.desc || (product.brand + ' ' + product.name + ' — authentic luxury fragrance at Wateen Perfumes.');
+    var desc = rawDesc.length > 160 ? rawDesc.slice(0, 157).trim() + '…' : rawDesc;
+    var img = product.img || 'assets/logo.png';
+
+    var setContent = function (id, val) { var el = document.getElementById(id); if (el) el.setAttribute('content', val); };
+    var setHref = function (id, val) { var el = document.getElementById(id); if (el) el.setAttribute('href', val); };
+
+    setContent('metaDesc', desc);
+    setHref('metaCanonical', window.SEO ? window.SEO.abs(url) : url);
+    setContent('metaOgTitle', title);
+    setContent('metaOgDesc', desc);
+    setContent('metaOgUrl', window.SEO ? window.SEO.abs(url) : url);
+    setContent('metaOgImage', window.SEO ? window.SEO.abs(img) : img);
+    setContent('metaTwTitle', title);
+    setContent('metaTwDesc', desc);
+    setContent('metaTwImage', window.SEO ? window.SEO.abs(img) : img);
+
+    var ld = document.getElementById('productJsonLd');
+    if (ld) {
+      var availability = (product.stock === undefined || product.stock > 0) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
+      ld.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name,
+        image: product.images && product.images.length ? product.images : [img],
+        description: rawDesc,
+        sku: product.sku || product.id,
+        brand: { '@type': 'Brand', name: product.brand },
+        offers: {
+          '@type': 'Offer',
+          url: window.SEO ? window.SEO.abs(url) : url,
+          priceCurrency: 'EGP',
+          price: product.price,
+          availability: availability
+        },
+        aggregateRating: (product.reviews && Number(product.reviews) > 0) ? {
+          '@type': 'AggregateRating',
+          ratingValue: (String(product.rating || '').split('★').length - 1) || 5,
+          reviewCount: product.reviews
+        } : undefined
+      });
+    }
+  })();
+
   var crumb = document.getElementById('pdCrumb');
   if (crumb) {
     var cat = product.cat;

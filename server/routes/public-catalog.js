@@ -172,3 +172,66 @@ router.get('/brands', async (req, res, next) => {
 });
 
 module.exports = router;
+
+// ── sitemap.xml — mounted separately at the site root by server.js so the
+// URL is /sitemap.xml, not /api/public/sitemap.xml. Lists every static page
+// plus every published product and active brand, pulled live from the DB so
+// it never goes stale as the catalog changes.
+// SITE_URL: swap this to the real domain once it's purchased (kept in sync
+// with the same placeholder used in seo-config.js on the frontend).
+const SITE_URL = process.env.SITE_URL || 'https://wateenperfumes.com';
+
+const STATIC_PAGES = [
+  { path: '/', priority: '1.0', changefreq: 'daily' },
+  { path: '/shop.html', priority: '0.9', changefreq: 'daily' },
+  { path: '/men.html', priority: '0.8', changefreq: 'daily' },
+  { path: '/women.html', priority: '0.8', changefreq: 'daily' },
+  { path: '/unisex.html', priority: '0.8', changefreq: 'daily' },
+  { path: '/watches.html', priority: '0.8', changefreq: 'daily' },
+  { path: '/accessories.html', priority: '0.8', changefreq: 'daily' },
+  { path: '/all-brands.html', priority: '0.7', changefreq: 'weekly' },
+  { path: '/wholesale.html', priority: '0.5', changefreq: 'monthly' },
+  { path: '/shipping-policy.html', priority: '0.3', changefreq: 'monthly' },
+  { path: '/returns.html', priority: '0.3', changefreq: 'monthly' },
+  { path: '/terms.html', priority: '0.3', changefreq: 'monthly' },
+  { path: '/privacy-policy.html', priority: '0.3', changefreq: 'monthly' }
+];
+
+function xmlEscape(s) {
+  return String(s).replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&apos;', '"': '&quot;' }[c]));
+}
+
+async function sitemapHandler(req, res, next) {
+  try {
+    const [products, brands] = await Promise.all([
+      db.prepare(`SELECT slug, updated_at FROM products WHERE status = 'published'`).all(),
+      db.prepare('SELECT slug, updated_at FROM brands WHERE is_active = TRUE').all()
+    ]);
+
+    const urls = [];
+    const today = new Date().toISOString().slice(0, 10);
+
+    STATIC_PAGES.forEach(p => urls.push({ loc: SITE_URL + p.path, lastmod: today, changefreq: p.changefreq, priority: p.priority }));
+    products.forEach(p => urls.push({
+      loc: `${SITE_URL}/product.html?id=${encodeURIComponent(p.slug)}`,
+      lastmod: (p.updated_at ? new Date(p.updated_at) : new Date()).toISOString().slice(0, 10),
+      changefreq: 'weekly', priority: '0.7'
+    }));
+    brands.forEach(b => urls.push({
+      loc: `${SITE_URL}/brand.html?id=${encodeURIComponent(b.slug)}`,
+      lastmod: (b.updated_at ? new Date(b.updated_at) : new Date()).toISOString().slice(0, 10),
+      changefreq: 'weekly', priority: '0.6'
+    }));
+
+    const body = `<?xml version="1.0" encoding="UTF-8"?>\n` +
+      `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+      urls.map(u =>
+        `  <url>\n    <loc>${xmlEscape(u.loc)}</loc>\n    <lastmod>${u.lastmod}</lastmod>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`
+      ).join('\n') +
+      `\n</urlset>\n`;
+
+    res.type('application/xml').send(body);
+  } catch (e) { next(e); }
+}
+
+module.exports.sitemapHandler = sitemapHandler;
