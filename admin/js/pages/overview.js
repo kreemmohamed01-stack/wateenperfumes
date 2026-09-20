@@ -206,12 +206,12 @@ function renderRevenueChart(series) {
   box.innerHTML = `
     <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:100%;height:100%">
       <defs><linearGradient id="rev-grad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#c9a227" stop-opacity="0.3"/>
-        <stop offset="100%" stop-color="#c9a227" stop-opacity="0"/>
+        <stop offset="0%" stop-color="#1a7a4e" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#1a7a4e" stop-opacity="0"/>
       </linearGradient></defs>
       ${gridLines}
       <path d="${area}" fill="url(#rev-grad)"/>
-      <path d="${path}" fill="none" stroke="#a07d1c" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="${path}" fill="none" stroke="#0f5536" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
     </svg>
     <div class="hstack" style="justify-content:space-between;margin-top:8px;font-size:11px;color:var(--ink-soft)">
       <span>${escapeHtml(fmtDay(series[0].day))}</span><span>${escapeHtml(fmtDay(series[series.length-1].day))}</span>
@@ -220,9 +220,9 @@ function renderRevenueChart(series) {
 }
 
 const STATUS_COLORS = {
-  pending: '#c9a227', confirmed: '#e3c76a', processing: '#a07d1c', packed: '#8a6f34',
-  shipped: '#736a5f', out_for_delivery: '#9a8f80', delivered: '#1a7a4e',
-  cancelled: '#c62828', returned: '#8f1d1d', refunded: '#bdb3a4'
+  pending: '#9a6a12', confirmed: '#1e4f78', processing: '#2fae76', packed: '#0f5536',
+  shipped: '#12100d', out_for_delivery: '#6b6255', delivered: '#157a49',
+  cancelled: '#b5251f', returned: '#7f1a16', refunded: '#9a9184'
 };
 
 function renderStatusDonut(counts, kpis) {

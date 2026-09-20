@@ -177,12 +177,12 @@ async function loadVisitorChart(days) {
     box.innerHTML = `
       <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:100%;height:100%">
         <defs><linearGradient id="vis-grad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#c9a227" stop-opacity="0.3"/>
-          <stop offset="100%" stop-color="#c9a227" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#1a7a4e" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#1a7a4e" stop-opacity="0"/>
         </linearGradient></defs>
         ${guides}
         <path d="${area}" fill="url(#vis-grad)"/>
-        <path d="${path}" fill="none" stroke="#a07d1c" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="${path}" fill="none" stroke="#0f5536" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
       </svg>
       <div class="hstack" style="justify-content:space-between;margin-top:8px;font-size:11px;color:var(--ink-soft)">
         <span>${escapeHtml(fmtDay(series[0].day))}</span>

@@ -28,7 +28,7 @@ async function loadNotifList() {
   const box = document.getElementById('notifList');
   if (!data.items.length) { box.innerHTML = emptyState('', 'No notifications yet', ''); return; }
   box.innerHTML = data.items.map(n => `
-    <div class="hstack" data-notif="${n.id}" data-link="${n.link||''}" style="padding:14px 20px;border-bottom:1px solid var(--line-soft);cursor:pointer;${n.isRead?'':'background:rgba(185,139,82,.05)'}">
+    <div class="hstack" data-notif="${n.id}" data-link="${n.link||''}" style="padding:14px 20px;border-bottom:1px solid var(--line-soft);cursor:pointer;${n.isRead?'':'background:rgba(21,85,54,.06)'}">
       <span style="font-size:18px">${NOTIF_ICON[n.type]||'🔔'}</span>
       <div style="flex:1"><b style="font-size:12.5px">${escapeHtml(n.title)}</b><div class="muted" style="font-size:11.5px">${escapeHtml(n.body||'')}</div></div>
       <span class="muted" style="font-size:10.5px;white-space:nowrap">${fmtDate(n.createdAt)}</span>
