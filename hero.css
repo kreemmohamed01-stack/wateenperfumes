@@ -2760,6 +2760,15 @@ a{ text-decoration:none; color:inherit; }
   filter:drop-shadow(0 16px 22px rgba(94,68,40,.3));
 }
 
+/* watches, homepage collection rail: same shared stone-podium backdrop used
+   on the dedicated watches page/cards (shop.css, product.css), so a watch
+   reads as a display piece here too instead of floating on bare page bg */
+.mini--watch .mini__ph{
+  background:#e9e0d2 url('assets/bg/watches.webp') center/cover no-repeat;
+  border-radius:8px;
+}
+.mini--watch .mini__ph img{ padding:14%; box-sizing:border-box; }
+
 /* one quiet cue that the row scrolls — a small gold ring with a chevron
    that nudges itself, sitting just past the right edge of the rail */
 .col__hint{
