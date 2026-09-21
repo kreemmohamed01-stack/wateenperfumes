@@ -545,7 +545,15 @@
    (shared across every page — index & category pages alike)
    ════════════════════════════════════════════════ */
 
-(function () {
+// This is the one IIFE in this file that actually reads window.CATALOG, so
+// it's the only one that needs to wait for site-data.js's window.__dataReady
+// first. That promise never rejects and always settles (site-data.js has its
+// own timeout fallback), so this always runs — on a slow/flaky connection it
+// just starts a little later, rather than the cart/wishlist/search/best-
+// sellers grid it defines going dark the way it did the last time this ran
+// conditionally on a fetch succeeding. site-data.js loads immediately before
+// this script tag, so __dataReady is guaranteed to already exist here.
+(window.__dataReady || Promise.resolve()).then(function () {
   'use strict';
 
   // shared catalog — defined in catalog.js, loaded before this file
@@ -1079,7 +1087,7 @@
     });
   });
 
-})();
+});
 
 
 /* ════════════════════════════════════════════════

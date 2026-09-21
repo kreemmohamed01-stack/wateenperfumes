@@ -3,7 +3,11 @@
    Reads the cart saved by hero.js, renders the summary,
    validates the form, and confirms the order.
    ════════════════════════════════════════════════ */
-(function () {
+// Waits for site-data.js's window.__dataReady first — see the matching note
+// in hero.js. That promise never rejects and always settles, so this always
+// runs; it just starts once window.CATALOG/SITE_SETTINGS are real instead of
+// possibly reading them empty before an async fetch has landed.
+(window.__dataReady || Promise.resolve()).then(function () {
   'use strict';
 
   var CATALOG  = (typeof window !== 'undefined' && window.CATALOG) || [];
@@ -645,4 +649,4 @@
   syncOptions('shipping');
   syncPaymentPanels();
   render();
-})();
+});

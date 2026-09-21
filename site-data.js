@@ -8,59 +8,69 @@
    every page script keep working unmodified, just backed
    by the real database now.
 
-   Uses a synchronous XHR deliberately: every page script
-   that follows (hero.js, checkout.js, category filters,
-   etc.) reads window.CATALOG at parse time, not after a
-   DOMContentLoaded callback, so the fetch must finish
-   before this script tag returns control to the parser.
+   This used to fetch via a synchronous XHR so that every
+   later page script (hero.js, checkout.js, category
+   filters, etc.) could read window.CATALOG at parse time.
+   That guaranteed the data was ready, but a synchronous XHR
+   permanently disables the browser's back/forward cache
+   (bfcache) on the whole page — every back-button press
+   forced a full slow reload from the server instead of an
+   instant restore.
 
-   An earlier version of this file fetched asynchronously
-   and loaded hero.js/checkout.js only once the data had
-   arrived, to let the browser's back/forward cache work.
-   That broke the site for real visitors: hero.js is also
-   where the cart, wishlist, search, and the scroll-reveal
-   animation that makes every section's content visible all
-   live, so on a slow or flaky connection the whole site
-   below the hero stayed invisible and non-functional until
-   that fetch finished — sometimes indefinitely. A slightly
-   slower back button is a far smaller problem than that, so
-   this reverts to the synchronous, guaranteed-ready approach.
-   The one improvement kept from that attempt: this still
-   calls a single combined /api/public/bootstrap endpoint
-   instead of three separate ones, which the backend runs in
-   parallel — one round trip instead of three.
+   An earlier attempt fixed the bfcache problem by loading
+   hero.js/checkout.js only *after* an async fetch resolved,
+   but gated on the fetch succeeding — so on a slow or flaky
+   connection (or any fetch failure) hero.js never ran at
+   all, and the cart, wishlist, search and reveal animation
+   it also contains went dark for the whole visit.
+
+   This version keeps hero.js/checkout.js/every catalog-
+   reading inline script loading as plain, always-run
+   <script> tags — nothing about how or whether they execute
+   changes — but each of them now starts by awaiting
+   window.__dataReady (set below) before touching
+   window.CATALOG. That promise NEVER rejects and always
+   settles (see the timeout fallback below), so those scripts
+   are still guaranteed to run and see real data whenever the
+   network cooperates, and safely fall back to an empty
+   catalog rather than hang forever if it doesn't. No sync
+   XHR anywhere, so bfcache stays intact.
+
+   Still calls the one combined /api/public/bootstrap
+   endpoint (catalog + settings + featured coupon in one
+   response, built in parallel server-side) instead of three
+   separate requests.
    ════════════════════════════════════════════════ */
 (function () {
   'use strict';
 
-  function fetchJsonSync(url) {
-    try {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', url, false); // synchronous by design — see note above
-      xhr.send(null);
-      if (xhr.status >= 200 && xhr.status < 300) return JSON.parse(xhr.responseText);
-    } catch (e) { /* fall through to fallback below */ }
-    return null;
-  }
-
-  // Every page starts this same request inline in <head>, long before this
-  // file downloads (see window.__bootPromise there). By the time we get
-  // here that response is normally already sitting in the browser's HTTP
-  // cache, so the synchronous read below is served from memory instead of
-  // going to the network — which is what makes it safe to still be
-  // synchronous. Staying synchronous matters: every page's scripts read
-  // window.CATALOG the instant they run, and making that async is what
-  // previously broke the cart, search and the section reveal animation.
-  var boot = fetchJsonSync('/api/public/bootstrap');
-
-  window.CATALOG = (boot && boot.catalog) || (window.CATALOG || []);
-  window.SITE_SETTINGS = (boot && boot.settings) || {
+  var FALLBACK = {
     freeShippingThreshold: 1000, defaultShippingFee: 80,
     globalSaleEnabled: false, globalSalePercent: 0,
     codEnabled: true, instapayEnabled: true, cardEnabled: true, instapayNumber: '01027380269',
     shippingRatesByGovernorate: {}
   };
-  window.FEATURED_COUPON = (boot && boot.featuredCoupon) || null;
+
+  // Every page starts this same request inline in <head>, long before this
+  // file downloads (see window.__bootPromise there), so by the time we get
+  // here it has often already resolved or is close to it. __bootPromise
+  // never rejects — it resolves null on any failure — so .then() below
+  // always fires. A page that somehow never defined it (or an ad-blocker
+  // that stripped the inline script) still gets a promise here instead of
+  // a hard error.
+  var bootPromise = window.__bootPromise || Promise.resolve(null);
+
+  // Absolute safety net: never let a stalled/never-resolving request leave
+  // the rest of the site waiting forever. 5s is generous but bounded.
+  var timeout = new Promise(function (resolve) {
+    setTimeout(function () { resolve(null); }, 5000);
+  });
+
+  window.__dataReady = Promise.race([bootPromise, timeout]).then(function (boot) {
+    window.CATALOG = (boot && boot.catalog) || (window.CATALOG || []);
+    window.SITE_SETTINGS = (boot && boot.settings) || FALLBACK;
+    window.FEATURED_COUPON = (boot && boot.featuredCoupon) || null;
+  });
 
   /* ---------- announcement bar: dashboard text, or hide it entirely ---------- */
   function applyAnnouncementSettings() {
@@ -155,13 +165,17 @@
     syncSaleBanner();
   }
 
-  // this file is parsed before hero.js, which is what defines __wireRolls, so
-  // the work is deferred to DOMContentLoaded (by which point hero.js has run).
-  // If the document is somehow already parsed, fall back to a microtask so
-  // hero.js still gets its chance to define the hook first.
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyAll);
-  } else {
-    setTimeout(applyAll, 0);
-  }
+  // Needs both: window.SITE_SETTINGS/FEATURED_COUPON (only real once
+  // __dataReady resolves, now that the fetch is async) and __wireRolls,
+  // which hero.js defines once it runs. DOMContentLoaded fires whenever the
+  // browser finishes parsing regardless of the fetch, so waiting on it alone
+  // is no longer enough — wait for whichever of the two settles last.
+  var domReady = new Promise(function (resolve) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', resolve);
+    } else {
+      setTimeout(resolve, 0);
+    }
+  });
+  Promise.all([window.__dataReady, domReady]).then(applyAll);
 })();

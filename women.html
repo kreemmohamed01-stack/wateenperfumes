@@ -627,7 +627,11 @@ window.__bootPromise = (function () {
 <script src="site-data.js"></script>
 <script src="hero.js"></script>
 <script>
-(function () {
+// Waits for site-data.js's window.__dataReady first — see the matching note
+// in hero.js. Never rejects and always settles, so this always runs; it
+// just starts once window.CATALOG is real instead of possibly reading it
+// empty before an async fetch has landed.
+(window.__dataReady || Promise.resolve()).then(function () {
 /* ════════════════════════════════════════════════
    WOMEN — dynamic filtering, sorting, pagination
    over the shared CATALOG, scoped to cat === 'women'
@@ -1031,7 +1035,7 @@ window.__bootPromise = (function () {
 
   renderResults();
 })();
-})();
+});
 </script>
 <script src="track.js" defer></script>
 </body>
