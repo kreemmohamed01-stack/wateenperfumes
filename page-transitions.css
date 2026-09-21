@@ -36,7 +36,12 @@ html:not(.pt-ready)::after{ display: none; }
 
 .pt-ready.pt-in body {
   opacity: 1;
-  transform: translateY(0);
+  /* "none", not translateY(0) — a live transform of any kind makes body a
+     containing block for its fixed-position descendants (the zoom lightbox,
+     cart/wishlist drawers, mobile nav…), so they end up positioned against
+     body's full scrollable height instead of the viewport once the intro
+     animation "finishes" but the transform value never actually clears. */
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
