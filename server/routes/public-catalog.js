@@ -129,6 +129,16 @@ async function loadAllProductRelations(productIds) {
   return { variantsByProduct, imagesByProduct, categoriesByProduct, brandsById };
 }
 
+// Fields that ship on a single product (via /catalog/:slug) but are dead
+// weight in the full 400+ product list every page downloads before it can
+// render. Dropping them here is purely a transfer-size win:
+//   variants — no frontend code reads it at all; every product currently
+//              has exactly one variant and its price/size/stock are
+//              already present as top-level fields.
+//   images   — the only reader is product.html's JSON-LD, which is
+//              already written to fall back to `img` when it's absent.
+const BULK_OMIT_FIELDS = ['variants', 'images'];
+
 // shared by /catalog and /bootstrap so both return identical shapes
 async function buildCatalog(settings) {
   const rows = await db.prepare(`SELECT * FROM products WHERE status = 'published'`).all();
@@ -136,7 +146,11 @@ async function buildCatalog(settings) {
   const fullProducts = rows.map(row => assembleProduct(
     row, relations.variantsByProduct, relations.imagesByProduct, relations.categoriesByProduct, relations.brandsById
   ));
-  return fullProducts.map(p => toLegacyShape(p, settings));
+  return fullProducts.map(p => {
+    const shaped = toLegacyShape(p, settings);
+    BULK_OMIT_FIELDS.forEach(f => { delete shaped[f]; });
+    return shaped;
+  });
 }
 
 // mirrors settings.js's publicSettings() response shape exactly, so
@@ -194,20 +208,45 @@ router.get('/catalog', async (req, res, next) => {
 // parser for ~1.4s and made every navigation feel slow. Running the same
 // three queries in parallel here and returning them together cuts that to
 // one round trip. See site-data.js for the frontend side of this.
+// ── in-memory cache for the bootstrap payload ──
+// Building this response means four cross-table queries over 400+ products
+// plus assembly — about a second of server time — and it was being redone
+// from scratch on every single page view. The catalog only changes when
+// someone edits it in the dashboard, so hold the built JSON briefly and
+// serve repeats straight from memory. On Vercel each warm lambda keeps its
+// own copy, which is fine: the TTL bounds how stale anything can get.
+const storefrontCache = require('../lib/storefront-cache');
+
 router.get('/bootstrap', async (req, res, next) => {
   try {
+    res.type('application/json');
+    // This response is fetched on EVERY page load, and it's the single
+    // biggest thing standing between a visitor and a usable page. Without
+    // a cache header the browser re-downloads the whole catalog each time
+    // someone moves between pages. 60s of private caching plus a longer
+    // stale-while-revalidate window means navigating the site reuses what's
+    // already in memory instantly, while a dashboard edit still shows up
+    // within about a minute.
+    res.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=600');
+
+    const cached = storefrontCache.get();
+    if (cached) return res.send(cached);
+
     const settings = await settingsMap();
     const [catalog, featuredCoupon] = await Promise.all([
       buildCatalog(settings),
       loadFeaturedCoupon()
     ]);
-    res.json({
+    const body = JSON.stringify({
       catalog,
       settings: toPublicSettingsShape(settings),
       featuredCoupon
     });
+    storefrontCache.set(body);
+    return res.send(body);
   } catch (e) { next(e); }
 });
+
 
 router.get('/catalog/:slug', async (req, res, next) => {
   try {

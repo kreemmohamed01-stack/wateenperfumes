@@ -1,40 +1,28 @@
 /* ════════════════════════════════════════════════
    WATEEN PERFUMES — SITE-WIDE PAGE TRANSITIONS
-   Two things, both purely visual — neither ever delays
-   or intercepts navigation itself, so back/forward and
-   link clicks stay as fast as the browser makes them
-   (including instant bfcache restores):
+   A brief loading veil plus a soft fade-in, both purely
+   visual. Nothing here ever intercepts a click or delays
+   a navigation, so links, back and forward stay exactly
+   as fast as the browser makes them.
 
-   1. A full-screen loading veil. The plain dark layer is
-      painted by CSS alone (html.pt-ready::before/::after
-      in page-transitions.css) the instant this script
-      runs — before <body> even exists, since this file is
-      linked at the very top of <head>. The wordmark +
-      spinner on top of it are injected here as the first
-      element in <body>, the moment the parser reaches it
-      (a few milliseconds later at most). The whole veil
-      stays up until the page is actually ready (fonts,
-      images and this page's own data fetch have all
-      settled — see revealOnce() below), not just once the
-      browser has painted an empty shell.
-
-   2. A soft fade/rise-in for the page content itself once
-      that happens.
-
-   No dependencies, fully skipped (motion-wise) for users
-   who asked for reduced motion — the veil still shows and
-   clears either way, just without the spin/slide.
+   Timing matters a lot here. An earlier version revealed
+   the page on window "load", which waits for every image
+   on the page — the homepage has ~70 — so on a phone the
+   whole site sat behind a blank veil for many seconds.
+   The veil now clears as soon as the DOM is parsed and
+   the page's own data is in (DOMContentLoaded), which is
+   the moment the page is genuinely usable. Images stream
+   in afterwards on their own, as they always did.
    ════════════════════════════════════════════════ */
 (function () {
   'use strict';
 
   var root = document.documentElement;
 
-  // Marks <html> immediately — this alone is what makes the CSS paint the
-  // plain dark veil (html.pt-ready::before/::after), before <body> exists.
+  // Marks <html> immediately — this is what makes the CSS paint the plain
+  // dark veil (html.pt-ready::before/::after) before <body> even exists.
   root.classList.add('pt-ready');
 
-  // ---- inject the wordmark + spinner as the first element in <body> ----
   function injectLoaderMark() {
     if (document.getElementById('ptLoader') || !document.body) return;
     var el = document.createElement('div');
@@ -53,52 +41,56 @@
     document.body.insertBefore(el, document.body.firstChild);
   }
 
-  // <body> doesn't exist the instant this script runs (it's placed right
-  // after <meta charset>, before <body> opens), so poll very briefly for
-  // it — the parser reaches <body> within a few milliseconds of this
-  // script finishing, well before the page has anything worth seeing.
-  if (document.body) {
-    injectLoaderMark();
-  } else {
-    var poll = setInterval(function () {
-      if (document.body) { clearInterval(poll); injectLoaderMark(); }
-    }, 4);
-  }
-
   function hideLoaderMark() {
     var el = document.getElementById('ptLoader');
     if (el) el.classList.add('is-hidden');
   }
 
-  function reveal() {
-    root.classList.add('pt-in');
-    hideLoaderMark();
-  }
-
-  // ---- readiness: window 'load' (fonts, images, and this page's own
-  // synchronous data fetch in site-data.js have all settled by then) —
-  // with a hard cap so a slow third-party asset can never leave the veil
-  // stuck on screen indefinitely. ----
-  var MAX_WAIT_MS = 4000;
   var revealed = false;
   function revealOnce() {
     if (revealed) return;
     revealed = true;
-    reveal();
+    root.classList.add('pt-in');
+    hideLoaderMark();
   }
 
-  if (document.readyState === 'complete') {
+  // <body> doesn't exist the instant this script runs (it sits right after
+  // <meta charset>), so poll briefly for it. If the page turns out to be
+  // ready before the veil mark is even injected, skip injecting it at all —
+  // flashing a spinner onto an already-finished page is worse than no
+  // spinner.
+  if (document.body) {
+    injectLoaderMark();
+  } else {
+    var poll = setInterval(function () {
+      if (!document.body) return;
+      clearInterval(poll);
+      if (!revealed) injectLoaderMark();
+    }, 4);
+  }
+
+  // ---- readiness ----
+  // DOMContentLoaded: markup parsed, and site-data.js (which runs inline
+  // near the end of <body>) has already populated the catalog by then, so
+  // the page is genuinely usable. Deliberately NOT window "load", which
+  // would wait on every image and keep the site hidden for seconds.
+  // The timeout is only a safety net for a stalled parse.
+  var MAX_WAIT_MS = 2500;
+
+  if (document.readyState === 'interactive' || document.readyState === 'complete') {
     revealOnce();
   } else {
-    window.addEventListener('load', revealOnce);
+    document.addEventListener('DOMContentLoaded', revealOnce);
     setTimeout(revealOnce, MAX_WAIT_MS);
   }
 
-  // Every bfcache restore (back/forward) re-fires "pageshow" with
-  // persisted=true on the exact same document — reveal it again straight
-  // away (loader included, in case it somehow didn't finish clearing) so
-  // the page is instantly visible, not re-run the fade-in.
+  // bfcache restore (back/forward) re-fires pageshow on the same document —
+  // reveal instantly, no fade, no veil.
   window.addEventListener('pageshow', function (e) {
-    if (e.persisted) { root.classList.add('pt-in'); hideLoaderMark(); }
+    if (e.persisted) {
+      revealed = true;
+      root.classList.add('pt-in');
+      hideLoaderMark();
+    }
   });
 })();

@@ -22,6 +22,7 @@ const settingsRoutes = require('./routes/settings');
 const overviewRoutes = require('./routes/overview');
 const publicCatalogRoutes = require('./routes/public-catalog');
 const { sitemapHandler } = require('./routes/public-catalog');
+const storefrontCache = require('./lib/storefront-cache');
 const staffRoutes = require('./routes/staff');
 const analyticsRoutes = require('./routes/analytics');
 
@@ -49,6 +50,21 @@ app.get('/api/sitemap.xml', sitemapHandler);
 /* ---------- admin API (auth required inside each router) ----------
    analytics is mounted here even though its /collect endpoint is public:
    that one route opts out of auth itself, the rest require it. */
+
+// The storefront's /api/public/bootstrap payload is cached in memory (it's
+// expensive to build and every page load needs it). Any successful write
+// through the admin API can change what shoppers see, so drop that cache
+// on the way out — one place, rather than remembering it in all 19 write
+// handlers. Reads and failed writes leave it alone.
+app.use(['/api/products', '/api/categories', '/api/brands', '/api/inventory',
+         '/api/coupons', '/api/settings', '/api/reviews'], (req, res, next) => {
+  if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') return next();
+  res.on('finish', () => {
+    if (res.statusCode >= 200 && res.statusCode < 400) storefrontCache.invalidate();
+  });
+  next();
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
