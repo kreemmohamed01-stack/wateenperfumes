@@ -1,0 +1,40 @@
+/* ════════════════════════════════════════════════
+   WATEEN PERFUMES — SITE-WIDE PAGE TRANSITIONS (CSS)
+   Pairs with page-transitions.js. Body starts very
+   slightly lowered + transparent, then rises/fades in
+   once JS adds .pt-in; fades back out + settles when
+   JS adds .pt-out just before navigating away. Uses
+   only opacity/transform so it stays on the compositor
+   thread — no jank, no layout cost.
+   ════════════════════════════════════════════════ */
+
+/* No-JS visitors: content must never be hidden waiting on a script. */
+html:not(.pt-ready) body { opacity: 1; transform: none; }
+
+.pt-ready body {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .62s cubic-bezier(.16,.8,.24,1),
+              transform .62s cubic-bezier(.16,.8,.24,1);
+  will-change: opacity, transform;
+}
+
+.pt-ready.pt-in body {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pt-ready.pt-out body {
+  opacity: 0;
+  transform: translateY(-10px) scale(.992);
+  transition: opacity .26s cubic-bezier(.4,0,.68,.06),
+              transform .26s cubic-bezier(.4,0,.68,.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pt-ready body {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

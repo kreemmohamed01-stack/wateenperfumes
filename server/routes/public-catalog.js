@@ -179,7 +179,7 @@ module.exports = router;
 // it never goes stale as the catalog changes.
 // SITE_URL: swap this to the real domain once it's purchased (kept in sync
 // with the same placeholder used in seo-config.js on the frontend).
-const SITE_URL = process.env.SITE_URL || 'https://wateenperfumes.com';
+const SITE_URL = process.env.SITE_URL || 'https://wateemperfumeseg.com';
 
 const STATIC_PAGES = [
   { path: '/', priority: '1.0', changefreq: 'daily' },

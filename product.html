@@ -2,6 +2,8 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="page-transitions.css">
+<script src="page-transitions.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shuhrah — RASASI | Wateen Perfumes</title>
 <!-- description/canonical/OG/Twitter content + the JSON-LD block below are filled in per-product by the script at the bottom of this page (search "SEO: fill in product meta") once the product loads -->
@@ -28,7 +30,8 @@
 <script type="application/ld+json" id="productJsonLd">{}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap"></noscript>
 <link rel="stylesheet" href="hero.css">
 <link rel="stylesheet" href="product.css">
 <link rel="stylesheet" href="rtl.css">
@@ -790,6 +793,31 @@
       (catHref[cat] ? '<a href="' + catHref[cat] + '">' + catLabel[cat] + '</a><span>›</span>' : '') +
       '<b>' + pName(product) + '</b>';
   }
+
+  // ---- SEO: BreadcrumbList structured data (mirrors the visible crumb above) ----
+  (function seoFillBreadcrumbLd(){
+    var abs = window.SEO ? window.SEO.abs : function (p) { return p; };
+    var items = [{ '@type': 'ListItem', position: 1, name: 'Home', item: abs('index.html') }];
+    var cat = product.cat;
+    if (catHref[cat]) {
+      items.push({ '@type': 'ListItem', position: 2, name: catLabel[cat], item: abs(catHref[cat]) });
+    }
+    items.push({
+      '@type': 'ListItem',
+      position: items.length + 1,
+      name: product.name,
+      item: abs('product.html?id=' + encodeURIComponent(product.id))
+    });
+    var script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'breadcrumbJsonLd';
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: items
+    });
+    document.head.appendChild(script);
+  })();
 
   // ---- gallery: the product's own two photos — main + one more ----
   var mainImg = document.getElementById('pdMainImg');
