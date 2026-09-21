@@ -3,16 +3,29 @@
    Pairs with page-transitions.js. Body starts very
    slightly lowered + transparent, then rises/fades in
    once JS adds .pt-in on first paint. That's the only
-   state change — there is no exit animation and nothing
-   here ever delays navigation, so links, back and
-   forward stay exactly as fast as the browser makes
+   body state change — there is no exit animation and
+   nothing here ever delays navigation, so links, back
+   and forward stay exactly as fast as the browser makes
    them (including instant bfcache restores). Uses only
    opacity/transform so it stays on the compositor
    thread — no jank, no layout cost.
+
+   Also paints a full-screen loading veil the instant the
+   page starts loading — this is a ::before on <html>
+   itself, not a DOM element, specifically so it can exist
+   before <body> does (this stylesheet is linked at the
+   very top of <head>, before the parser has even reached
+   <body>). It stays up until page-transitions.js adds
+   .pt-in (the page is actually ready — fonts, images and
+   this page's own data fetch have all settled), then
+   fades out — never just "the browser painted an empty
+   shell".
    ════════════════════════════════════════════════ */
 
 /* No-JS visitors: content must never be hidden waiting on a script. */
 html:not(.pt-ready) body { opacity: 1; transform: none; }
+html:not(.pt-ready)::before,
+html:not(.pt-ready)::after{ display: none; }
 
 .pt-ready body {
   opacity: 0;
@@ -32,4 +45,117 @@ html:not(.pt-ready) body { opacity: 1; transform: none; }
     transform: none !important;
     transition: none !important;
   }
+}
+
+/* ---- loading veil ---- */
+/* the veil itself: a full-viewport fixed layer painted as soon as the
+   stylesheet parses, well before <body> exists */
+html.pt-ready::before{
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #14100c;
+  transition: opacity .6s cubic-bezier(.4,0,.2,1), visibility .6s;
+}
+/* a faint warm vignette so the black isn't flat, layered above it */
+html.pt-ready::after{
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: radial-gradient(circle at 50% 42%, rgba(185,139,82,.16), transparent 60%);
+  transition: opacity .6s cubic-bezier(.4,0,.2,1), visibility .6s;
+}
+html.pt-ready.pt-in::before,
+html.pt-ready.pt-in::after{
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* the wordmark + spinner sit on their own fixed element, since a
+   pseudo-element can't hold nested markup — page-transitions.js injects
+   this the moment <body> exists (right at its very start, before any
+   other content), and the CSS above keeps the plain dark veil visible
+   underneath it in the split second before that happens */
+#ptLoader{
+  position: fixed;
+  inset: 0;
+  z-index: 100001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity .6s cubic-bezier(.4,0,.2,1), visibility .6s;
+}
+#ptLoader.is-hidden{
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.ptLoader__inner{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.ptLoader__mark{
+  font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  font-weight: 500;
+  font-size: clamp(2.1rem, 5vw, 3rem);
+  letter-spacing: .34em;
+  color: #f3ede0;
+  text-transform: uppercase;
+  text-indent: .34em; /* optically re-center the wide tracking */
+  margin: 0;
+  opacity: 1;
+}
+.ptLoader__mark i{
+  font-style: normal;
+  color: #d7b184;
+}
+
+.ptLoader__ring{
+  position: relative;
+  width: 46px;
+  height: 46px;
+}
+.ptLoader__ring svg{
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.ptLoader__ring circle{
+  fill: none;
+  stroke-width: 1.4;
+}
+.ptLoader__ring circle.ptLoader__track{
+  stroke: rgba(215,177,132,.18);
+}
+.ptLoader__ring circle.ptLoader__arc{
+  stroke: #d7b184;
+  stroke-linecap: round;
+  stroke-dasharray: 118;
+  stroke-dashoffset: 88;
+  animation: ptRingSpin 1.15s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes ptRingSpin{
+  to{ transform: rotate(360deg); }
+}
+
+@media (max-width: 640px){
+  .ptLoader__mark{ font-size: 1.6rem; letter-spacing: .26em; text-indent: .26em; }
+  .ptLoader__ring{ width: 38px; height: 38px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .ptLoader__mark{ animation: none; opacity: 1; }
+  .ptLoader__ring circle.ptLoader__arc{ animation-duration: 2s; }
+  html.pt-ready::before, html.pt-ready::after, #ptLoader{ transition: opacity .25s linear; }
 }
