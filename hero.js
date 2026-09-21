@@ -30,6 +30,13 @@
     scrollLockCount = Math.max(0, scrollLockCount - 1);
     if (scrollLockCount === 0) document.body.style.overflow = '';
   }
+  // The cart drawer and search modal live in a separate IIFE further down
+  // this file and call these by bare name, which threw "lockScroll is not
+  // defined" and left the page scrollable behind them. Share the same
+  // counter rather than giving those a second, competing implementation —
+  // the whole point of the count is that it spans every overlay.
+  window.__lockScroll = lockScroll;
+  window.__unlockScroll = unlockScroll;
 
 
   /* ─────────── NAV: glass on scroll + hide/reveal ───────────
@@ -758,13 +765,13 @@
     if (!cartDrawer) return;
     cartDrawer.classList.add('is-open');
     cartDrawer.setAttribute('aria-hidden', 'false');
-    lockScroll();
+    window.__lockScroll();
   }
   function closeCart() {
     if (!cartDrawer) return;
     cartDrawer.classList.remove('is-open');
     cartDrawer.setAttribute('aria-hidden', 'true');
-    unlockScroll();
+    window.__unlockScroll();
   }
 
   ['cartBtn', 'cartBtnMob', 'drawerCartBtn'].forEach(function (id) {
@@ -947,7 +954,7 @@
     if (!searchModal) return;
     searchModal.classList.add('is-open');
     searchModal.setAttribute('aria-hidden', 'false');
-    lockScroll();
+    window.__lockScroll();
     runSearch();
     setTimeout(function () { if (searchInput) searchInput.focus(); }, 250);
   }
@@ -955,7 +962,7 @@
     if (!searchModal) return;
     searchModal.classList.remove('is-open');
     searchModal.setAttribute('aria-hidden', 'true');
-    unlockScroll();
+    window.__unlockScroll();
   }
 
   ['searchBtn', 'searchBtnMob'].forEach(function (id) {

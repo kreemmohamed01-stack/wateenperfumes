@@ -2,6 +2,21 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<!-- Start the storefront data request as the very first thing the browser
+     does. site-data.js needs this data before the page's own scripts can
+     run, but it sits near the end of <body> — so the request used to only
+     begin after every stylesheet, font and script had already downloaded.
+     Firing it here overlaps it with all of that instead. site-data.js picks
+     up the result from window.__bootPromise when it runs. -->
+<script>
+window.__bootPromise = (function () {
+  try {
+    return fetch('/api/public/bootstrap')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+  } catch (e) { return null; }
+})();
+</script>
 <link rel="stylesheet" href="page-transitions.css">
 <script src="page-transitions.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -157,7 +172,7 @@
         <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>
       </svg>
     </button>
-    <img class="drawer__logo" src="assets/logo.png" alt="">
+    <img class="drawer__logo" loading="lazy" src="assets/logo.png" alt="">
     <nav class="drawer__links">
       <a href="index.html" style="--i:1">HOME</a>
       <a href="men.html" style="--i:2">MEN</a>
@@ -498,7 +513,7 @@
   <div class="wrap foot__inner">
 
     <div class="foot__brand">
-      <img class="foot__logo" src="assets/logo.png" alt="Wateen Perfumes">
+      <img class="foot__logo" loading="lazy" src="assets/logo.png" alt="Wateen Perfumes">
       <p class="foot__tag">MORE THAN A FRAGRANCE</p>
       <p class="foot__text">Curated scents for every story.<br>Authentic brands. Timeless elegance.</p>
       <div class="foot__social">

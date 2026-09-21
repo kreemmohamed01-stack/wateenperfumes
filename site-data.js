@@ -43,6 +43,14 @@
     return null;
   }
 
+  // Every page starts this same request inline in <head>, long before this
+  // file downloads (see window.__bootPromise there). By the time we get
+  // here that response is normally already sitting in the browser's HTTP
+  // cache, so the synchronous read below is served from memory instead of
+  // going to the network — which is what makes it safe to still be
+  // synchronous. Staying synchronous matters: every page's scripts read
+  // window.CATALOG the instant they run, and making that async is what
+  // previously broke the cart, search and the section reveal animation.
   var boot = fetchJsonSync('/api/public/bootstrap');
 
   window.CATALOG = (boot && boot.catalog) || (window.CATALOG || []);

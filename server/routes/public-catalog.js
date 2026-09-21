@@ -137,7 +137,17 @@ async function loadAllProductRelations(productIds) {
 //              already present as top-level fields.
 //   images   — the only reader is product.html's JSON-LD, which is
 //              already written to fall back to `img` when it's absent.
-const BULK_OMIT_FIELDS = ['variants', 'images'];
+//   desc/descAr/notes — long-form copy shown only on the product page.
+//              That page now hydrates them for the one product being
+//              viewed via /catalog/:slug (see hydrateProductCopy in
+//              product.html), so the other ~400 products' worth of prose
+//              no longer has to reach every visitor before the site can
+//              render. Nothing else reads them: search ranks on
+//              name/brand/category/family/type, and the listing pages
+//              never touch them.
+//   sku      — shown only in the product page's details table, and
+//              arrives with the same hydration fetch.
+const BULK_OMIT_FIELDS = ['variants', 'images', 'desc', 'descAr', 'notes', 'sku'];
 
 // shared by /catalog and /bootstrap so both return identical shapes
 async function buildCatalog(settings) {
@@ -228,6 +238,15 @@ router.get('/bootstrap', async (req, res, next) => {
     // already in memory instantly, while a dashboard edit still shows up
     // within about a minute.
     res.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=600');
+    // The global CORS middleware reflects the request origin, which adds
+    // "Vary: Origin". That made the browser treat the early fetch() fired
+    // from <head> and the XHR in site-data.js as two different cache
+    // entries, so the catalog was downloaded twice on every page load.
+    // This response is public, same-origin data with no per-origin
+    // variation, so pin it to "*" and drop the Vary — now the second read
+    // is served straight from cache.
+    res.set('Access-Control-Allow-Origin', '*');
+    res.removeHeader('Vary');
 
     const cached = storefrontCache.get();
     if (cached) return res.send(cached);

@@ -2,6 +2,21 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<!-- Start the storefront data request as the very first thing the browser
+     does. site-data.js needs this data before the page's own scripts can
+     run, but it sits near the end of <body> — so the request used to only
+     begin after every stylesheet, font and script had already downloaded.
+     Firing it here overlaps it with all of that instead. site-data.js picks
+     up the result from window.__bootPromise when it runs. -->
+<script>
+window.__bootPromise = (function () {
+  try {
+    return fetch('/api/public/bootstrap')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+  } catch (e) { return null; }
+})();
+</script>
 <link rel="stylesheet" href="page-transitions.css">
 <script src="page-transitions.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
