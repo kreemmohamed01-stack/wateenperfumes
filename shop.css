@@ -341,8 +341,8 @@ body.shop-page .crumb{ padding-top:88px; }
 /* the grid itself reuses .grid--products / .card / .card__wish from
    hero.css and category.css's white-card treatment */
 .shopGrid{
-  grid-template-columns:repeat(4,1fr);
-  gap:34px 22px;
+  grid-template-columns:repeat(3,1fr);
+  gap:38px 28px;
 }
 /* undo the homepage best-sellers' 3-up "centre the last short row"
    rule — shop.html is a plain, even 4-up grid at any item count */
@@ -366,7 +366,7 @@ body.shop-page .crumb{ padding-top:88px; }
   aspect-ratio:1/1;
   margin-bottom:16px;
 }
-.shopGrid .card__media img{ position:absolute; inset:0; width:100%; height:100%; max-width:none; max-height:none; padding:11%; object-fit:contain; }
+.shopGrid .card__media img{ position:absolute; inset:0; width:100%; height:100%; max-width:none; max-height:none; padding:8%; object-fit:contain; }
 .shopGrid .card__wish{
   position:absolute;
   top:14px; right:14px;
@@ -457,7 +457,6 @@ body.shop-page .crumb{ padding-top:88px; }
 
 @media (max-width:1180px){
   .shopBody{ grid-template-columns:210px 1fr; gap:32px; }
-  .shopGrid{ grid-template-columns:repeat(3,1fr); }
 }
 
 @media (max-width:900px){
@@ -524,15 +523,25 @@ body.shop-page .crumb{ padding-top:88px; }
    .watches-page covers watches.html, where every card is a watch; .is-watch
    (set per-card by the JS that builds each card) covers shop.html and brand
    pages, where watches are mixed in alongside perfumes/accessories.
+   The background is zoomed past "cover" and pushed down (112%/center 40%) so
+   the marble slab's top surface sits low in the box, and the watch photo is
+   pulled down to meet it (object-position center 70%) instead of floating
+   dead-centre — together the watch reads as actually resting on the slab
+   rather than hovering in front of it. Tuned against both the chunky
+   near-square men's photos and the slim ~1:2 women's bracelet photos in the
+   catalogue; see product.css for the matching product-page gallery rule.
    The product-page gallery gets the matching treatment in product.css. ---- */
 .watches-page .shopGrid .card__media,
 .watches-page .pgrid .card__media,
 .shopGrid .card.is-watch .card__media{
-  background:#e9e0d2 url('assets/bg/watches.webp') center/cover no-repeat;
+  background:#e9e0d2 url('assets/bg/watches.webp') center 40%/112% 112% no-repeat;
   border-radius:10px;
   overflow:hidden;
   box-shadow:0 10px 26px -14px rgba(58,45,30,.35);
 }
 .watches-page .shopGrid .card__media img,
 .watches-page .pgrid .card__media img,
-.shopGrid .card.is-watch .card__media img{ padding:14%; }
+.shopGrid .card.is-watch .card__media img{
+  padding:8%;
+  object-position:center 70%;
+}

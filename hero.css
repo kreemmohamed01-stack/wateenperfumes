@@ -1970,8 +1970,8 @@ a{ text-decoration:none; color:inherit; }
   width:100%;
   /* a fixed, non-negotiable box: as a flex child of .card it must not grow or
      shrink, or the photo inside overflows it and rides over the name/price */
-  flex:0 0 320px;
-  height:320px;
+  flex:0 0 360px;
+  height:360px;
   margin-bottom:18px;
   /* no clipping — the bottle must never be cut */
 }
@@ -1983,9 +1983,9 @@ a{ text-decoration:none; color:inherit; }
   background:#fff;
   border-radius:6px;
   margin-top:34px;
-  /* a bit bigger than the shared 320px card default, just for this rail */
-  flex:0 0 350px;
-  height:350px;
+  /* a bit bigger than the shared 360px card default, just for this rail */
+  flex:0 0 390px;
+  height:390px;
 }
 .best .card__badge{
   position:absolute;
@@ -2701,7 +2701,7 @@ a{ text-decoration:none; color:inherit; }
 .col__track::-webkit-scrollbar{ display:none; }
 
 .mini{
-  flex:0 0 calc((100% - 100px) / 6);   /* 6 across on desktop */
+  flex:0 0 calc((100% - 80px) / 5);   /* 5 across on desktop */
   scroll-snap-align:start;
   /* a column so every tile lines its name and price up on the same baseline
      no matter how many lines the name runs to */
@@ -2713,9 +2713,9 @@ a{ text-decoration:none; color:inherit; }
 .mini__ph{
   /* a fixed, non-negotiable box: as a flex child of .mini it must not grow or
      shrink, or the photo inside stretches past it and collides with the price */
-  flex:0 0 var(--ph-h,150px);
+  flex:0 0 var(--ph-h,180px);
   display:block;
-  height:var(--ph-h,150px);
+  height:var(--ph-h,180px);
   /* clear air under the photo so the price can never crowd it */
   margin-bottom:16px;
   overflow:hidden;
@@ -2761,13 +2761,20 @@ a{ text-decoration:none; color:inherit; }
 }
 
 /* watches, homepage collection rail: same shared stone-podium backdrop used
-   on the dedicated watches page/cards (shop.css, product.css), so a watch
-   reads as a display piece here too instead of floating on bare page bg */
+   on the dedicated watches page/cards (shop.css, product.css), pushed down
+   the same way so the watch reads as resting on the slab — see the longer
+   note above .watches-page's rule in shop.css for how these numbers were
+   picked. .mini__ph isn't square like the other card boxes, but a two-value
+   background-size (112% 112%) scales the same on both axes regardless. */
 .mini--watch .mini__ph{
-  background:#e9e0d2 url('assets/bg/watches.webp') center/cover no-repeat;
+  background:#e9e0d2 url('assets/bg/watches.webp') center 40%/112% 112% no-repeat;
   border-radius:8px;
 }
-.mini--watch .mini__ph img{ padding:14%; box-sizing:border-box; }
+.mini--watch .mini__ph img{
+  padding:8%;
+  box-sizing:border-box;
+  object-position:center 70%;
+}
 
 /* one quiet cue that the row scrolls — a small gold ring with a chevron
    that nudges itself, sitting just past the right edge of the rail */
@@ -3457,7 +3464,7 @@ a{ text-decoration:none; color:inherit; }
   .brands__note{ right:34px; }
 
   .grid--products{ grid-template-columns:repeat(3,1fr); gap:26px 16px; }
-  .mini{ flex:0 0 calc((100% - 80px) / 5); }
+  .mini{ flex:0 0 calc((100% - 60px) / 4); }
   .brandchip{ flex:0 0 25%; }
   .brandchip img{ max-width:110px; max-height:50px; }
 

@@ -292,11 +292,11 @@ body.cat-page .crumb{
   padding-bottom:110px;
 }
 .pgrid .grid--products{
-  grid-template-columns:repeat(4,1fr);
-  gap:34px 22px;
+  grid-template-columns:repeat(3,1fr);
+  gap:38px 28px;
 }
 /* undo the 3-up / centred last-row rules from the best-sellers section —
-   category grids are a plain, even 4-up */
+   category grids are a plain, even grid at any column count */
 .pgrid .grid--products .card:nth-child(7),
 .pgrid .grid--products .card:nth-child(8){
   grid-column:auto;
@@ -325,7 +325,7 @@ body.cat-page .crumb{
   height:100%;
   max-width:none;
   max-height:none;
-  padding:11%;
+  padding:8%;
   object-fit:contain;
 }
 .pgrid .card__wish{
@@ -374,7 +374,6 @@ body.cat-page .crumb{
 @media (max-width:1180px){
   .phero__inner{ min-height:360px; }
   .phero__copy{ padding-right:34px; }
-  .pgrid .grid--products{ grid-template-columns:repeat(3,1fr); }
 }
 
 @media (max-width:900px){

@@ -724,10 +724,13 @@ body.product-page .crumb{ padding-top:88px; }
 
 /* ---- watches: same shared stone-podium backdrop as the watches grid
    (shop.css), applied to the product-page gallery — main frame + thumbs —
-   so a single watch's own page matches the display case it was picked from. ---- */
+   so a single watch's own page matches the display case it was picked from.
+   Same zoomed/pushed-down backdrop + pulled-down photo as the grid cards
+   (see the note above .watches-page's rule in shop.css) so the watch reads
+   as resting on the slab instead of floating centred in the frame. ---- */
 .watches-page .pd__main,
 .watches-page .pd__thumb{
-  background:#e9e0d2 url('assets/bg/watches.webp') center/cover no-repeat;
+  background:#e9e0d2 url('assets/bg/watches.webp') center 40%/112% 112% no-repeat;
 }
-.watches-page .pd__main img{ padding:60px; }
-.watches-page .pd__thumb img{ padding:10px; }
+.watches-page .pd__main img{ padding:8%; object-position:center 70%; }
+.watches-page .pd__thumb img{ padding:8%; object-position:center 70%; }
