@@ -129,15 +129,83 @@ async function loadAllProductRelations(productIds) {
   return { variantsByProduct, imagesByProduct, categoriesByProduct, brandsById };
 }
 
+// shared by /catalog and /bootstrap so both return identical shapes
+async function buildCatalog(settings) {
+  const rows = await db.prepare(`SELECT * FROM products WHERE status = 'published'`).all();
+  const relations = await loadAllProductRelations(rows.map(r => r.id));
+  const fullProducts = rows.map(row => assembleProduct(
+    row, relations.variantsByProduct, relations.imagesByProduct, relations.categoriesByProduct, relations.brandsById
+  ));
+  return fullProducts.map(p => toLegacyShape(p, settings));
+}
+
+// mirrors settings.js's publicSettings() response shape exactly, so
+// /bootstrap's `settings` field is a drop-in replacement for a separate
+// call to /api/public/settings.
+function toPublicSettingsShape(s) {
+  return {
+    storeName: s.store_name, currency: s.store_currency,
+    freeShippingThreshold: Number(s.free_shipping_threshold || 1000),
+    defaultShippingFee: Number(s.default_shipping_fee || 80),
+    globalSaleEnabled: s.global_sale_enabled === 'true',
+    globalSalePercent: Number(s.global_sale_percent || 0),
+    codEnabled: s.cod_enabled !== 'false',
+    instapayEnabled: s.instapay_enabled !== 'false',
+    cardEnabled: s.card_enabled !== 'false',
+    instapayNumber: s.instapay_number,
+    shippingRatesByGovernorate: JSON.parse(s.shipping_rates_by_governorate || '{}'),
+    watchesFreeShipping: s.watches_free_shipping !== 'false',
+    announcementText: s.announcement_text || '',
+    announcementEnabled: s.announcement_enabled !== 'false',
+    heroTitle: s.hero_title || '',
+    heroSubtitle: s.hero_subtitle || '',
+    social: {
+      instagram: s.social_instagram, facebook: s.social_facebook,
+      whatsapp: s.social_whatsapp, tiktok: s.social_tiktok
+    }
+  };
+}
+
+// mirrors coupons.js's featuredPublic() response shape exactly.
+async function loadFeaturedCoupon() {
+  const coupon = await db.prepare(`
+    SELECT * FROM coupons WHERE is_featured = TRUE AND is_active = TRUE
+    AND (starts_at IS NULL OR starts_at <= NOW())
+    AND (expires_at IS NULL OR expires_at >= NOW())
+    LIMIT 1
+  `).get();
+  if (!coupon) return null;
+  return {
+    code: coupon.code, type: coupon.type, amount: coupon.amount,
+    label: coupon.type === 'percent' ? `${coupon.amount}% OFF` : coupon.type === 'fixed' ? `${coupon.amount} EGP OFF` : 'FREE SHIPPING'
+  };
+}
+
 router.get('/catalog', async (req, res, next) => {
   try {
     const settings = await settingsMap();
-    const rows = await db.prepare(`SELECT * FROM products WHERE status = 'published'`).all();
-    const relations = await loadAllProductRelations(rows.map(r => r.id));
-    const fullProducts = rows.map(row => assembleProduct(
-      row, relations.variantsByProduct, relations.imagesByProduct, relations.categoriesByProduct, relations.brandsById
-    ));
-    res.json(fullProducts.map(p => toLegacyShape(p, settings)));
+    res.json(await buildCatalog(settings));
+  } catch (e) { next(e); }
+});
+
+// ── bootstrap — combines catalog + settings + featured coupon into one
+// response. The storefront used to fire these as three separate sequential
+// (synchronous XHR) requests on every single page load, which blocked the
+// parser for ~1.4s and made every navigation feel slow. Running the same
+// three queries in parallel here and returning them together cuts that to
+// one round trip. See site-data.js for the frontend side of this.
+router.get('/bootstrap', async (req, res, next) => {
+  try {
+    const settings = await settingsMap();
+    const [catalog, featuredCoupon] = await Promise.all([
+      buildCatalog(settings),
+      loadFeaturedCoupon()
+    ]);
+    res.json({
+      catalog,
+      settings: toPublicSettingsShape(settings),
+      featuredCoupon
+    });
   } catch (e) { next(e); }
 });
 

@@ -1,11 +1,10 @@
 /* ════════════════════════════════════════════════
    WATEEN PERFUMES — SITE-WIDE PAGE TRANSITIONS
-   Adds a smooth fade/rise-in on load and a fade-out
-   before internal navigation, so moving between pages
-   feels like one continuous app instead of a hard
-   reload. Pure CSS transitions (GPU-friendly, no
-   layout thrash) driven by a couple of classes on
-   <html>. No dependencies, ~1KB, and fully skipped
+   Adds a smooth fade/rise-in on load, purely visual —
+   it never delays or intercepts navigation itself, so
+   back/forward and link clicks stay as fast as the
+   browser's native bfcache restore. CSS-only opacity/
+   transform, no dependencies, ~0.5KB, fully skipped
    for users who asked for reduced motion.
    ════════════════════════════════════════════════ */
 (function () {
@@ -19,59 +18,27 @@
   // this script loading).
   root.classList.add('pt-ready');
 
-  if (reduceMotion) {
+  function reveal() {
     root.classList.add('pt-in');
+  }
+
+  if (reduceMotion) {
+    reveal();
     return;
   }
 
-  // ---- entry: fade/rise the page in on first paint ----
+  // Entry: fade/rise the page in on first paint. Runs immediately — this is
+  // the only thing this script does. It never touches link clicks, never
+  // delays navigation, and never blocks the browser's instant bfcache
+  // restore on back/forward.
   requestAnimationFrame(function () {
-    requestAnimationFrame(function () {
-      root.classList.add('pt-in');
-    });
+    requestAnimationFrame(reveal);
   });
 
-  // Pages restored from the bfcache (back/forward) already have pt-in set
-  // from before, but Safari can drop it on some transitions — force it back.
+  // Every bfcache restore (back/forward) re-fires "pageshow" with
+  // persisted=true on the exact same document — reveal it again straight
+  // away so the page is instantly visible, not re-run the fade-in.
   window.addEventListener('pageshow', function (e) {
-    if (e.persisted) root.classList.add('pt-in');
+    if (e.persisted) reveal();
   });
-
-  // ---- exit: fade the page out just before leaving, then navigate ----
-  var EXIT_MS = 260;
-  var navigating = false;
-
-  function isInternalNav(a) {
-    if (!a || !a.href) return false;
-    if (a.target && a.target !== '' && a.target !== '_self') return false;
-    if (a.hasAttribute('download')) return false;
-    if (a.dataset.noTransition !== undefined) return false;
-    var url;
-    try { url = new URL(a.href, location.href); } catch (e) { return false; }
-    if (url.origin !== location.origin) return false;
-    // same-page anchors (#foo) shouldn't trigger a full-page fade
-    if (url.pathname === location.pathname && url.search === location.search && url.hash) return false;
-    return /\.html?$|\/$/.test(url.pathname) || url.pathname === '' || !/\.[a-z0-9]+$/i.test(url.pathname);
-  }
-
-  document.addEventListener('click', function (e) {
-    if (navigating) return;
-    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-
-    var a = e.target.closest('a');
-    if (!isInternalNav(a)) return;
-
-    e.preventDefault();
-    navigating = true;
-    root.classList.add('pt-out');
-
-    var done = false;
-    function go() {
-      if (done) return;
-      done = true;
-      location.href = a.href;
-    }
-    root.addEventListener('transitionend', go, { once: true });
-    setTimeout(go, EXIT_MS); // safety net if transitionend doesn't fire
-  }, true);
 })();

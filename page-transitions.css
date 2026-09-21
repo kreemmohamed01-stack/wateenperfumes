@@ -2,9 +2,12 @@
    WATEEN PERFUMES — SITE-WIDE PAGE TRANSITIONS (CSS)
    Pairs with page-transitions.js. Body starts very
    slightly lowered + transparent, then rises/fades in
-   once JS adds .pt-in; fades back out + settles when
-   JS adds .pt-out just before navigating away. Uses
-   only opacity/transform so it stays on the compositor
+   once JS adds .pt-in on first paint. That's the only
+   state change — there is no exit animation and nothing
+   here ever delays navigation, so links, back and
+   forward stay exactly as fast as the browser makes
+   them (including instant bfcache restores). Uses only
+   opacity/transform so it stays on the compositor
    thread — no jank, no layout cost.
    ════════════════════════════════════════════════ */
 
@@ -14,21 +17,13 @@ html:not(.pt-ready) body { opacity: 1; transform: none; }
 .pt-ready body {
   opacity: 0;
   transform: translateY(14px);
-  transition: opacity .62s cubic-bezier(.16,.8,.24,1),
-              transform .62s cubic-bezier(.16,.8,.24,1);
-  will-change: opacity, transform;
+  transition: opacity .5s cubic-bezier(.16,.8,.24,1),
+              transform .5s cubic-bezier(.16,.8,.24,1);
 }
 
 .pt-ready.pt-in body {
   opacity: 1;
   transform: translateY(0);
-}
-
-.pt-ready.pt-out body {
-  opacity: 0;
-  transform: translateY(-10px) scale(.992);
-  transition: opacity .26s cubic-bezier(.4,0,.68,.06),
-              transform .26s cubic-bezier(.4,0,.68,.06);
 }
 
 @media (prefers-reduced-motion: reduce) {

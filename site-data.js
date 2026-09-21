@@ -27,18 +27,19 @@
     return null;
   }
 
-  var catalog = fetchJsonSync('/api/public/catalog');
-  var settings = fetchJsonSync('/api/public/settings');
-  var featuredCoupon = fetchJsonSync('/api/public/coupons/featured');
+  // Single combined request instead of three separate sequential ones —
+  // the backend runs the same three queries in parallel and hands them
+  // back together, so this pays for one round trip instead of three.
+  var boot = fetchJsonSync('/api/public/bootstrap');
 
-  window.CATALOG = catalog || (window.CATALOG || []);
-  window.SITE_SETTINGS = settings || {
+  window.CATALOG = (boot && boot.catalog) || (window.CATALOG || []);
+  window.SITE_SETTINGS = (boot && boot.settings) || {
     freeShippingThreshold: 1000, defaultShippingFee: 80,
     globalSaleEnabled: false, globalSalePercent: 0,
     codEnabled: true, instapayEnabled: true, cardEnabled: true, instapayNumber: '01027380269',
     shippingRatesByGovernorate: {}
   };
-  window.FEATURED_COUPON = featuredCoupon || null;
+  window.FEATURED_COUPON = (boot && boot.featuredCoupon) || null;
 
   /* ---------- announcement bar: dashboard text, or hide it entirely ---------- */
   function applyAnnouncementSettings() {
