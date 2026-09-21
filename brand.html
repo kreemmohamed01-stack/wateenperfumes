@@ -557,8 +557,9 @@
 
 <script src="i18n.js"></script>
 <script src="site-data.js"></script>
-<script src="hero.js"></script>
+<script>loadWhenDataReady("hero.js");</script>
 <script>
+runWhenDataReady(function () {
 /* ════════════════════════════════════════════════
    BRAND PAGE — renders from ?id=<slug> against CATALOG.
    Maps a URL slug to the matching CATALOG brand name and
@@ -806,6 +807,7 @@
     });
   }
 })();
+});
 </script>
 <script src="track.js" defer></script>
 </body>

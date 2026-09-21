@@ -530,8 +530,9 @@
 
 <script src="i18n.js"></script>
 <script src="site-data.js"></script>
-<script src="hero.js"></script>
+<script>loadWhenDataReady("hero.js");</script>
 <script>
+runWhenDataReady(function () {
 /* ════════════════════════════════════════════════
    WISHLIST PAGE — renders the saved products
    ════════════════════════════════════════════════ */
@@ -650,6 +651,7 @@
     if (!e || e.key === WISH_KEY) render();
   });
 })();
+});
 </script>
 <script src="track.js" defer></script>
 </body>

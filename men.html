@@ -610,8 +610,9 @@
 
 <script src="i18n.js"></script>
 <script src="site-data.js"></script>
-<script src="hero.js"></script>
+<script>loadWhenDataReady("hero.js");</script>
 <script>
+runWhenDataReady(function () {
 /* ════════════════════════════════════════════════
    MEN — dynamic filtering, sorting, pagination
    over the shared CATALOG, scoped to cat === 'men'
@@ -1027,6 +1028,7 @@
 
   renderResults();
 })();
+});
 </script>
 <script src="track.js" defer></script>
 </body>
