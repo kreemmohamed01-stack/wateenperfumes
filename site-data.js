@@ -4,80 +4,55 @@
    currently-featured coupon from the backend, then
    exposes them as window.CATALOG / window.SITE_SETTINGS /
    window.FEATURED_COUPON in the exact shape the rest of
-   the site already expects — so hero.js, checkout.js and
-   every page's inline script keep working unmodified,
-   just backed by the real database.
+   the site already expects — so hero.js, checkout.js, and
+   every page script keep working unmodified, just backed
+   by the real database now.
 
-   This used to block the page with a synchronous XHR so
-   that later <script> tags could read window.CATALOG the
-   instant they ran. That also permanently disables the
-   browser's back/forward cache (bfcache) on every page
-   that ever executes one — so every "back" press forced a
-   full slow reload from the server instead of an instant
-   restore, which is what made navigation feel so heavy.
+   Uses a synchronous XHR deliberately: every page script
+   that follows (hero.js, checkout.js, category filters,
+   etc.) reads window.CATALOG at parse time, not after a
+   DOMContentLoaded callback, so the fetch must finish
+   before this script tag returns control to the parser.
 
-   Now this fetches asynchronously (bfcache-safe) and every
-   script that depends on window.CATALOG/SITE_SETTINGS is
-   loaded via loadWhenDataReady() below instead of a plain
-   <script src>, so it only runs once the data has actually
-   arrived — same guarantee as before, just non-blocking.
+   An earlier version of this file fetched asynchronously
+   and loaded hero.js/checkout.js only once the data had
+   arrived, to let the browser's back/forward cache work.
+   That broke the site for real visitors: hero.js is also
+   where the cart, wishlist, search, and the scroll-reveal
+   animation that makes every section's content visible all
+   live, so on a slow or flaky connection the whole site
+   below the hero stayed invisible and non-functional until
+   that fetch finished — sometimes indefinitely. A slightly
+   slower back button is a far smaller problem than that, so
+   this reverts to the synchronous, guaranteed-ready approach.
+   The one improvement kept from that attempt: this still
+   calls a single combined /api/public/bootstrap endpoint
+   instead of three separate ones, which the backend runs in
+   parallel — one round trip instead of three.
    ════════════════════════════════════════════════ */
 (function () {
   'use strict';
 
-  var FALLBACK_SETTINGS = {
+  function fetchJsonSync(url) {
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, false); // synchronous by design — see note above
+      xhr.send(null);
+      if (xhr.status >= 200 && xhr.status < 300) return JSON.parse(xhr.responseText);
+    } catch (e) { /* fall through to fallback below */ }
+    return null;
+  }
+
+  var boot = fetchJsonSync('/api/public/bootstrap');
+
+  window.CATALOG = (boot && boot.catalog) || (window.CATALOG || []);
+  window.SITE_SETTINGS = (boot && boot.settings) || {
     freeShippingThreshold: 1000, defaultShippingFee: 80,
     globalSaleEnabled: false, globalSalePercent: 0,
     codEnabled: true, instapayEnabled: true, cardEnabled: true, instapayNumber: '01027380269',
     shippingRatesByGovernorate: {}
   };
-
-  // Single combined request instead of three separate sequential ones —
-  // the backend runs the same three queries in parallel and hands them
-  // back together, so this pays for one round trip instead of three.
-  var dataPromise = fetch('/api/public/bootstrap')
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .catch(function () { return null; })
-    .then(function (boot) {
-      window.CATALOG = (boot && boot.catalog) || (window.CATALOG || []);
-      window.SITE_SETTINGS = (boot && boot.settings) || FALLBACK_SETTINGS;
-      window.FEATURED_COUPON = (boot && boot.featuredCoupon) || null;
-      return boot;
-    });
-
-  // ---- public loader: any later <script> that reads window.CATALOG /
-  // window.SITE_SETTINGS at parse time must be loaded through this instead
-  // of a plain <script src="...">, so it only starts running once the
-  // fetch above has actually populated those globals. Scripts run in the
-  // order this is called, same as plain <script> tags would. ----
-  var chain = dataPromise;
-  window.loadWhenDataReady = function (src) {
-    chain = chain.then(function () {
-      return new Promise(function (resolve) {
-        var s = document.createElement('script');
-        s.src = src;
-        s.onload = resolve;
-        s.onerror = resolve; // don't let one failed script wedge the rest
-        document.body.appendChild(s);
-      });
-    });
-    return chain;
-  };
-
-  // ---- public loader for inline script bodies: pass a function and it
-  // runs once the data is ready, in the same queued order as
-  // loadWhenDataReady() calls around it. ----
-  window.runWhenDataReady = function (fn) {
-    chain = chain.then(fn);
-    return chain;
-  };
-
-  // Exposes "every loadWhenDataReady()/runWhenDataReady() call queued so
-  // far on this page has finished" as a promise. Read only after
-  // DOMContentLoaded, by which point every <script> tag on the page has
-  // already run and queued its own call onto `chain`, so this reliably
-  // represents "the whole chain is done", not just some of it.
-  window.__dataReadyChain = function () { return chain; };
+  window.FEATURED_COUPON = (boot && boot.featuredCoupon) || null;
 
   /* ---------- announcement bar: dashboard text, or hide it entirely ---------- */
   function applyAnnouncementSettings() {
@@ -172,15 +147,13 @@
     syncSaleBanner();
   }
 
-  // Runs once every loadWhenDataReady()/runWhenDataReady() call on this
-  // page has actually finished (hero.js, which defines __wireRolls,
-  // included) — read via DOMContentLoaded rather than dataPromise directly,
-  // so every later <script> tag on the page has had a chance to queue its
-  // own call onto `chain` first, however many there turn out to be.
-  function afterChain() { window.__dataReadyChain().then(applyAll); }
+  // this file is parsed before hero.js, which is what defines __wireRolls, so
+  // the work is deferred to DOMContentLoaded (by which point hero.js has run).
+  // If the document is somehow already parsed, fall back to a microtask so
+  // hero.js still gets its chance to define the hook first.
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', afterChain);
+    document.addEventListener('DOMContentLoaded', applyAll);
   } else {
-    afterChain();
+    setTimeout(applyAll, 0);
   }
 })();
