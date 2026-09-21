@@ -545,3 +545,22 @@ body.shop-page .crumb{ padding-top:88px; }
   padding:8%;
   object-position:center 70%;
 }
+
+/* ---- perfumes: same idea as the watches podium above, using a second
+   stone-scene backdrop shot with oud chips instead of a watch. Perfume
+   photos are already framed as "bottle + box standing on a surface" shots
+   (not bare transparent cutouts like the watch photos), so unlike watches
+   this one needs no push-down tuning — a plain centred cover-fit backdrop
+   already lines up with where the bottle's base naturally sits.
+   .perfumes-page covers men.html/women.html/unisex.html, where every card
+   is a perfume; .is-perfume (set per-card by the JS that builds each card)
+   covers shop.html and brand pages, where perfumes are mixed in alongside
+   watches/accessories. ---- */
+.perfumes-page .shopGrid .card__media,
+.perfumes-page .pgrid .card__media,
+.shopGrid .card.is-perfume .card__media{
+  background:#efe6d6 url('assets/bg/perfumes.webp') center/cover no-repeat;
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 10px 26px -14px rgba(58,45,30,.35);
+}

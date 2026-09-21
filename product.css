@@ -734,3 +734,13 @@ body.product-page .crumb{ padding-top:88px; }
 }
 .watches-page .pd__main img{ padding:8%; object-position:center 70%; }
 .watches-page .pd__thumb img{ padding:8%; object-position:center 70%; }
+
+/* ---- perfumes: same shared stone-podium backdrop as the perfumes grid
+   (shop.css), applied to the product-page gallery — main frame + thumbs.
+   No object-position push needed here (see the longer note in shop.css) —
+   the bottle+box photos already sit correctly against a plain cover-fit
+   backdrop. ---- */
+.perfumes-page .pd__main,
+.perfumes-page .pd__thumb{
+  background:#efe6d6 url('assets/bg/perfumes.webp') center/cover no-repeat;
+}

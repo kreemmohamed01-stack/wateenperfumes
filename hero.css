@@ -2776,6 +2776,19 @@ a{ text-decoration:none; color:inherit; }
   object-position:center 70%;
 }
 
+/* perfumes, homepage collection rail: same idea, second stone-scene
+   backdrop (oud chips instead of a watch) — see the longer note above
+   .perfumes-page's rule in shop.css. No push-down needed; a plain
+   cover-fit backdrop already lines up with these bottle+box photos. */
+.mini--perfume .mini__ph{
+  background:#efe6d6 url('assets/bg/perfumes.webp') center/cover no-repeat;
+  border-radius:8px;
+}
+.mini--perfume .mini__ph img{
+  padding:8%;
+  box-sizing:border-box;
+}
+
 /* one quiet cue that the row scrolls — a small gold ring with a chevron
    that nudges itself, sitting just past the right edge of the rail */
 .col__hint{

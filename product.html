@@ -723,6 +723,7 @@
 
   if (product.cat === 'accessories') document.body.classList.add('accessories-page');
   if (product.cat === 'watches') document.body.classList.add('watches-page');
+  if (['men','women','unisex'].indexOf(product.cat) !== -1) document.body.classList.add('perfumes-page');
 
   var catLabel = { men: 'Men', women: 'Women', unisex: 'Unisex' };
   var catHref = { men: 'men.html', women: 'women.html', unisex: 'unisex.html' };

@@ -783,7 +783,7 @@
       ? '<span class="card__priceNow">' + t('EGP') + ' ' + fmt(p.price) + '</span><span class="card__priceWas">' + t('EGP') + ' ' + fmt(p.compareAtPrice) + '</span>'
       : t('EGP') + ' ' + fmt(p.price);
     return (
-      '<article class="card' + (p.cat === 'watches' ? ' is-watch' : '') + '" style="--d:' + (i % 4) + '" data-id="' + p.id + '">' +
+      '<article class="card' + (p.cat === 'watches' ? ' is-watch' : '') + (['men','women','unisex'].indexOf(p.cat) !== -1 ? ' is-perfume' : '') + '" style="--d:' + (i % 4) + '" data-id="' + p.id + '">' +
         '<div class="card__media">' +
           badge +
           '<img src="' + p.img + '" alt="' + pName(p) + '" loading="lazy">' +
