@@ -530,11 +530,16 @@ body.shop-page .crumb{ padding-top:88px; }
    rather than hovering in front of it. Tuned against both the chunky
    near-square men's photos and the slim ~1:2 women's bracelet photos in the
    catalogue; see product.css for the matching product-page gallery rule.
-   The product-page gallery gets the matching treatment in product.css. ---- */
+   The product-page gallery gets the matching treatment in product.css.
+   Zoom is 128%, not 112% — at 112% the podium itself sits visibly left of
+   the box's true centre (the right stone block gets cropped tighter than
+   the left rock does), which read as the whole scene being shifted left
+   under every watch. 128% centres the slab's front corners symmetrically
+   around the box centre while still keeping both side props in frame. ---- */
 .watches-page .shopGrid .card__media,
 .watches-page .pgrid .card__media,
 .shopGrid .card.is-watch .card__media{
-  background:#e9e0d2 url('assets/bg/watches.webp') center 40%/112% 112% no-repeat;
+  background:#e9e0d2 url('assets/bg/watches.webp') center 40%/128% 128% no-repeat;
   border-radius:10px;
   overflow:hidden;
   box-shadow:0 10px 26px -14px rgba(58,45,30,.35);
