@@ -1060,6 +1060,20 @@ window.__bootPromise = (function () {
     });
   }
 
+  // ---- seed the search box from ?q= in the URL ----
+  // Backs the WebSite/SearchAction structured data in index.html, which
+  // tells Google this page is a real search results page it can send
+  // queries to (what shows the sitelinks search box under the listing) —
+  // without this, that markup would point at a URL param nothing reads.
+  (function seedSearchFromQuery() {
+    var params = new URLSearchParams(location.search);
+    var q = params.get('q');
+    if (!q) return;
+    state.q = q;
+    if (searchInput) searchInput.value = q;
+    if (searchWrap) searchWrap.classList.add('has-value');
+  })();
+
   renderResults();
 })();
 });
