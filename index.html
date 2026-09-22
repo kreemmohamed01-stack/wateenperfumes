@@ -2,7 +2,12 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<!-- two verification tags: one for the non-www property, one for www —
+     Search Console treats https://wateenperfumeseg.com and
+     https://www.wateenperfumeseg.com as separate properties even though
+     the former 308-redirects to the latter, so each needed its own proof. -->
 <meta name="google-site-verification" content="axe9sZbZ8SMWqZOfQzcNR8oDhL_ykAM_5bbvc2x8EWk" />
+<meta name="google-site-verification" content="ov3VVA5GeaRHoz9uC21avfNSgN0rWuQZPoBk3zlsWxw" />
 <!-- Start the storefront data request as the very first thing the browser
      does. site-data.js needs this data before the page's own scripts can
      run, but it sits near the end of <body> — so the request used to only
@@ -59,8 +64,8 @@ window.__bootPromise = (function () {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "Wateen Perfumes",
-  "url": "https://wateemperfumeseg.com/",
-  "logo": "https://wateemperfumeseg.com/assets/logo.png",
+  "url": "https://www.wateenperfumeseg.com/",
+  "logo": "https://www.wateenperfumeseg.com/assets/logo.png",
   "sameAs": [
     "https://www.facebook.com/share/1KAZzLxbjH/?mibextid=wwXIfr",
     "https://www.instagram.com/wateenperfum?stkn=Z2Y5MTVuNnBueWxm",
@@ -80,10 +85,10 @@ window.__bootPromise = (function () {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Wateen Perfumes",
-  "url": "https://wateemperfumeseg.com/",
+  "url": "https://www.wateenperfumeseg.com/",
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "https://wateemperfumeseg.com/shop.html?q={search_term_string}",
+    "target": "https://www.wateenperfumeseg.com/shop.html?q={search_term_string}",
     "query-input": "required name=search_term_string"
   }
 }

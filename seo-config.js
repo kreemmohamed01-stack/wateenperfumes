@@ -8,7 +8,7 @@
    from here, so one edit here is all it takes.
    ════════════════════════════════════════════════ */
 (function () {
-  var SITE_URL = 'https://wateemperfumeseg.com';
+  var SITE_URL = 'https://www.wateenperfumeseg.com';
   var SITE_NAME = 'Wateen Perfumes';
 
   window.SEO = {

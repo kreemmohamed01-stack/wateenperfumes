@@ -45,7 +45,7 @@ const CATEGORY_DEFS = [
 
 const DEFAULT_SETTINGS = {
   store_name: 'Wateen Perfumes',
-  store_email: 'info@wateemperfumeseg.com',
+  store_email: 'info@wateenperfumeseg.com',
   store_phone: '01027380269',
   store_currency: 'EGP',
   free_shipping_threshold: '1000',
@@ -99,7 +99,7 @@ async function run() {
     `).run(k, v);
   }
 
-  const adminEmail = 'admin@wateemperfumeseg.com';
+  const adminEmail = 'admin@wateenperfumeseg.com';
   const existingAdmin = await db.prepare('SELECT id FROM users WHERE email = ?').get(adminEmail);
   if (!existingAdmin) {
     const hash = bcrypt.hashSync('WateenAdmin@2026', 10);
