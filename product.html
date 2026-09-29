@@ -869,8 +869,24 @@ window.__bootPromise = (function () {
   var ratingEl = document.getElementById('pdRating');
   if (ratingEl) ratingEl.innerHTML = product.rating + ' <i>(' + product.reviews + ' ' + t('reviews') + ')</i>';
 
+  // #pdPrice/#pdPriceWasVal are real .roll counters that exist in the static
+  // HTML with data-value="0" — hero.js's own <script> tag runs synchronously
+  // right after this one, taking its one-time snapshot of every .roll on the
+  // page (see the price roll-up counter in hero.js) and immediately "rolling"
+  // this one to 0, since that's still its data-value at that instant. This
+  // script's own price fill only happens once __dataReady resolves, which is
+  // always later (a promise callback never runs before the rest of the
+  // current script finishes) — so it used to set the real data-value on an
+  // element hero.js had already marked "rolled" and settled at 0, and the
+  // roll animation's own once-only guard then refused to touch it again.
+  // Clearing that guard here lets __wireRolls (below) legitimately re-run it
+  // with the real number.
   var priceEl = document.getElementById('pdPrice');
-  if (priceEl) { priceEl.dataset.value = product.price; priceEl.textContent = '0'; }
+  if (priceEl) {
+    priceEl.dataset.value = product.price;
+    priceEl.textContent = '0';
+    delete priceEl.dataset.rolled;
+  }
 
   var priceWrap = document.getElementById('pdPriceWrap');
   var wasEl = document.getElementById('pdPriceWas');
@@ -879,7 +895,7 @@ window.__bootPromise = (function () {
   var onSale = product.compareAtPrice && Number(product.compareAtPrice) > Number(product.price);
   if (onSale) {
     if (priceWrap) priceWrap.classList.add('pd__price--sale');
-    if (wasVal) { wasVal.dataset.value = product.compareAtPrice; wasVal.textContent = '0'; }
+    if (wasVal) { wasVal.dataset.value = product.compareAtPrice; wasVal.textContent = '0'; delete wasVal.dataset.rolled; }
     if (wasEl) wasEl.style.display = '';
     if (badgeEl) {
       var pctOff = Math.round((1 - Number(product.price) / Number(product.compareAtPrice)) * 100);
@@ -887,6 +903,12 @@ window.__bootPromise = (function () {
       badgeEl.style.display = '';
     }
   }
+
+  // Opt these two back into the roll animation now that their real value is
+  // set and the stale "already rolled" guard is cleared — same hook the
+  // best-sellers grid uses in hero.js for elements injected after its own
+  // one-time querySelectorAll('.roll') snapshot.
+  if (window.__wireRolls) window.__wireRolls(priceWrap);
 
   var lowStockEl = document.getElementById('pdLowStock');
   if (lowStockEl && product.isLowStock) lowStockEl.style.display = '';
