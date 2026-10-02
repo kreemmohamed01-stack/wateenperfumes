@@ -2,6 +2,9 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<!-- Meta Pixel: wmTrack() queues calls until meta-pixel.js (async) arrives -->
+<script>window.wmTrack=function(){(window.__wmQ=window.__wmQ||[]).push(arguments)};</script>
+<script src="meta-pixel.js" async></script>
 <!-- Start the storefront data request as the very first thing the browser
      does. site-data.js needs this data before the page's own scripts can
      run, but it sits near the end of <body> — so the request used to only
@@ -743,6 +746,16 @@ window.__bootPromise = (function () {
   var product = findProduct(requestedId) || CAT[0];
 
   if (!product) return; // catalog.js failed to load — nothing to render
+
+  if (window.wmTrack) {
+    var metaId = String(product.dbId || product.id);
+    window.wmTrack('ViewContent', {
+      content_ids: [metaId], content_type: 'product', content_name: product.name,
+      content_category: product.cat || undefined,
+      contents: [{ id: metaId, quantity: 1 }],
+      value: Number(product.price) || 0, currency: 'EGP'
+    });
+  }
 
   if (product.cat === 'accessories') document.body.classList.add('accessories-page');
   if (product.cat === 'watches') document.body.classList.add('watches-page');

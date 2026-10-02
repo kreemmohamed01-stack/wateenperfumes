@@ -619,6 +619,17 @@
           }
 
           buildReceipt(result.data.orderNumber, method, snapshot, lines);
+
+          // browser half of the Purchase event; the server already sent the
+          // Conversions API half with this same event id, so Meta counts it once
+          if (window.wmTrack) {
+            window.wmTrack('Purchase', {
+              value: snapshot.total, currency: 'EGP', content_type: 'product',
+              content_ids: lines.map(function (l) { return String(l.productId || l.name); }),
+              contents: lines.map(function (l) { return { id: String(l.productId || l.name), quantity: l.qty }; }),
+              num_items: lines.reduce(function (n, l) { return n + l.qty; }, 0)
+            }, { eventId: 'purchase.' + result.data.orderNumber, browserOnly: true });
+          }
           $('coDonePhone').textContent = $('coPhone').value.trim();
 
           cart = [];
@@ -649,4 +660,17 @@
   syncOptions('shipping');
   syncPaymentPanels();
   render();
+
+  // Meta Pixel: shopper reached checkout with something in the cart
+  if (cart.length && window.wmTrack) {
+    var metaLines = cart.map(function (l) { var p = findProduct(l.id); return p ? { p: p, qty: l.qty } : null; }).filter(Boolean);
+    if (metaLines.length) {
+      window.wmTrack('InitiateCheckout', {
+        value: totals().total, currency: 'EGP', content_type: 'product',
+        content_ids: metaLines.map(function (m) { return String(m.p.dbId || m.p.id); }),
+        contents: metaLines.map(function (m) { return { id: String(m.p.dbId || m.p.id), quantity: m.qty }; }),
+        num_items: metaLines.reduce(function (n, m) { return n + m.qty; }, 0)
+      });
+    }
+  }
 });

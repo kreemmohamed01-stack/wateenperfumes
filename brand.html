@@ -2,6 +2,9 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<!-- Meta Pixel: wmTrack() queues calls until meta-pixel.js (async) arrives -->
+<script>window.wmTrack=function(){(window.__wmQ=window.__wmQ||[]).push(arguments)};</script>
+<script src="meta-pixel.js" async></script>
 <!-- Start the storefront data request as the very first thing the browser
      does. site-data.js needs this data before the page's own scripts can
      run, but it sits near the end of <body> — so the request used to only
@@ -584,9 +587,10 @@ window.__bootPromise = (function () {
    Maps a URL slug to the matching CATALOG brand name and
    lists that brand's products using the same .card markup
    and local wiring pattern as shop.html's cardHtml()/wireGrid().
-   Six of the nine slugs currently have no stock in CATALOG —
-   those show the honest empty state below (same pattern as
-   accessories.html) instead of any invented product.
+   A brand with no stock yet shows the honest empty state
+   below (same pattern as accessories.html) instead of any
+   invented product. Slugs not in BRANDS (e.g. from the live
+   sitemap) are matched against the catalog's own brand names.
    ════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -594,27 +598,50 @@ window.__bootPromise = (function () {
   var CAT = (typeof window !== 'undefined' && window.CATALOG) || [];
   var fmt = function (n) { return n.toLocaleString('en-US'); };
 
-  // ---- known brands: slug -> display info + matching CATALOG brand name ----
-  // brandName is null for houses not yet stocked in catalog.js.
+  // ---- known brands: slug -> display info + matching CATALOG brand name(s) ----
+  // brandNames lists every name the house's products may carry in the
+  // catalog (DUKHAN/RAINDROPS were older names for the Dkhoni/Ajmal lines).
   var BRANDS = {
-    'rasasi':          { name: 'Rasasi',            brandName: 'RASASI' },
-    'zimaya':          { name: 'Zimaya',            brandName: 'ZIMAYA' },
-    'maison-alhambra': { name: 'Maison Alhambra',   brandName: 'MAISON ALHAMBRA' },
-    'lattafa':         { name: 'Lattafa',           brandName: 'LATTAFA' },
-    'dkhoni':          { name: 'Dkhoni',            brandName: null },
-    'swiss-arabian':   { name: 'Swiss Arabian',     brandName: 'SWISS ARABIAN' },
-    'ajmal':           { name: 'Ajmal',             brandName: null },
-    'azha':            { name: 'Azha',              brandName: 'AZHA' },
-    'arabiyat':        { name: 'Arabiyat Prestige', brandName: 'ARABIYAT PRESTIGE' }
+    'rasasi':          { name: 'Rasasi',            brandNames: ['RASASI'] },
+    'zimaya':          { name: 'Zimaya',            brandNames: ['ZIMAYA'] },
+    'maison-alhambra': { name: 'Maison Alhambra',   brandNames: ['MAISON ALHAMBRA'] },
+    'lattafa':         { name: 'Lattafa',           brandNames: ['LATTAFA'] },
+    'dkhoni':          { name: 'Dkhoni',            brandNames: ['DKHONI', 'DUKHAN'] },
+    'swiss-arabian':   { name: 'Swiss Arabian',     brandNames: ['SWISS ARABIAN'] },
+    'ajmal':           { name: 'Ajmal',             brandNames: ['AJMAL', 'RAINDROPS'] },
+    'azha':            { name: 'Azha',              brandNames: ['AZHA'] },
+    'arabiyat':        { name: 'Arabiyat Prestige', brandNames: ['ARABIYAT PRESTIGE'] }
   };
+  // the database's own slugs for some of the same houses (used by the sitemap)
+  var ALIASES = { 'arabiyat-prestige': 'arabiyat', 'dukhan': 'dkhoni', 'raindrops': 'ajmal' };
 
   function getParam(name) {
     var m = new RegExp('[?&]' + name + '=([^&]+)').exec(location.search);
     return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : null;
   }
 
+  function slugify(str) {
+    return String(str || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+
   var slug = getParam('id');
+  if (slug && ALIASES[slug]) slug = ALIASES[slug];
   var brand = slug ? BRANDS[slug] : null;
+  var hasLogo = !!brand;
+
+  // any other brand that actually has products in the catalog
+  if (slug && !brand) {
+    for (var bi = 0; bi < CAT.length; bi++) {
+      if (CAT[bi].brand && slugify(CAT[bi].brand) === slug) {
+        var raw = CAT[bi].brand;
+        brand = {
+          name: raw.toLowerCase().replace(/(^|\s)\S/g, function (c) { return c.toUpperCase(); }),
+          brandNames: [raw.trim().toUpperCase()]
+        };
+        break;
+      }
+    }
+  }
 
   var setText = function (id, text) { var el = document.getElementById(id); if (el) el.textContent = text; };
 
@@ -670,7 +697,7 @@ window.__bootPromise = (function () {
     var title = brand.name + ' — Wateen Perfumes';
     var desc = 'Shop authentic ' + brand.name + ' fragrances at Wateen Perfumes. ' + brandBlurb;
     if (desc.length > 160) desc = desc.slice(0, 157).trim() + '…';
-    var img = 'assets/brands/' + slug + '.png';
+    var img = hasLogo ? 'assets/brands/' + slug + '.png' : 'assets/logo.png';
 
     var setContent = function (id, val) { var el = document.getElementById(id); if (el) el.setAttribute('content', val); };
     var setHref = function (id, val) { var el = document.getElementById(id); if (el) el.setAttribute('href', val); };
@@ -688,12 +715,14 @@ window.__bootPromise = (function () {
 
   var logoEl = document.getElementById('brLogo');
   if (logoEl) {
-    logoEl.src = 'assets/brands/' + slug + '.png';
+    logoEl.src = hasLogo ? 'assets/brands/' + slug + '.png' : 'assets/logo.png';
     logoEl.alt = brand.name;
   }
 
   // ---- products for this brand ----
-  var allProducts = brand.brandName ? CAT.filter(function (p) { return p.brand === brand.brandName; }) : [];
+  var allProducts = CAT.filter(function (p) {
+    return brand.brandNames.indexOf(String(p.brand || '').trim().toUpperCase()) !== -1;
+  });
   var searchQuery = '';
 
   function cardHtml(p, i) {

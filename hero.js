@@ -632,6 +632,19 @@
     return null;
   }
 
+  // Meta Pixel payload for one product — content id is the DB id, matching
+  // what the server reports on Purchase (see server/lib/meta-capi.js)
+  function metaProductData(p, qty) {
+    qty = qty || 1;
+    var cid = String(p.dbId || p.id);
+    return {
+      content_ids: [cid], content_type: 'product', content_name: p.name,
+      content_category: p.cat || undefined,
+      contents: [{ id: cid, quantity: qty }],
+      value: (Number(p.price) || 0) * qty, currency: 'EGP'
+    };
+  }
+
   function addToCart(id, qty) {
     qty = qty || 1;
     var line = null;
@@ -639,6 +652,8 @@
     if (line) line.qty += qty;
     else cart.push({ id: id, qty: qty });
     renderCart();
+    var added = findProduct(id);
+    if (added && window.wmTrack) window.wmTrack('AddToCart', metaProductData(added, qty));
   }
 
   function setQty(id, qty) {
@@ -919,6 +934,8 @@
     if (i === -1) ids.push(id); else ids.splice(i, 1);
     saveWishlist(ids);
     syncWishCount();
+    var wished = i === -1 ? findProduct(id) : null;
+    if (wished && window.wmTrack) window.wmTrack('AddToWishlist', metaProductData(wished, 1));
     return i === -1; // true = now wished
   }
 
@@ -1050,7 +1067,16 @@
         .map(function (r) { return r.p; });
     }
     renderResults(list);
+
+    // report the search to Meta once the shopper stops typing, not per keystroke
+    clearTimeout(searchTrackTimer);
+    if (q.length >= 2 && window.wmTrack) {
+      searchTrackTimer = setTimeout(function () {
+        window.wmTrack('Search', { search_string: q, content_ids: list.slice(0, 10).map(function (p) { return String(p.dbId || p.id); }) });
+      }, 1500);
+    }
   }
+  var searchTrackTimer = null;
 
   if (searchInput) searchInput.addEventListener('input', runSearch);
   if (searchClear) searchClear.addEventListener('click', function () {

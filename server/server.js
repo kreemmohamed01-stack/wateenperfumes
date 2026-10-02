@@ -25,6 +25,7 @@ const { sitemapHandler } = require('./routes/public-catalog');
 const storefrontCache = require('./lib/storefront-cache');
 const staffRoutes = require('./routes/staff');
 const analyticsRoutes = require('./routes/analytics');
+const metaCapi = require('./lib/meta-capi');
 
 const app = express();
 app.disable('x-powered-by');
@@ -40,6 +41,8 @@ app.post('/api/public/orders', (req, res, next) => orderRoutes.createPublicOrder
 app.post('/api/public/coupons/validate', (req, res, next) => couponRoutes.validatePublic(req, res, next));
 app.get('/api/public/coupons/featured', (req, res, next) => couponRoutes.featuredPublic(req, res, next));
 app.post('/api/public/reviews', (req, res, next) => reviewRoutes.submitPublic(req, res, next));
+// browser pixel events mirrored to Meta's Conversions API (see meta-pixel.js)
+app.post('/api/public/meta-event', metaCapi.relayHandler);
 
 // sitemap.xml is generated live from the DB (products/brands change over
 // time), so it's served through the API rather than as a static file. On

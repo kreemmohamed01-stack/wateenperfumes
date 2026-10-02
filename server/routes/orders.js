@@ -3,6 +3,7 @@ const { db, withTransaction } = require('../db');
 const { requireAuth, requirePermission, logActivity } = require('../middleware/auth');
 const { notify } = require('../lib/notify');
 const { sendOrderWhatsApp } = require('../lib/whatsapp');
+const metaCapi = require('../lib/meta-capi');
 
 const router = express.Router();
 
@@ -128,6 +129,11 @@ router.createPublicOrder = async (req, res, next) => {
       subtotal: b.subtotal || 0, discountTotal: b.discountTotal || 0, shippingFee: b.shippingFee || 0,
       total: b.total || 0, paymentMethod: b.paymentMethod || 'cod', couponCode: b.couponCode || null,
       customerNotes: b.customerNotes || null
+    }).catch(() => {});
+
+    // Meta Conversions API Purchase — same reasoning: awaited, never fatal
+    await metaCapi.sendPurchase(req, {
+      orderNumber, customer: b.customer, address: b.address, items: b.items, total: b.total || 0
     }).catch(() => {});
 
     res.status(201).json({ orderId, orderNumber });
