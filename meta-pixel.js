@@ -12,7 +12,8 @@
    once — but still arrives when an ad-blocker or iOS
    privacy settings stop the browser copy.
 
-   Purchase is the exception: the server sends its CAPI copy
+   Purchase fires only after the server confirms an order was
+   saved (checkout.js), once per order. The server sends its CAPI copy
    itself when the order is saved (see server/routes/orders.js),
    so the browser only fires the pixel half here.
 
@@ -42,6 +43,11 @@
     s.parentNode.insertBefore(t, s);
   }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
 
+  // Turn off Meta's "automatic events": left on, the pixel guesses events from
+  // button clicks — every tap on PLACE ORDER / SECURE CHECKOUT got reported as
+  // a Purchase even when the form didn't validate and no order was created,
+  // inflating sales in Ads Manager. Every event is sent explicitly below.
+  fbq('set', 'autoConfig', false, PIXEL_ID);
   fbq('init', PIXEL_ID);
 
   function newEventId(name) {
