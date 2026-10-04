@@ -21,7 +21,7 @@ const activityRoutes = require('./routes/activity');
 const settingsRoutes = require('./routes/settings');
 const overviewRoutes = require('./routes/overview');
 const publicCatalogRoutes = require('./routes/public-catalog');
-const { sitemapHandler } = require('./routes/public-catalog');
+const { sitemapHandler, metaFeedHandler } = require('./routes/public-catalog');
 const storefrontCache = require('./lib/storefront-cache');
 const staffRoutes = require('./routes/staff');
 const analyticsRoutes = require('./routes/analytics');
@@ -49,6 +49,10 @@ app.post('/api/public/meta-event', metaCapi.relayHandler);
 // Vercel, vercel.json rewrites /sitemap.xml to this same function.
 app.get('/sitemap.xml', sitemapHandler);
 app.get('/api/sitemap.xml', sitemapHandler);
+// Meta Commerce Manager product feed (scheduled data feed URL); vercel.json
+// rewrites the friendly /meta-catalog.xml to this function too.
+app.get('/meta-catalog.xml', metaFeedHandler);
+app.get('/api/meta-catalog.xml', metaFeedHandler);
 
 /* ---------- admin API (auth required inside each router) ----------
    analytics is mounted here even though its /collect endpoint is public:

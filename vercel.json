@@ -3,7 +3,8 @@
   "buildCommand": null,
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
-    { "source": "/sitemap.xml", "destination": "/api" }
+    { "source": "/sitemap.xml", "destination": "/api" },
+    { "source": "/meta-catalog.xml", "destination": "/api" }
   ],
   "headers": [
     {

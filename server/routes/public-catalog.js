@@ -361,3 +361,81 @@ async function sitemapHandler(req, res, next) {
 }
 
 module.exports.sitemapHandler = sitemapHandler;
+
+// ── Meta (Facebook/Instagram) product catalog feed ──
+// Commerce Manager pulls this on a schedule to build the catalog used by
+// catalog / Advantage+ shopping ads. g:id is the product's DB id — the same
+// value meta-pixel.js and the Conversions API send as content_ids — so the
+// pixel's ViewContent/AddToCart/Purchase events match back to these items.
+// Product photos are transparent WebP (made for the site's podium cards);
+// Meta wants an opaque JPG/PNG, so image links go through Cloudinary's fetch
+// API, which converts them to a 1080x1080 white-background JPG on the fly.
+function feedImage(url) {
+  if (!url) return '';
+  const abs = /^https?:\/\//i.test(url) ? url : `${SITE_URL}/${url.replace(/^\/+/, '')}`;
+  const cloud = process.env.CLOUDINARY_CLOUD_NAME;
+  return cloud
+    ? `https://res.cloudinary.com/${cloud}/image/fetch/f_jpg,b_white,c_pad,w_1080,h_1080,q_85/${abs}`
+    : abs;
+}
+
+const FEED_CATEGORY = {
+  watches: { google: 'Apparel & Accessories > Jewelry > Watches', type: 'Watches' },
+  accessories: { google: 'Apparel & Accessories', type: 'Accessories' },
+  men: { google: 'Health & Beauty > Personal Care > Cosmetics > Perfume & Cologne', type: 'Perfume > Men' },
+  women: { google: 'Health & Beauty > Personal Care > Cosmetics > Perfume & Cologne', type: 'Perfume > Women' },
+  unisex: { google: 'Health & Beauty > Personal Care > Cosmetics > Perfume & Cologne', type: 'Perfume > Unisex' }
+};
+const FEED_GENDER = { Men: 'male', Women: 'female', Unisex: 'unisex' };
+
+function titleCase(s) {
+  return String(s || '').toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase());
+}
+
+async function metaFeedHandler(req, res, next) {
+  try {
+    const settings = await settingsMap();
+    const rows = await db.prepare(`SELECT * FROM products WHERE status = 'published'`).all();
+    const rel = await loadAllProductRelations(rows.map(r => r.id));
+    const items = rows.map(row => toLegacyShape(
+      assembleProduct(row, rel.variantsByProduct, rel.imagesByProduct, rel.categoriesByProduct, rel.brandsById), settings
+    )).filter(p => p.price > 0 && p.img);
+
+    const tag = (name, val) => (val === undefined || val === null || val === '') ? '' : `      <g:${name}>${xmlEscape(val)}</g:${name}>\n`;
+    const body = items.map(p => {
+      const brand = titleCase(p.brand) || 'Wateen Perfumes';
+      const cat = FEED_CATEGORY[p.cat] || FEED_CATEGORY.unisex;
+      const onSale = p.compareAtPrice && Number(p.compareAtPrice) > Number(p.price);
+      const desc = (p.desc || `${p.name} by ${brand} — authentic ${p.type || 'fragrance'} from Wateen Perfumes.`).replace(/\s+/g, ' ').trim();
+      const extra = (p.images || []).slice(1, 10).map(feedImage);
+      return '    <item>\n' +
+        tag('id', String(p.dbId)) +
+        tag('title', `${p.name} - ${brand}`.slice(0, 150)) +
+        tag('description', desc.slice(0, 5000)) +
+        tag('availability', p.stock > 0 ? 'in stock' : 'out of stock') +
+        tag('condition', 'new') +
+        tag('price', `${Number(onSale ? p.compareAtPrice : p.price).toFixed(2)} EGP`) +
+        (onSale ? tag('sale_price', `${Number(p.price).toFixed(2)} EGP`) : '') +
+        tag('link', `${SITE_URL}/product.html?id=${encodeURIComponent(p.id)}`) +
+        tag('image_link', feedImage(p.img)) +
+        extra.map(u => tag('additional_image_link', u)).join('') +
+        tag('brand', brand) +
+        tag('google_product_category', cat.google) +
+        tag('product_type', cat.type) +
+        tag('gender', FEED_GENDER[p.gender]) +
+        tag('custom_label_0', p.bestSeller ? 'best seller' : (p.newArrival ? 'new arrival' : '')) +
+        '    </item>';
+    }).join('\n');
+
+    res.set('Cache-Control', 'public, max-age=900');
+    res.type('application/xml').send(
+      `<?xml version="1.0" encoding="UTF-8"?>\n` +
+      `<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">\n  <channel>\n` +
+      `    <title>Wateen Perfumes</title>\n    <link>${SITE_URL}</link>\n` +
+      `    <description>Wateen Perfumes product catalog</description>\n` +
+      body + `\n  </channel>\n</rss>\n`
+    );
+  } catch (e) { next(e); }
+}
+
+module.exports.metaFeedHandler = metaFeedHandler;
