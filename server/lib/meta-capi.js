@@ -67,8 +67,11 @@ function requestUserData(req) {
   return ud;
 }
 
+// resolves to a short outcome string ('ok', 'disabled', 'http-400', ...) —
+// never the token or Meta's response body — so callers can surface it
 async function sendEvents(events) {
-  if (!enabled() || !events.length) return;
+  if (!enabled()) return 'disabled';
+  if (!events.length) return 'empty';
   const body = { data: events };
   if (TEST_CODE) body.test_event_code = TEST_CODE;
 
@@ -79,9 +82,11 @@ async function sendEvents(events) {
       `https://graph.facebook.com/${GRAPH_VERSION}/${PIXEL_ID}/events?access_token=${encodeURIComponent(TOKEN)}`,
       { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: ctrl.signal }
     );
-    if (!res.ok) console.error('[meta-capi]', res.status, (await res.text()).slice(0, 500));
+    if (!res.ok) { console.error('[meta-capi]', res.status, (await res.text()).slice(0, 500)); return 'http-' + res.status; }
+    return 'ok';
   } catch (e) {
     console.error('[meta-capi]', e.name === 'AbortError' ? 'timeout' : e.message);
+    return e.name === 'AbortError' ? 'timeout' : 'network-error';
   } finally {
     clearTimeout(timer);
   }
@@ -117,10 +122,11 @@ async function relayHandler(req, res) {
     const b = req.body || {};
     const name = String(b.eventName || '');
     const eventId = String(b.eventId || '').slice(0, 100);
+    let outcome = !enabled() ? 'disabled' : 'skipped';
     if (enabled() && RELAYABLE.has(name) && eventId && !isBotUserAgent(req.headers['user-agent'] || '')) {
       let url = typeof b.url === 'string' ? b.url.slice(0, 1000) : '';
       if (!/^https?:\/\//i.test(url)) url = req.headers.referer || '';
-      await sendEvents([{
+      outcome = await sendEvents([{
         event_name: name,
         event_time: Math.floor(Date.now() / 1000),
         event_id: eventId,
@@ -130,9 +136,13 @@ async function relayHandler(req, res) {
         custom_data: cleanCustomData(b.data)
       }]);
     }
+    res.set('X-Meta-CAPI', outcome);
   } catch (e) {
     console.error('[meta-capi] relay', e.message);
+    res.set('X-Meta-CAPI', 'error');
   }
+  // the X-Meta-CAPI header above shows whether Meta accepted the event
+  // (ok / http-4xx / disabled / skipped) without needing server logs
   res.status(204).end();
 }
 
