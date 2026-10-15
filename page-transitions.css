@@ -174,3 +174,57 @@ html.pt-ready.pt-in::after{
   .ptLoader__ring circle.ptLoader__arc{ animation-duration: 2s; }
   html.pt-ready::before, html.pt-ready::after, #ptLoader{ transition: opacity .25s linear; }
 }
+
+/* ---- brand intro video (page-transitions.js, first page of a visit) ----
+   sits above the veil and the page; the page loads and fades in underneath
+   it. Background matches the video's own cream backdrop, so on landscape
+   screens the portrait video blends into the side margins. */
+#wmIntro{
+  position: fixed;
+  inset: 0;
+  z-index: 100002;
+  background: #e4d7c2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity .6s cubic-bezier(.4,0,.2,1), visibility .6s;
+}
+#wmIntro.is-out{ opacity: 0; visibility: hidden; pointer-events: none; }
+#wmIntro video{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+@media (min-aspect-ratio: 3/4){
+  /* portrait video on a wide screen: feather its edges into the backdrop */
+  #wmIntro video{
+    object-fit: contain;
+    -webkit-mask-image: linear-gradient(to right, transparent calc(50% - 28vh), #000 calc(50% - 16vh), #000 calc(50% + 16vh), transparent calc(50% + 28vh));
+    mask-image: linear-gradient(to right, transparent calc(50% - 28vh), #000 calc(50% - 16vh), #000 calc(50% + 16vh), transparent calc(50% + 28vh));
+  }
+}
+#wmIntro button{
+  position: absolute;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  font: 500 .72rem/1 'Jost', system-ui, sans-serif;
+  letter-spacing: .22em;
+  color: #2a2118;
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(42,33,24,.18);
+  border-radius: 999px;
+  padding: 11px 18px;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+#wmIntro button[hidden]{ display: none; }
+#wmIntro .wmIntro__skip{ right: 20px; }
+#wmIntro .wmIntro__sound{
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+#wmIntro .wmIntro__sound svg{ width: 16px; height: 16px; }

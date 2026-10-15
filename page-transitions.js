@@ -57,7 +57,90 @@
     }
   } catch (e) { /* purely an optimisation */ }
 
+  /* ---------- brand intro video (first page of a visit only) ----------
+     A 5s logo reveal played over the site while the page loads underneath,
+     so it never adds to load time. Skipped for reduced-motion / data-saver
+     visitors, and abandoned if it can't start within START_TIMEOUT_MS on a
+     slow connection — the site is shown instead of a stalled intro. The file
+     is cached for a year (vercel.json), so it's downloaded once per visitor.
+     Browsers only allow sound without a tap when the visitor has played
+     media on this site before; otherwise it starts muted with a sound
+     button, which replays it from the start with sound. */
+  var INTRO_SRC = '/assets/intro.mp4';
+  var START_TIMEOUT_MS = 2500;
+  var MAX_SHOW_MS = 8000; // hard cap if playback stalls mid-way on a weak connection
+  var intro = null;
+
+  function wantsIntro() {
+    if (fast) return false;
+    try {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+      if (navigator.connection && navigator.connection.saveData) return false;
+    } catch (e) {}
+    return true;
+  }
+
+  function closeIntro() {
+    if (!intro || intro.classList.contains('is-out')) return;
+    var el = intro;
+    el.classList.add('is-out');
+    try { el.querySelector('video').pause(); } catch (e) {}
+    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 700);
+  }
+
+  function injectIntro() {
+    if (intro || !document.body || !wantsIntro()) return !!intro;
+    intro = document.createElement('div');
+    intro.id = 'wmIntro';
+    intro.innerHTML =
+      '<video playsinline preload="auto" poster="/assets/intro-poster.webp" src="' + INTRO_SRC + '"></video>' +
+      '<button type="button" class="wmIntro__sound" hidden aria-label="Play with sound">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>' +
+        '<span>SOUND</span>' +
+      '</button>' +
+      '<button type="button" class="wmIntro__skip">SKIP</button>';
+    // on <html>, not <body>: body starts transparent and transformed while
+    // the page loads, which would hide the intro and re-anchor its fixed
+    // positioning to body's (possibly wider) box
+    root.appendChild(intro);
+
+    var video = intro.querySelector('video');
+    var soundBtn = intro.querySelector('.wmIntro__sound');
+    var started = false;
+    var cap = setTimeout(closeIntro, MAX_SHOW_MS);
+
+    video.addEventListener('playing', function () { started = true; }, { once: true });
+    video.addEventListener('ended', closeIntro);
+    video.addEventListener('error', closeIntro);
+    intro.querySelector('.wmIntro__skip').addEventListener('click', closeIntro);
+    soundBtn.addEventListener('click', function () {
+      video.muted = false;
+      video.currentTime = 0;
+      clearTimeout(cap);
+      cap = setTimeout(closeIntro, MAX_SHOW_MS);
+      soundBtn.hidden = true;
+      var p = video.play();
+      if (p && p.catch) p.catch(function () {});
+    });
+
+    // try with sound first; if the browser refuses, fall back to muted
+    video.muted = false;
+    var p = video.play();
+    if (p && p.catch) {
+      p.catch(function () {
+        video.muted = true;
+        soundBtn.hidden = false;
+        var p2 = video.play();
+        if (p2 && p2.catch) p2.catch(closeIntro);
+      });
+    }
+
+    setTimeout(function () { if (!started) closeIntro(); }, START_TIMEOUT_MS);
+    return true;
+  }
+
   function injectLoaderMark() {
+    if (injectIntro()) return;
     if (fast || document.getElementById('ptLoader') || !document.body) return;
     var el = document.createElement('div');
     el.id = 'ptLoader';
@@ -100,6 +183,7 @@
       if (!document.body) return;
       clearInterval(poll);
       if (!revealed) injectLoaderMark();
+      else injectIntro();
     }, 4);
   }
 
@@ -125,6 +209,7 @@
       revealed = true;
       root.classList.add('pt-in');
       hideLoaderMark();
+      if (intro && intro.parentNode) intro.parentNode.removeChild(intro);
     }
   });
 })();
