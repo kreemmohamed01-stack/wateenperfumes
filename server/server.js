@@ -35,6 +35,18 @@ app.use(express.json({ limit: '2mb' }));
 app.use(cookieParser());
 
 /* ---------- public API (no auth) — used by the storefront itself ---------- */
+// Public storefront reads (catalog, bootstrap, categories, brands, settings,
+// sitemap, feed) are identical for every visitor, so let Vercel's edge cache
+// answer them instead of waking this function and the US database on every
+// page view. Each edge copy is fresh for 60s, then served stale while one
+// background request refreshes it — the same ~1 min (≤10 min worst case)
+// staleness the browser cache on /bootstrap already allows. Only Vercel reads
+// this header (it's stripped before reaching the browser), and it only
+// caches successful responses, never errors.
+const EDGE_CACHE = 'max-age=60, stale-while-revalidate=600';
+app.get(['/api/public/*splat', '/sitemap.xml', '/api/sitemap.xml', '/meta-catalog.xml', '/api/meta-catalog.xml'],
+  (req, res, next) => { res.set('Vercel-CDN-Cache-Control', EDGE_CACHE); next(); });
+
 app.use('/api/public', publicCatalogRoutes);
 app.use('/api/public/settings', (req, res, next) => settingsRoutes.publicSettings(req, res, next));
 app.post('/api/public/orders', (req, res, next) => orderRoutes.createPublicOrder(req, res, next));

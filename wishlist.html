@@ -20,8 +20,8 @@ window.__bootPromise = (function () {
   } catch (e) { return null; }
 })();
 </script>
-<link rel="stylesheet" href="page-transitions.css">
-<script src="page-transitions.js"></script>
+<link rel="stylesheet" href="page-transitions.css?v=2">
+<script src="page-transitions.js?v=2"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Your Wishlist — Wateen Perfumes</title>
 <meta name="description" content="View and manage the items you've saved to your Wateen Perfumes wishlist.">
@@ -548,7 +548,7 @@ window.__bootPromise = (function () {
 
 <script src="i18n.js"></script>
 <script src="site-data.js"></script>
-<script src="hero.js"></script>
+<script src="hero.js?v=2"></script>
 <script>
 // Waits for site-data.js's window.__dataReady first — see the matching note
 // in hero.js. Never rejects and always settles, so this always runs; it
@@ -606,7 +606,7 @@ window.__bootPromise = (function () {
             '</button>' +
             '<div class="wlCard__media">' +
               '<span class="wlCard__ribbon">' + p.family + '</span>' +
-              '<a href="product.html?id=' + p.id + '"><img src="' + p.img + '" alt="' + pName(p) + '"></a>' +
+              '<a href="product.html?id=' + p.id + '"><img src="' + p.img + '" alt="' + pName(p) + '" loading="lazy" decoding="async"></a>' +
             '</div>' +
             '<div class="wlCard__body">' +
               '<p class="wlCard__brand">' + pBrand(p) + '</p>' +
@@ -675,6 +675,6 @@ window.__bootPromise = (function () {
 })();
 });
 </script>
-<script src="track.js" defer></script>
+<script src="track.js?v=2" defer></script>
 </body>
 </html>

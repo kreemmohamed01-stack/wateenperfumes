@@ -19,12 +19,46 @@
 
   var root = document.documentElement;
 
+  // Only the first page of a visit gets the full branded veil (wordmark +
+  // spinner). Every page after that is usually served from cache in a blink,
+  // so re-showing the loader there just made moving around feel slow —
+  // those get a short plain fade instead (html.pt-fast in the CSS).
+  var fast = false;
+  try {
+    fast = sessionStorage.getItem('wm_pt_seen') === '1';
+    sessionStorage.setItem('wm_pt_seen', '1');
+  } catch (e) { /* private mode: keep the full veil */ }
+
   // Marks <html> immediately — this is what makes the CSS paint the plain
   // dark veil (html.pt-ready::before/::after) before <body> even exists.
   root.classList.add('pt-ready');
+  if (fast) root.classList.add('pt-fast');
+
+  // Fetch the next page's HTML as soon as a shopper hovers (or starts
+  // tapping) a link, so by the time the click lands it's already here.
+  // Prefetch only downloads the document — it never runs its scripts — so
+  // it can't fire Meta pixel / analytics events for pages nobody opened.
+  // Browsers without Speculation Rules simply ignore this.
+  try {
+    if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) {
+      var rules = document.createElement('script');
+      rules.type = 'speculationrules';
+      rules.textContent = JSON.stringify({
+        prefetch: [{
+          source: 'document',
+          where: { and: [
+            { href_matches: ['/*', '/*\\?*'] },
+            { not: { href_matches: ['/admin/*', '/admin/*\\?*', '/api/*', '/api/*\\?*'] } }
+          ] },
+          eagerness: 'moderate'
+        }]
+      });
+      document.head.appendChild(rules);
+    }
+  } catch (e) { /* purely an optimisation */ }
 
   function injectLoaderMark() {
-    if (document.getElementById('ptLoader') || !document.body) return;
+    if (fast || document.getElementById('ptLoader') || !document.body) return;
     var el = document.createElement('div');
     el.id = 'ptLoader';
     el.setAttribute('aria-hidden', 'true');

@@ -13,7 +13,9 @@
   if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
 
   var SESSION_KEY = 'wateen_session_id';
-  var HEARTBEAT_MS = 60000; // refresh presence every minute
+  // every 2 min — well inside the dashboard's 5-minute "online now" window,
+  // at half the serverless calls of a 1-minute beat
+  var HEARTBEAT_MS = 120000;
 
   // A session id groups this visit's pageviews together. sessionStorage means
   // it naturally ends when the tab closes, which is what a "session" should be.

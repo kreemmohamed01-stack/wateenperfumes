@@ -44,6 +44,16 @@ html:not(.pt-ready)::after{ display: none; }
   transform: none;
 }
 
+/* every page after the first in a visit: no wordmark/spinner (the JS skips
+   injecting it), just a quick, nearly motionless fade from the dark veil */
+.pt-ready.pt-fast body {
+  transform: translateY(4px);
+  transition: opacity .22s ease-out, transform .22s ease-out;
+}
+.pt-ready.pt-fast.pt-in body { transform: none; }
+html.pt-ready.pt-fast::before,
+html.pt-ready.pt-fast::after { transition: opacity .22s ease-out, visibility .22s; }
+
 @media (prefers-reduced-motion: reduce) {
   .pt-ready body {
     opacity: 1 !important;

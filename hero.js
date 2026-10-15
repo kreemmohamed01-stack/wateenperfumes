@@ -498,10 +498,10 @@
       const p = video.play();
       if (p && p.catch) p.catch(() => {});
     };
-    tryPlay();
-    video.addEventListener('canplay', tryPlay, { once: true });
-
-    // pause when off-screen so it never burns battery in the background
+    // The video is preload="none", so nothing downloads until it's first
+    // played — which now only happens once it scrolls into view, keeping its
+    // ~750KB from competing with the hero image and catalog on first load.
+    // Also pauses off-screen so it never burns battery in the background.
     if ('IntersectionObserver' in window) {
       const vo = new IntersectionObserver((entries) => {
         entries.forEach((e) => {
@@ -510,6 +510,8 @@
         });
       }, { threshold: 0.25 });
       vo.observe(player);
+    } else {
+      tryPlay();
     }
 
     function setSound(on) {
@@ -1013,7 +1015,7 @@
       list.map(function (p) {
         return (
           '<div class="searchm__row" data-id="' + p.id + '" style="cursor:pointer">' +
-            '<div class="searchm__rowImg"><img src="' + p.img + '" alt="' + pName(p) + '"></div>' +
+            '<div class="searchm__rowImg"><img src="' + p.img + '" alt="' + pName(p) + '" loading="lazy" decoding="async"></div>' +
             '<div class="searchm__rowInfo">' +
               '<b>' + pBrand(p) + '</b>' +
               '<i>' + pName(p) + ' &middot; ' + t(p.type) + '</i>' +
