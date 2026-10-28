@@ -214,6 +214,11 @@
 
       saveCart();
       render();
+      // the discount was worked out for the old subtotal — check the code again
+      if (promo && promoBtn) {
+        $('coPromo').value = promo.code;
+        promoBtn.click();
+      }
     });
   }
 

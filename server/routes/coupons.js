@@ -106,47 +106,57 @@ router.delete('/:id', requireAuth, requirePermission('discounts'), async (req, r
 });
 
 /* ---------- public: validate + compute discount for the checkout ---------- */
+// checks a code against a cart and works out its discount — shared by the
+// checkout's "apply" button and order placement, so an order can never carry
+// a discount the code doesn't actually give. Returns { error, status } or
+// { coupon, discount, freeShipping, label }.
+async function evaluateCoupon(code, subtotal, productIds = [], categoryIds = [], brandIds = []) {
+  if (!code) return { status: 400, error: 'Enter a code.' };
+
+  const coupon = await db.prepare('SELECT * FROM coupons WHERE code = ?').get(String(code).trim().toUpperCase());
+  if (!coupon || !coupon.is_active) return { status: 404, error: 'That code is not valid.' };
+
+  const now = new Date();
+  if (coupon.starts_at && new Date(coupon.starts_at) > now) return { status: 400, error: 'This code is not active yet.' };
+  if (coupon.expires_at && new Date(coupon.expires_at) < now) return { status: 400, error: 'This code has expired.' };
+  if (coupon.usage_limit && coupon.used_count >= coupon.usage_limit) return { status: 400, error: 'This code has reached its usage limit.' };
+  if (subtotal < coupon.min_order) return { status: 400, error: `Minimum order of ${coupon.min_order} EGP required.` };
+
+  const applicableProducts = JSON.parse(coupon.applicable_products || '[]');
+  const applicableCategories = JSON.parse(coupon.applicable_categories || '[]');
+  const applicableBrands = JSON.parse(coupon.applicable_brands || '[]');
+
+  const scoped = applicableProducts.length || applicableCategories.length || applicableBrands.length;
+  if (scoped) {
+    const matches = productIds.some(id => applicableProducts.includes(id))
+      || categoryIds.some(id => applicableCategories.includes(id))
+      || brandIds.some(id => applicableBrands.includes(id));
+    if (!matches) return { status: 400, error: 'This code does not apply to the items in your cart.' };
+  }
+
+  let discount = 0;
+  let freeShipping = false;
+  if (coupon.type === 'percent') {
+    discount = subtotal * (coupon.amount / 100);
+    if (coupon.max_discount) discount = Math.min(discount, coupon.max_discount);
+  } else if (coupon.type === 'fixed') {
+    discount = Math.min(coupon.amount, subtotal);
+  } else if (coupon.type === 'free_shipping') {
+    freeShipping = true;
+  }
+
+  return {
+    coupon, discount: Math.round(discount), freeShipping,
+    label: coupon.type === 'percent' ? `${coupon.amount}% off` : coupon.type === 'fixed' ? `${coupon.amount} EGP off` : 'Free shipping'
+  };
+}
+
 router.validatePublic = async (req, res, next) => {
   try {
     const { code, subtotal, productIds = [], categoryIds = [], brandIds = [] } = req.body || {};
-    if (!code) return res.status(400).json({ error: 'Enter a code.' });
-
-    const coupon = await db.prepare('SELECT * FROM coupons WHERE code = ?').get(String(code).trim().toUpperCase());
-    if (!coupon || !coupon.is_active) return res.status(404).json({ error: 'That code is not valid.' });
-
-    const now = new Date();
-    if (coupon.starts_at && new Date(coupon.starts_at) > now) return res.status(400).json({ error: 'This code is not active yet.' });
-    if (coupon.expires_at && new Date(coupon.expires_at) < now) return res.status(400).json({ error: 'This code has expired.' });
-    if (coupon.usage_limit && coupon.used_count >= coupon.usage_limit) return res.status(400).json({ error: 'This code has reached its usage limit.' });
-    if (subtotal < coupon.min_order) return res.status(400).json({ error: `Minimum order of ${coupon.min_order} EGP required.` });
-
-    const applicableProducts = JSON.parse(coupon.applicable_products || '[]');
-    const applicableCategories = JSON.parse(coupon.applicable_categories || '[]');
-    const applicableBrands = JSON.parse(coupon.applicable_brands || '[]');
-
-    const scoped = applicableProducts.length || applicableCategories.length || applicableBrands.length;
-    if (scoped) {
-      const matches = productIds.some(id => applicableProducts.includes(id))
-        || categoryIds.some(id => applicableCategories.includes(id))
-        || brandIds.some(id => applicableBrands.includes(id));
-      if (!matches) return res.status(400).json({ error: 'This code does not apply to the items in your cart.' });
-    }
-
-    let discount = 0;
-    let freeShipping = false;
-    if (coupon.type === 'percent') {
-      discount = subtotal * (coupon.amount / 100);
-      if (coupon.max_discount) discount = Math.min(discount, coupon.max_discount);
-    } else if (coupon.type === 'fixed') {
-      discount = Math.min(coupon.amount, subtotal);
-    } else if (coupon.type === 'free_shipping') {
-      freeShipping = true;
-    }
-
-    res.json({
-      code: coupon.code, type: coupon.type, discount: Math.round(discount), freeShipping,
-      label: coupon.type === 'percent' ? `${coupon.amount}% off` : coupon.type === 'fixed' ? `${coupon.amount} EGP off` : 'Free shipping'
-    });
+    const r = await evaluateCoupon(code, subtotal, productIds, categoryIds, brandIds);
+    if (r.error) return res.status(r.status).json({ error: r.error });
+    res.json({ code: r.coupon.code, type: r.coupon.type, discount: r.discount, freeShipping: r.freeShipping, label: r.label });
   } catch (e) { next(e); }
 };
 
@@ -168,3 +178,4 @@ router.featuredPublic = async (req, res, next) => {
 };
 
 module.exports = router;
+module.exports.evaluateCoupon = evaluateCoupon;

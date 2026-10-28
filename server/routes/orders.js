@@ -4,8 +4,57 @@ const { requireAuth, requirePermission, logActivity } = require('../middleware/a
 const { notify } = require('../lib/notify');
 const { sendOrderWhatsApp } = require('../lib/whatsapp');
 const metaCapi = require('../lib/meta-capi');
+const { buildCatalog, settingsMap } = require('./public-catalog');
+const { evaluateCoupon } = require('./coupons');
 
 const router = express.Router();
+
+// Re-prices a checkout cart from the database: unit prices, shipping and the
+// coupon discount are all recomputed here, so the totals the browser sends
+// are never trusted (anyone can edit that request). Mirrors the rules in
+// checkout.js — watches ship free while that's enabled, anything else ships
+// at the selected governorate's rate.
+async function priceOrder(b) {
+  const settings = await settingsMap();
+  const catalog = await buildCatalog(settings);
+  const byId = new Map(catalog.map(p => [p.dbId, p]));
+
+  const items = [];
+  for (const item of b.items) {
+    const p = byId.get(Number(item.productId));
+    const qty = Math.floor(Number(item.qty));
+    if (!p || !(qty > 0)) return { error: 'One of the items in your cart is no longer available.' };
+    const variant = p.variants.find(v => v.size === item.size) || p.variants.find(v => v.size === p.size) || p.variants[0];
+    items.push({
+      productId: p.dbId, variantId: variant ? variant.id : null, name: p.name, brand: p.brand,
+      size: variant ? variant.size : p.size, qty, unitPrice: variant ? variant.price : p.price, image: p.img,
+      isWatch: p.cat === 'watches' || p.extraCats.includes('watches'), brandId: p.brandId
+    });
+  }
+
+  const subtotal = items.reduce((sum, i) => sum + i.unitPrice * i.qty, 0);
+
+  const govRates = JSON.parse(settings.shipping_rates_by_governorate || '{}');
+  const gov = b.address?.governorate;
+  const perfumeFee = Number(gov && govRates[gov] != null ? govRates[gov] : (settings.default_shipping_fee || 80));
+  const watchesFree = settings.watches_free_shipping !== 'false';
+  let shippingFee = (items.some(i => !i.isWatch) || !watchesFree) ? perfumeFee : 0;
+
+  let discountTotal = 0;
+  let couponCode = null;
+  if (b.couponCode) {
+    const c = await evaluateCoupon(b.couponCode, subtotal, items.map(i => i.productId), [], items.map(i => i.brandId));
+    if (c.error) return { error: c.error };
+    discountTotal = c.discount;
+    if (c.freeShipping) shippingFee = 0;
+    couponCode = c.coupon.code;
+  }
+
+  return {
+    items, subtotal, shippingFee, discountTotal, couponCode,
+    total: Math.max(0, subtotal - discountTotal) + shippingFee
+  };
+}
 
 const STATUS_FLOW = ['pending', 'confirmed', 'processing', 'packed', 'shipped', 'out_for_delivery', 'delivered'];
 const ALL_STATUSES = [...STATUS_FLOW, 'cancelled', 'returned', 'refunded'];
@@ -48,6 +97,15 @@ router.createPublicOrder = async (req, res, next) => {
     if (!Array.isArray(b.items) || !b.items.length) {
       return res.status(400).json({ error: 'Order must contain at least one item.' });
     }
+
+    const priced = await priceOrder(b);
+    if (priced.error) return res.status(400).json({ error: priced.error });
+    b.items = priced.items;
+    b.subtotal = priced.subtotal;
+    b.discountTotal = priced.discountTotal;
+    b.shippingFee = priced.shippingFee;
+    b.total = priced.total;
+    b.couponCode = priced.couponCode;
 
     const { orderId, orderNumber } = await withTransaction(async (tdb) => {
       let customer = await tdb.prepare('SELECT * FROM customers WHERE phone = ?').get(b.customer.phone.trim());

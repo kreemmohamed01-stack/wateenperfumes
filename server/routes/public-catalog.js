@@ -24,7 +24,7 @@ function toLegacyShape(p, settings) {
       compareAt = compareAt || v.price;
       price = Math.round(v.price * (1 - pctOff / 100));
     }
-    return { size: v.size, price, compareAtPrice: compareAt, stock: v.available };
+    return { id: v.id, size: v.size, price, compareAtPrice: compareAt, stock: v.available };
   });
 
   const defaultVariant = variants.find((v, i) => p.variants[i].isDefault) || variants[0];
@@ -79,7 +79,7 @@ function assembleProduct(row, variantsByProduct, imagesByProduct, categoriesByPr
     discountActive: !!row.discount_active, lowStockThreshold: row.low_stock_threshold,
     categories,
     variants: variants.map(v => ({
-      isDefault: !!v.is_default, size: v.size, price: v.price, compareAtPrice: v.compare_at_price,
+      id: v.id, isDefault: !!v.is_default, size: v.size, price: v.price, compareAtPrice: v.compare_at_price,
       available: v.stock - v.reserved
     })),
     images
@@ -361,6 +361,8 @@ async function sitemapHandler(req, res, next) {
 }
 
 module.exports.sitemapHandler = sitemapHandler;
+module.exports.buildCatalog = buildCatalog;
+module.exports.settingsMap = settingsMap;
 
 // ── Meta (Facebook/Instagram) product catalog feed ──
 // Commerce Manager pulls this on a schedule to build the catalog used by
