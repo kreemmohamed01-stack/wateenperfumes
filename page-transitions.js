@@ -64,8 +64,7 @@
      slow connection — the site is shown instead of a stalled intro. The file
      is cached for a year (vercel.json), so it's downloaded once per visitor.
      Browsers only allow sound without a tap when the visitor has played
-     media on this site before; otherwise it starts muted with a sound
-     button, which replays it from the start with sound. */
+     media on this site before; otherwise it plays muted. */
   var INTRO_SRC = '/assets/intro.mp4';
   var START_TIMEOUT_MS = 2500;
   var MAX_SHOW_MS = 8000; // hard cap if playback stalls mid-way on a weak connection
@@ -93,35 +92,19 @@
     intro = document.createElement('div');
     intro.id = 'wmIntro';
     intro.innerHTML =
-      '<video playsinline preload="auto" poster="/assets/intro-poster.webp" src="' + INTRO_SRC + '"></video>' +
-      '<button type="button" class="wmIntro__sound" hidden aria-label="Play with sound">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>' +
-        '<span>SOUND</span>' +
-      '</button>' +
-      '<button type="button" class="wmIntro__skip">SKIP</button>';
+      '<video playsinline preload="auto" poster="/assets/intro-poster.webp" src="' + INTRO_SRC + '"></video>';
     // on <html>, not <body>: body starts transparent and transformed while
     // the page loads, which would hide the intro and re-anchor its fixed
     // positioning to body's (possibly wider) box
     root.appendChild(intro);
 
     var video = intro.querySelector('video');
-    var soundBtn = intro.querySelector('.wmIntro__sound');
     var started = false;
-    var cap = setTimeout(closeIntro, MAX_SHOW_MS);
+    setTimeout(closeIntro, MAX_SHOW_MS);
 
     video.addEventListener('playing', function () { started = true; }, { once: true });
     video.addEventListener('ended', closeIntro);
     video.addEventListener('error', closeIntro);
-    intro.querySelector('.wmIntro__skip').addEventListener('click', closeIntro);
-    soundBtn.addEventListener('click', function () {
-      video.muted = false;
-      video.currentTime = 0;
-      clearTimeout(cap);
-      cap = setTimeout(closeIntro, MAX_SHOW_MS);
-      soundBtn.hidden = true;
-      var p = video.play();
-      if (p && p.catch) p.catch(function () {});
-    });
 
     // try with sound first; if the browser refuses, fall back to muted
     video.muted = false;
@@ -129,7 +112,6 @@
     if (p && p.catch) {
       p.catch(function () {
         video.muted = true;
-        soundBtn.hidden = false;
         var p2 = video.play();
         if (p2 && p2.catch) p2.catch(closeIntro);
       });
