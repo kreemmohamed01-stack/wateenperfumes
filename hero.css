@@ -3789,3 +3789,8 @@ a{ text-decoration:none; color:inherit; }
   .reveal [style*="--d"],
   .reveal .stagger{ opacity:1 !important; transform:none !important; }
 }
+
+/* the cart drawer toggles its empty state / items / footer with the hidden
+   attribute, but rules like .cartd__empty{display:flex} override it — so
+   "Your cart is empty" showed even with products in the cart */
+.cartd [hidden], #cartDrawer [hidden]{ display:none !important; }
