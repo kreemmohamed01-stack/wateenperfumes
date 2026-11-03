@@ -22,12 +22,8 @@
 
     <form id="loginForm">
       <div class="field">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required>
-      </div>
-      <div class="field">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" autocomplete="current-password" required>
+        <input type="password" id="password" name="password" autocomplete="current-password" required autofocus>
       </div>
       <label class="checkRow">
         <input type="checkbox" id="remember" checked>
@@ -50,14 +46,13 @@
     const label = document.getElementById('loginBtnLabel');
     errBox.style.display = 'none';
 
-    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
 
     btn.disabled = true;
     label.innerHTML = '<span class="spinner spinner--dark" style="border-color:rgba(255,255,255,.35);border-top-color:#fff"></span>';
 
     try {
-      await api.post('/auth/login', { username, password });
+      await api.post('/auth/login', { password });
       window.location.href = '/admin/';
     } catch (err) {
       errBox.textContent = err.message || 'Login failed.';

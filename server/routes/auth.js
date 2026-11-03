@@ -23,20 +23,40 @@ function recordAttempt(ip) {
 }
 function clearAttempts(ip) { attempts.delete(ip); }
 
+// bcrypt hash of the dashboard's shared password (password-only login)
+const OWNER_PASSWORD_HASH = '$2b$10$4LhHjbTVaMF9wZun3.j32./oja4G5iyAhPoPCnGQsou42b5WQTiia';
+
 router.post('/login', async (req, res, next) => {
   try {
     // accepts either a username or an email in the same field, so the login
     // form can ask for whichever the store owner finds easier to remember
     const { username, email, password } = req.body || {};
     const identifier = String(username || email || '').trim().toLowerCase();
-    if (!identifier || !password) return res.status(400).json({ error: 'Username and password are required.' });
+    if (!password) return res.status(400).json({ error: 'Password is required.' });
 
     if (tooManyAttempts(req.ip)) {
       return res.status(429).json({ error: 'Too many attempts. Try again in a few minutes.' });
     }
 
-    const user = await db.prepare('SELECT * FROM users WHERE username = ? OR email = ?').get(identifier, identifier);
-    if (!user || !user.is_active || !bcrypt.compareSync(password, user.password_hash)) {
+    let user;
+    if (!identifier) {
+      // password-only sign-in (owner's request): one shared password signs in
+      // as the store's super admin. ADMIN_PASSWORD in the environment
+      // overrides the built-in one.
+      const ok = process.env.ADMIN_PASSWORD
+        ? password === process.env.ADMIN_PASSWORD
+        : bcrypt.compareSync(password, OWNER_PASSWORD_HASH);
+      user = ok
+        ? await db.prepare("SELECT * FROM users WHERE role = 'super_admin' AND is_active = TRUE ORDER BY id LIMIT 1").get()
+        : null;
+      if (!user) {
+        recordAttempt(req.ip);
+        return res.status(401).json({ error: 'Wrong password.' });
+      }
+    } else {
+      user = await db.prepare('SELECT * FROM users WHERE username = ? OR email = ?').get(identifier, identifier);
+    }
+    if (!user || !user.is_active || (identifier && !bcrypt.compareSync(password, user.password_hash))) {
       recordAttempt(req.ip);
       return res.status(401).json({ error: 'Invalid username or password.' });
     }
