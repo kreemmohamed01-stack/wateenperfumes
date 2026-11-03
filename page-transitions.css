@@ -205,3 +205,18 @@ html.pt-ready.pt-in::after{
     mask-image: linear-gradient(to right, transparent calc(50% - 28vh), #000 calc(50% - 16vh), #000 calc(50% + 16vh), transparent calc(50% + 28vh));
   }
 }
+
+/* no buttons on the intro: hide every native media control/overlay the
+   browser might draw (iOS play button, Android cast / PiP, start overlay) */
+#wmIntro video{ pointer-events: none; }
+#wmIntro video::-webkit-media-controls,
+#wmIntro video::-webkit-media-controls-panel,
+#wmIntro video::-webkit-media-controls-play-button,
+#wmIntro video::-webkit-media-controls-start-playback-button,
+#wmIntro video::-webkit-media-controls-overlay-play-button,
+#wmIntro video::-webkit-media-controls-enclosure,
+#wmIntro video::-internal-media-controls-overlay-cast-button{
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0 !important;
+}

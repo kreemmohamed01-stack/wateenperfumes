@@ -92,7 +92,7 @@
     intro = document.createElement('div');
     intro.id = 'wmIntro';
     intro.innerHTML =
-      '<video playsinline preload="auto" poster="/assets/intro-poster.webp" src="' + INTRO_SRC + '"></video>';
+      '<video playsinline webkit-playsinline autoplay disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback noplaybackrate" x-webkit-airplay="deny" tabindex="-1" preload="auto" poster="/assets/intro-poster.webp" src="' + INTRO_SRC + '"></video>';
     // on <html>, not <body>: body starts transparent and transformed while
     // the page loads, which would hide the intro and re-anchor its fixed
     // positioning to body's (possibly wider) box
