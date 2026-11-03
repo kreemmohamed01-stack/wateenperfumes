@@ -1243,8 +1243,11 @@ body.co-page .drawer{ display:none !important; }
 
 /* printing the receipt: everything else on the page steps aside */
 @media print{
-  body.co-page > *{ display:none !important; }
-  .coDone{
+  body.co-page > *:not(.coDone){ display:none !important; }
+  /* the page-transition veil and fade must not blank the printout */
+  html::before, html::after{ display:none !important; }
+  body.co-page{ opacity:1 !important; transform:none !important; overflow:visible !important; }
+  body.co-page > .coDone{
     display:block !important;
     position:static !important;
     opacity:1 !important; visibility:visible !important;
