@@ -189,6 +189,18 @@
     }
   }
 
+  // re-read the saved cart when this page comes back from the back/forward
+  // cache or another tab changes it, so checkout never shows a stale cart
+  function reloadCart() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(CART_KEY));
+      cart = Array.isArray(saved) ? saved : [];
+    } catch (e) { return; }
+    render();
+  }
+  window.addEventListener('pageshow', function (e) { if (e.persisted) reloadCart(); });
+  window.addEventListener('storage', function (e) { if (e.key === CART_KEY) reloadCart(); });
+
   /* ---------- quantity / remove ---------- */
 
   var itemsRoot = $('coItems');

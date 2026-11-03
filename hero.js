@@ -855,6 +855,23 @@
 
   renderCart();
 
+  // The cart lives in localStorage, but this page keeps its own in-memory
+  // copy. When the browser restores a page from the back/forward cache (or
+  // another tab changes the cart), that copy is stale — the drawer showed
+  // "your cart is empty" for a cart that had items, and the next add would
+  // overwrite the saved cart with the stale one. Re-read it whenever the
+  // page is shown again or the saved cart changes elsewhere.
+  function reloadCart() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(CART_KEY));
+      cart = Array.isArray(saved) ? saved : [];
+    } catch (e) { return; }
+    renderCart();
+  }
+  window.addEventListener('pageshow', function (e) { if (e.persisted) reloadCart(); });
+  window.addEventListener('storage', function (e) { if (e.key === CART_KEY) reloadCart(); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) reloadCart(); });
+
 
   /* ─────────── make every product card/rail-item open its product page ───────────
      matched by name against the shared catalog, so this works on the
