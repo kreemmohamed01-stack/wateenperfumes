@@ -760,8 +760,106 @@
     var totalEl = document.getElementById('cartTotal');
     if (subEl) subEl.textContent = fmt(subtotal) + ' ' + t('EGP');
     if (feeEl) feeEl.textContent = shipping === 0 ? t('FREE') : fmt(shipping) + ' ' + t('EGP');
-    if (totalEl) totalEl.textContent = fmt(subtotal + shipping) + ' ' + t('EGP');
+    var discount = 0;
+    if (cartPromo) {
+      discount = cartPromo.discount || 0;
+      if (cartPromo.freeShipping) shipping = 0;
+      if (feeEl) feeEl.textContent = shipping === 0 ? t('FREE') : fmt(shipping) + ' ' + t('EGP');
+    }
+    var discEl = document.getElementById('cartDiscount');
+    if (discEl) {
+      discEl.hidden = !discount;
+      discEl.querySelector('b').textContent = '-' + fmt(discount) + ' ' + t('EGP');
+    }
+    if (totalEl) totalEl.textContent = fmt(Math.max(0, subtotal - discount) + shipping) + ' ' + t('EGP');
+
+    // the discount was worked out for the old cart — check the code again
+    var sig = JSON.stringify(cart);
+    if (cartPromo && sig !== promoCartSig) { promoCartSig = sig; applyPromo(cartPromo.code, true); }
   }
+
+  /* ---------- discount code in the cart drawer ----------
+     The "Add a discount code" button used to have no handler at all. It now
+     opens a small field, checks the code with the same endpoint checkout
+     uses, and remembers it (PROMO_KEY) so checkout applies it automatically. */
+  var PROMO_KEY = 'wateen_promo';
+  var cartPromo = null;      // { code, discount, freeShipping, label }
+  var promoCartSig = null;
+
+  function cartSubtotal() {
+    return cart.reduce(function (s, l) { var p = findProduct(l.id); return s + (p ? p.price * l.qty : 0); }, 0);
+  }
+
+  function promoMsg(text, ok) {
+    var m = document.getElementById('cartPromoMsg');
+    if (!m) return;
+    m.textContent = text || '';
+    m.style.color = ok ? '#3c7a3c' : '#b23b3b';
+  }
+
+  function applyPromo(code, silent) {
+    code = (code || '').trim().toUpperCase();
+    if (!code) { promoMsg(t('Enter a code first.')); return; }
+    var productIds = cart.map(function (l) { var p = findProduct(l.id); return p ? p.dbId : null; }).filter(Boolean);
+    fetch('/api/public/coupons/validate', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code, subtotal: cartSubtotal(), productIds: productIds })
+    })
+      .then(function (res) { return res.json().then(function (d) { return { ok: res.ok, data: d }; }); })
+      .then(function (r) {
+        if (!r.ok) {
+          cartPromo = null;
+          try { localStorage.removeItem(PROMO_KEY); } catch (e) {}
+          promoMsg(r.data.error || t('That code is not valid.'));
+        } else {
+          cartPromo = { code: r.data.code, discount: r.data.discount, freeShipping: r.data.freeShipping, label: r.data.label };
+          try { localStorage.setItem(PROMO_KEY, cartPromo.code); } catch (e) {}
+          if (!silent) promoMsg(cartPromo.code + ' ' + t('applied —') + ' ' + cartPromo.label + '.', true);
+        }
+        promoCartSig = JSON.stringify(cart);
+        renderCart();
+      })
+      .catch(function () { if (!silent) promoMsg(t('Could not check that code — try again.')); });
+  }
+
+  (function wirePromo() {
+    var btn = document.querySelector('.cartd__promo');
+    if (!btn) return;
+
+    var box = document.createElement('div');
+    box.hidden = true;
+    box.style.cssText = 'margin:8px 0 12px';
+    box.innerHTML =
+      '<div style="display:flex;gap:8px">' +
+        '<input id="cartPromoInput" type="text" autocomplete="off" placeholder="' + t('Enter code') + '" ' +
+          'style="flex:1;min-width:0;padding:10px 12px;border:1px solid rgba(0,0,0,.2);background:transparent;font:inherit;text-transform:uppercase">' +
+        '<button type="button" id="cartPromoApply" style="padding:10px 16px;border:0;background:#1a1a1a;color:#fff;font:inherit;cursor:pointer">' + t('APPLY') + '</button>' +
+      '</div>' +
+      '<em id="cartPromoMsg" style="display:block;margin-top:6px;font-size:12px;font-style:normal"></em>';
+    btn.parentNode.insertBefore(box, btn.nextSibling);
+
+    var input = box.querySelector('#cartPromoInput');
+    btn.addEventListener('click', function () {
+      box.hidden = !box.hidden;
+      if (!box.hidden) input.focus();
+    });
+    box.querySelector('#cartPromoApply').addEventListener('click', function () { applyPromo(input.value); });
+    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); applyPromo(input.value); } });
+
+    // discount line above the total
+    var totals = document.querySelector('.cartd__totals');
+    if (totals) {
+      var p = document.createElement('p');
+      p.id = 'cartDiscount';
+      p.hidden = true;
+      p.innerHTML = '<span>' + t('Discount') + '</span><b>0</b>';
+      totals.appendChild(p);
+    }
+
+    var saved = null;
+    try { saved = localStorage.getItem(PROMO_KEY); } catch (e) {}
+    if (saved && cart.length) { input.value = saved; applyPromo(saved, true); }
+  })();
 
   var itemsRoot = document.getElementById('cartItems');
   if (itemsRoot) {

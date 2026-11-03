@@ -282,6 +282,13 @@
     });
   }
 
+  // a code applied in the cart drawer (hero.js) carries over to checkout
+  if (promoBtn && cart.length) {
+    var savedPromo = null;
+    try { savedPromo = localStorage.getItem('wateen_promo'); } catch (e) {}
+    if (savedPromo) { $('coPromo').value = savedPromo; promoBtn.click(); }
+  }
+
   /* ---------- payment method: highlight + card fields ---------- */
 
   function syncOptions(groupName) {
@@ -651,6 +658,7 @@
 
           cart = [];
           saveCart();
+          try { localStorage.removeItem('wateen_promo'); } catch (e) {}
 
           var done = $('coDone');
           done.classList.add('is-open');
