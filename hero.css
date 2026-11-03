@@ -3794,3 +3794,21 @@ a{ text-decoration:none; color:inherit; }
    attribute, but rules like .cartd__empty{display:flex} override it — so
    "Your cart is empty" showed even with products in the cart */
 .cartd [hidden], #cartDrawer [hidden]{ display:none !important; }
+
+/* ---- brands section on laptop/desktop: fill the full width like mobile ----
+   The art was letterboxed (object-fit:contain), leaving flat beige strips on
+   both sides with the headline half on the strip and half on the photo. Now
+   the photo covers the whole section and a soft veil on the left keeps the
+   copy readable over it, the same way the mobile layout works. */
+@media (min-width:901px){
+  .brands__bg img{ object-fit:cover; object-position:62% 60%; }
+  .brands__inner{ aspect-ratio:auto; max-height:none; min-height:min(78vh,820px); }
+  .brands__veil{
+    background:linear-gradient(90deg,
+      rgba(243,238,230,.82) 0%,
+      rgba(243,238,230,.6) 30%,
+      rgba(243,238,230,.18) 50%,
+      rgba(243,238,230,0) 62%);
+  }
+  .brands__note{ display:none; }
+}
