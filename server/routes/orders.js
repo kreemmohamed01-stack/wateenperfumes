@@ -16,7 +16,7 @@ const router = express.Router();
 // at the selected governorate's rate.
 async function priceOrder(b) {
   const settings = await settingsMap();
-  const catalog = await buildCatalog(settings);
+  const catalog = await buildCatalog(settings, { keepVariants: true });
   const byId = new Map(catalog.map(p => [p.dbId, p]));
 
   const items = [];
@@ -24,11 +24,12 @@ async function priceOrder(b) {
     const p = byId.get(Number(item.productId));
     const qty = Math.floor(Number(item.qty));
     if (!p || !(qty > 0)) return { error: 'One of the items in your cart is no longer available.' };
-    const variant = p.variants.find(v => v.size === item.size) || p.variants.find(v => v.size === p.size) || p.variants[0];
+    const variants = p.variants || [];
+    const variant = variants.find(v => v.size === item.size) || variants.find(v => v.size === p.size) || variants[0];
     items.push({
       productId: p.dbId, variantId: variant ? variant.id : null, name: p.name, brand: p.brand,
       size: variant ? variant.size : p.size, qty, unitPrice: variant ? variant.price : p.price, image: p.img,
-      isWatch: p.cat === 'watches' || p.extraCats.includes('watches'), brandId: p.brandId
+      isWatch: p.cat === 'watches' || (p.extraCats || []).includes('watches'), brandId: p.brandId
     });
   }
 

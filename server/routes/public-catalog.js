@@ -150,7 +150,9 @@ async function loadAllProductRelations(productIds) {
 const BULK_OMIT_FIELDS = ['variants', 'images', 'desc', 'descAr', 'notes', 'sku'];
 
 // shared by /catalog and /bootstrap so both return identical shapes
-async function buildCatalog(settings) {
+// opts.keepVariants: order pricing (routes/orders.js) needs each product's
+// variants with their real prices; the storefront payload drops them to stay small
+async function buildCatalog(settings, opts = {}) {
   const rows = await db.prepare(`SELECT * FROM products WHERE status = 'published'`).all();
   const relations = await loadAllProductRelations(rows.map(r => r.id));
   const fullProducts = rows.map(row => assembleProduct(
@@ -158,7 +160,7 @@ async function buildCatalog(settings) {
   ));
   return fullProducts.map(p => {
     const shaped = toLegacyShape(p, settings);
-    BULK_OMIT_FIELDS.forEach(f => { delete shaped[f]; });
+    BULK_OMIT_FIELDS.forEach(f => { if (!(opts.keepVariants && f === 'variants')) delete shaped[f]; });
     return shaped;
   });
 }
