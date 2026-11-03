@@ -1,6 +1,14 @@
 {
   "version": 2,
   "buildCommand": null,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "wateenperfume-omega.vercel.app" }],
+      "destination": "https://www.wateenperfumeseg.com/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/sitemap.xml", "destination": "/api" },
