@@ -154,6 +154,7 @@ function setActiveNav(page) {
 const PAGE_RENDERERS = {
   overview: () => window.PageOverview(),
   orders: (param) => window.PageOrders(param),
+  daily: () => window.PageDaily(),
   products: (param) => window.PageProducts(param),
   categories: () => window.PageCategories(),
   brands: () => window.PageBrands(),

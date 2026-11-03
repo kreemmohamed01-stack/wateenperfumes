@@ -213,6 +213,29 @@ router.get('/payment-breakdown', requireAuth, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+// orders per day (Cairo time) for comparing with Meta Ads "Purchases" —
+// every order is counted, plus how many of them were later cancelled/returned
+router.get('/daily', requireAuth, async (req, res, next) => {
+  try {
+    const days = Math.min(Math.max(parseInt(req.query.days, 10) || 30, 1), 365);
+    const rows = await db.prepare(`
+      SELECT to_char((created_at AT TIME ZONE 'Africa/Cairo')::date, 'YYYY-MM-DD') AS day,
+             COUNT(*) AS orders,
+             COALESCE(SUM(total), 0) AS revenue,
+             COUNT(*) FILTER (WHERE status IN ('cancelled','returned','refunded')) AS cancelled,
+             COALESCE(SUM(total) FILTER (WHERE status IN ('cancelled','returned','refunded')), 0) AS cancelled_revenue,
+             COUNT(*) FILTER (WHERE status = 'delivered') AS delivered
+      FROM orders
+      WHERE created_at >= (date_trunc('day', NOW() AT TIME ZONE 'Africa/Cairo') - make_interval(days => ${days - 1})) AT TIME ZONE 'Africa/Cairo'
+      GROUP BY 1 ORDER BY 1 DESC
+    `).all();
+    res.json(rows.map(r => ({
+      day: r.day, orders: Number(r.orders), revenue: Number(r.revenue),
+      cancelled: Number(r.cancelled), cancelledRevenue: Number(r.cancelled_revenue), delivered: Number(r.delivered)
+    })));
+  } catch (e) { next(e); }
+});
+
 router.get('/', requireAuth, async (req, res, next) => {
   try {
     const { q, status, paymentStatus, page = 1, pageSize = 20, from, to } = req.query;

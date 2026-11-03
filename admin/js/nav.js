@@ -7,6 +7,7 @@ const NAV_SECTIONS = [
     items: [
       { id: 'overview', label: 'Overview', icon: 'grid', permission: null },
       { id: 'orders', label: 'Orders', icon: 'box', permission: 'orders' },
+      { id: 'daily', label: 'Daily Orders', icon: 'chart', permission: 'orders' },
       { id: 'products', label: 'Products', icon: 'tag', permission: 'products' },
       { id: 'categories', label: 'Categories', icon: 'layers', permission: 'products' },
       { id: 'brands', label: 'Brands', icon: 'award', permission: 'products' },
