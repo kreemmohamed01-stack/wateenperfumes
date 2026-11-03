@@ -102,11 +102,15 @@ async function run() {
   const adminEmail = 'admin@wateenperfumeseg.com';
   const existingAdmin = await db.prepare('SELECT id FROM users WHERE email = ?').get(adminEmail);
   if (!existingAdmin) {
-    const hash = bcrypt.hashSync('WateenAdmin@2026', 10);
+    // never hardcode the password: take it from ADMIN_PASSWORD, or generate a
+    // random one and print it once to the console of whoever runs the seed
+    const password = process.env.ADMIN_PASSWORD || require('crypto').randomBytes(12).toString('base64url');
+    const hash = bcrypt.hashSync(password, 10);
     await db.prepare(`
       INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)
     `).run('Wateen Admin', adminEmail, hash, 'super_admin');
-    console.log('Created default admin user:', adminEmail, '/ WateenAdmin@2026 (change after first login)');
+    console.log('Created default admin user:', adminEmail,
+      process.env.ADMIN_PASSWORD ? '(password from ADMIN_PASSWORD)' : '/ ' + password + ' (save it now — it is not stored anywhere)');
   }
 
   if (productCount > 0) {
