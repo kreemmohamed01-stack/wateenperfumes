@@ -3,6 +3,12 @@
   "buildCommand": null,
   "redirects": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "wateenperfume-omega.vercel.app" }],
+      "destination": "https://www.wateenperfumeseg.com/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "wateenperfume-omega.vercel.app" }],
       "destination": "https://www.wateenperfumeseg.com/:path*",
