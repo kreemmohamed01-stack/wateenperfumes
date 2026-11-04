@@ -27,30 +27,13 @@ html:not(.pt-ready) body { opacity: 1; transform: none; }
 html:not(.pt-ready)::before,
 html:not(.pt-ready)::after{ display: none; }
 
-.pt-ready body {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity .5s cubic-bezier(.16,.8,.24,1),
-              transform .5s cubic-bezier(.16,.8,.24,1);
-}
-
-.pt-ready.pt-in body {
-  opacity: 1;
-  /* "none", not translateY(0) — a live transform of any kind makes body a
-     containing block for its fixed-position descendants (the zoom lightbox,
-     cart/wishlist drawers, mobile nav…), so they end up positioned against
-     body's full scrollable height instead of the viewport once the intro
-     animation "finishes" but the transform value never actually clears. */
-  transform: none;
-}
-
-/* every page after the first in a visit: no wordmark/spinner (the JS skips
-   injecting it), just a quick, nearly motionless fade from the dark veil */
-.pt-ready.pt-fast body {
-  transform: translateY(4px);
-  transition: opacity .22s ease-out, transform .22s ease-out;
-}
-.pt-ready.pt-fast.pt-in body { transform: none; }
+/* The page itself is never made transparent. It used to start at opacity 0
+   and fade in, but Chrome ignores anything painted at opacity 0 when it
+   measures Largest Contentful Paint, so Google PageSpeed reported NO_LCP
+   (score 0) and real-user speed data was wrong. The dark veil below still
+   covers the page while it loads and fades away the same way, so the look
+   is unchanged. */
+.pt-ready body { opacity: 1; transform: none; }
 html.pt-ready.pt-fast::before,
 html.pt-ready.pt-fast::after { transition: opacity .22s ease-out, visibility .22s; }
 

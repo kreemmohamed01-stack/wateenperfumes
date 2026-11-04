@@ -38,9 +38,26 @@
       n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
     };
     if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-    n.queue = []; t = b.createElement(e); t.async = !0;
-    t.src = v; s = b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t, s);
+    n.queue = [];
+    // Meta's script (~260 KB with its config) is fetched only once the page has
+    // finished loading and the browser is idle, or on the shopper's first tap /
+    // scroll — whichever comes first — so it never competes with the page's own
+    // content for bandwidth or CPU. fbq() calls queue up until then, and every
+    // event (except Purchase) also goes out at once through the server relay.
+    var loaded = false;
+    function inject() {
+      if (loaded) return; loaded = true;
+      t = b.createElement(e); t.async = !0; t.src = v;
+      s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+    }
+    function soon() {
+      if (f.requestIdleCallback) f.requestIdleCallback(inject, { timeout: 2500 });
+      else setTimeout(inject, 1200);
+    }
+    if (b.readyState === 'complete') soon(); else f.addEventListener('load', soon);
+    ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (ev) {
+      f.addEventListener(ev, inject, { once: true, passive: true });
+    });
   }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
 
   // Turn off Meta's "automatic events": left on, the pixel guesses events from
