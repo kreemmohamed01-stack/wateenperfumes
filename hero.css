@@ -1291,7 +1291,10 @@ a{ text-decoration:none; color:inherit; }
   object-position:center center;
   animation:heroFadeIn .7s var(--ease-out) forwards;
 }
-@keyframes heroFadeIn{ from{ opacity:0; } to{ opacity:1; } }
+/* no opacity in this fade: Chrome ignores images that start at opacity 0
+   when measuring Largest Contentful Paint (PageSpeed reported NO_LCP). The
+   page-transition veil already gives the soft fade-in. */
+@keyframes heroFadeIn{ from{ opacity:1; } to{ opacity:1; } }
 @keyframes heroZoom{ to{ transform:scale(1.03); } }
 @keyframes kenBurns{
   from{ transform:scale(1.03) translate3d(0,0,0); }
@@ -1678,7 +1681,7 @@ a{ text-decoration:none; color:inherit; }
     animation:heroFade 0.7s var(--ease-out) forwards !important;
     transform:none !important;
   }
-  @keyframes heroFade{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes heroFade{ from{ opacity:1; } to{ opacity:1; } }
 
   /* copy stays hard left, as in the reference */
   .hero__content{
