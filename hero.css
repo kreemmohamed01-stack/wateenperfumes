@@ -3826,3 +3826,15 @@ a{ text-decoration:none; color:inherit; }
 html.snap-on .col__track,
 html.snap-on .revrail__track,
 html.snap-on .rail__track{ scroll-snap-type:x mandatory; }
+
+/* ---- performance: stop effects that repaint every frame ----
+   The hero film grain (5% opacity — barely visible) was an SVG noise filter
+   with a blend mode, animated forever, forcing a full-hero repaint on every
+   frame; it stays as a still texture. The moving gold shine on headings
+   animates background-position on clipped text, which also repaints every
+   frame, so phones show the gold without the movement. */
+.hero__grain{ animation:none; }
+@media (max-width:900px){
+  .hero__line--gold{ animation:riseIn 0.95s var(--ease-out) 0.45s forwards; }
+  .shead__title em, .story__title em{ animation:none; }
+}

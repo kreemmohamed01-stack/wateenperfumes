@@ -39,9 +39,9 @@
     };
     if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
     n.queue = [];
-    // Meta's script (~260 KB with its config) is fetched only once the page has
-    // finished loading and the browser is idle, or on the shopper's first tap /
-    // scroll — whichever comes first — so it never competes with the page's own
+    // Meta's script (~260 KB with its config, ~0.9 s of phone CPU) is fetched on
+    // the shopper's first tap / scroll / key press, or 4 s after the page has
+    // finished loading — whichever comes first — so it never competes with the page's own
     // content for bandwidth or CPU. fbq() calls queue up until then, and every
     // event (except Purchase) also goes out at once through the server relay.
     var loaded = false;
@@ -50,10 +50,7 @@
       t = b.createElement(e); t.async = !0; t.src = v;
       s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
     }
-    function soon() {
-      if (f.requestIdleCallback) f.requestIdleCallback(inject, { timeout: 2500 });
-      else setTimeout(inject, 1200);
-    }
+    function soon() { setTimeout(inject, 4000); }
     if (b.readyState === 'complete') soon(); else f.addEventListener('load', soon);
     ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (ev) {
       f.addEventListener(ev, inject, { once: true, passive: true });
