@@ -274,6 +274,8 @@
     'APPLY': 'تطبيق',
     'Edit Cart': 'تعديل السلة',
     'Shipping': 'الشحن',
+    'Calculated at checkout': 'يُحسب في صفحة الدفع',
+    'shipping': 'الشحن',
     'Discount': 'الخصم',
     'Total': 'الإجمالي',
     'FREE': 'مجاني',

@@ -713,7 +713,7 @@
     if (emptyEl) emptyEl.hidden = true;
     if (footEl) footEl.hidden = false;
     var shipBlockOn = document.querySelector('.cartd__ship');
-    if (shipBlockOn) shipBlockOn.hidden = false;
+    if (shipBlockOn) shipBlockOn.hidden = true;   // no free-shipping threshold (see below)
 
     itemsEl.innerHTML = cart.map(function (line) {
       var p = findProduct(line.id);
@@ -741,37 +741,41 @@
       );
     }).join('');
 
-    var remaining = Math.max(FREE_SHIP_AT - subtotal, 0);
-    var shipMsg = document.getElementById('cartShipMsg');
-    var shipFill = document.getElementById('cartShipFill');
-    var shipHave = document.getElementById('cartShipHave');
-    var shipping = remaining > 0 ? SHIP_FEE : 0;
-
-    if (shipMsg) {
-      shipMsg.innerHTML = remaining > 0
-        ? t('Add') + ' <b>' + fmt(remaining) + ' ' + t('EGP') + '</b> ' + t('more for free shipping')
-        : '<b>' + t('You’ve unlocked free shipping!') + '</b>';
-    }
-    if (shipFill) shipFill.style.width = Math.min((subtotal / FREE_SHIP_AT) * 100, 100) + '%';
-    if (shipHave) shipHave.textContent = fmt(Math.min(subtotal, FREE_SHIP_AT));
+    // Shipping follows the same rules as checkout and the server (orders.js):
+    // a flat fee by governorate, watches free when that's switched on. There is
+    // no free-shipping threshold there, so the drawer no longer promises one
+    // (it used to say "You've unlocked free shipping!" over 1,000 EGP and then
+    // checkout charged shipping anyway). The governorate isn't known yet, so
+    // the fee is shown as "calculated at checkout" unless the cart is all
+    // watches and watches ship free.
+    var S = window.SITE_SETTINGS || {};
+    var watchesFree = S.watchesFreeShipping !== false;
+    var allWatches = cart.length > 0 && cart.every(function (l) {
+      var p = findProduct(l.id);
+      return p && (p.cat === 'watches' || (p.extraCats || []).indexOf('watches') !== -1);
+    });
+    var shipping = (allWatches && watchesFree) ? 0 : null;   // null = depends on governorate
+    var shipBlockEl = document.querySelector('.cartd__ship');
+    if (shipBlockEl) shipBlockEl.hidden = true;
 
     var subEl = document.getElementById('cartSubtotal');
     var feeEl = document.getElementById('cartShippingFee');
     var totalEl = document.getElementById('cartTotal');
     if (subEl) subEl.textContent = fmt(subtotal) + ' ' + t('EGP');
-    if (feeEl) feeEl.textContent = shipping === 0 ? t('FREE') : fmt(shipping) + ' ' + t('EGP');
+    var shipText = function () { return shipping === 0 ? t('FREE') : t('Calculated at checkout'); };
+    if (feeEl) feeEl.textContent = shipText();
     var discount = 0;
     if (cartPromo) {
       discount = cartPromo.discount || 0;
       if (cartPromo.freeShipping) shipping = 0;
-      if (feeEl) feeEl.textContent = shipping === 0 ? t('FREE') : fmt(shipping) + ' ' + t('EGP');
+      if (feeEl) feeEl.textContent = shipText();
     }
     var discEl = document.getElementById('cartDiscount');
     if (discEl) {
       discEl.hidden = !discount;
       discEl.querySelector('b').textContent = '-' + fmt(discount) + ' ' + t('EGP');
     }
-    if (totalEl) totalEl.textContent = fmt(Math.max(0, subtotal - discount) + shipping) + ' ' + t('EGP');
+    if (totalEl) totalEl.textContent = fmt(Math.max(0, subtotal - discount) + (shipping || 0)) + ' ' + t('EGP') + (shipping === null ? ' + ' + t('shipping') : '');
 
     // the discount was worked out for the old cart — check the code again
     var sig = JSON.stringify(cart);
