@@ -87,7 +87,12 @@ function fmtNumber(n) {
 }
 function fmtDate(iso) {
   if (!iso) return '—';
-  const d = new Date(iso.replace(' ', 'T') + 'Z');
+  // Postgres sends full ISO strings ("...T20:01:00.000Z"); older SQLite rows were
+  // "YYYY-MM-DD HH:MM:SS" in UTC with no zone. Only add the Z when it's missing —
+  // adding it twice ("...ZZ") made every order date show "Invalid Date".
+  const str = String(iso instanceof Date ? iso.toISOString() : iso).replace(' ', 'T');
+  const d = new Date(/(Z|[+-]\d\d:?\d\d)$/.test(str) ? str : str + 'Z');
+  if (isNaN(d)) return '—';
   return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
     ' · ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 }
