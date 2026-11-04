@@ -1,3 +1,15 @@
+/* Slider snapping goes on only after the page has loaded (or on the first
+   touch), never during the first paint — see html.snap-on in hero.css. */
+(function () {
+  var root = document.documentElement;
+  function on() { root.classList.add('snap-on'); }
+  if (document.readyState === 'complete') setTimeout(on, 300);
+  else window.addEventListener('load', function () { setTimeout(on, 300); });
+  ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(function (ev) {
+    window.addEventListener(ev, on, { once: true, passive: true });
+  });
+})();
+
 /* ════════════════════════════════════════════════
    WATEEN PERFUMES — HERO INTERACTIONS
    ════════════════════════════════════════════════ */
