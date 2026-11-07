@@ -1976,17 +1976,15 @@ a{ text-decoration:none; color:inherit; }
   flex:0 0 360px;
   height:360px;
   margin-bottom:18px;
-  /* every product sits on a clean white plate */
-  background:#fff;
-  border-radius:10px;
-  box-shadow:0 10px 26px -16px rgba(58,45,30,.28);
+  /* no plate — the product floats on the page */
+  background:transparent;
 }
 
 /* Best Sellers only: a plain white plate behind each bottle, and a ribbon
    badge marking the card as a bestseller — pinned above the media box's own
    top edge (negative offset) so it never overlaps the product photo itself. */
 .best .card__media{
-  background:#fff;
+  background:transparent;
   border-radius:6px;
   margin-top:34px;
   /* a bit bigger than the shared 360px card default, just for this rail */
@@ -2044,11 +2042,13 @@ a{ text-decoration:none; color:inherit; }
   max-width:none; max-height:none;
   padding:5%;
   object-fit:contain;
+  filter:drop-shadow(0 14px 16px rgba(60,44,28,.18));
   transition:transform .42s var(--ease-out), filter .35s var(--ease);
 }
 /* the zoom the brief asked for */
 .card:hover .card__media img{
-  transform:scale(1.05);
+  transform:scale(1.06) translateY(-6px);
+  filter:drop-shadow(0 24px 22px rgba(60,44,28,.26));
 }
 
 /* Best Sellers: slightly less inset than the shared card default, so the
@@ -2722,10 +2722,8 @@ a{ text-decoration:none; color:inherit; }
   height:var(--ph-h,180px);
   /* clear air under the photo so the price can never crowd it */
   margin-bottom:16px;
-  overflow:hidden;
-  background:#fff;
-  border-radius:8px;
-  box-shadow:0 8px 22px -14px rgba(58,45,30,.28);
+  overflow:visible;
+  background:transparent;
 }
 /* every product is scaled by the SAME rule inside that identical box, so a tall
    bottle and a wide watch read at one consistent size across the rail.
@@ -2736,6 +2734,7 @@ a{ text-decoration:none; color:inherit; }
   width:100%;
   height:var(--ph-h,150px);
   object-fit:contain;
+  filter:drop-shadow(0 14px 16px rgba(60,44,28,.18));
   transition:transform .4s var(--ease-out), filter .32s var(--ease);
 }
 .mini b{
@@ -2774,7 +2773,7 @@ a{ text-decoration:none; color:inherit; }
    picked. .mini__ph isn't square like the other card boxes, but a two-value
    background-size (112% 112%) scales the same on both axes regardless. */
 .mini--watch .mini__ph{
-  background:#fff;
+  background:transparent;
   border-radius:8px;
 }
 .mini--watch .mini__ph img{
@@ -2788,7 +2787,7 @@ a{ text-decoration:none; color:inherit; }
    .perfumes-page's rule in shop.css. No push-down needed; a plain
    cover-fit backdrop already lines up with these bottle+box photos. */
 .mini--perfume .mini__ph{
-  background:#fff;
+  background:transparent;
   border-radius:8px;
 }
 .mini--perfume .mini__ph img{

@@ -121,14 +121,14 @@ body.product-page .crumb{ padding-top:88px; }
   position:relative;
   aspect-ratio:1/1;
   overflow:hidden;
-  border-radius:6px;
-  background:#fff;
-  box-shadow:0 30px 60px -30px rgba(20,16,12,.18);
+  overflow:visible;
+  background:transparent;
 }
 .pd__main img{
   width:100%; height:100%;
   padding:20px;
   object-fit:contain; /* the whole bottle, always fully visible */
+  filter:drop-shadow(0 22px 22px rgba(60,44,28,.2));
   image-rendering:auto;
 }
 .pd__zoom{
@@ -532,7 +532,7 @@ body.product-page .crumb{ padding-top:88px; }
     gap:24px;
   }
   .pd__gallery{ gap:14px; }
-  .pd__main{ border-radius:8px; }
+
   .pd__main img{ padding:14px; }
   .pd__zoom{ width:36px; height:36px; right:14px; bottom:14px; }
   .pd__zoom svg{ width:15px; height:15px; }
@@ -731,7 +731,7 @@ body.product-page .crumb{ padding-top:88px; }
    zoom, not 112% — see that note for why. ---- */
 .watches-page .pd__main,
 .watches-page .pd__thumb{
-  background:#fff;
+  background:transparent;
 }
 .watches-page .pd__main img{ padding:5%; object-position:center; }
 .watches-page .pd__thumb img{ padding:5%; object-position:center; }
@@ -743,5 +743,5 @@ body.product-page .crumb{ padding-top:88px; }
    backdrop. ---- */
 .perfumes-page .pd__main,
 .perfumes-page .pd__thumb{
-  background:#fff;
+  background:transparent;
 }
