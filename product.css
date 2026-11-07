@@ -127,7 +127,7 @@ body.product-page .crumb{ padding-top:88px; }
 }
 .pd__main img{
   width:100%; height:100%;
-  padding:44px;
+  padding:20px;
   object-fit:contain; /* the whole bottle, always fully visible */
   image-rendering:auto;
 }
@@ -496,7 +496,7 @@ body.product-page .crumb{ padding-top:88px; }
   border:1px solid rgba(58,50,42,.08);
   border-radius:2px;
 }
-.pd__relatedTrack .card__media img{ position:absolute; inset:0; width:100%; height:100%; max-width:none; max-height:none; padding:11%; object-fit:contain; }
+.pd__relatedTrack .card__media img{ position:absolute; inset:0; width:100%; height:100%; max-width:none; max-height:none; padding:6%; object-fit:contain; }
 .pd__relatedTrack .card__brand{ text-align:left; margin-bottom:2px; }
 .pd__relatedTrack .card__name{ text-align:left; font-size:15px; margin-bottom:2px; }
 .pd__relatedTrack .card__type{ text-align:left; margin-bottom:6px; }
@@ -533,7 +533,7 @@ body.product-page .crumb{ padding-top:88px; }
   }
   .pd__gallery{ gap:14px; }
   .pd__main{ border-radius:8px; }
-  .pd__main img{ padding:28px; }
+  .pd__main img{ padding:14px; }
   .pd__zoom{ width:36px; height:36px; right:14px; bottom:14px; }
   .pd__zoom svg{ width:15px; height:15px; }
   .pd__thumbs{ gap:10px; justify-content:center; }
@@ -731,10 +731,10 @@ body.product-page .crumb{ padding-top:88px; }
    zoom, not 112% — see that note for why. ---- */
 .watches-page .pd__main,
 .watches-page .pd__thumb{
-  background:#e9e0d2 url('assets/bg/watches.webp') center 40%/128% 128% no-repeat;
+  background:#fff;
 }
-.watches-page .pd__main img{ padding:8%; object-position:center 70%; }
-.watches-page .pd__thumb img{ padding:8%; object-position:center 70%; }
+.watches-page .pd__main img{ padding:5%; object-position:center; }
+.watches-page .pd__thumb img{ padding:5%; object-position:center; }
 
 /* ---- perfumes: same shared stone-podium backdrop as the perfumes grid
    (shop.css), applied to the product-page gallery — main frame + thumbs.
@@ -743,5 +743,5 @@ body.product-page .crumb{ padding-top:88px; }
    backdrop. ---- */
 .perfumes-page .pd__main,
 .perfumes-page .pd__thumb{
-  background:#efe6d6 url('assets/bg/perfumes.webp') center/cover no-repeat;
+  background:#fff;
 }

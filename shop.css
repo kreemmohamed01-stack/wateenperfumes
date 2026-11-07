@@ -366,7 +366,7 @@ body.shop-page .crumb{ padding-top:88px; }
   aspect-ratio:1/1;
   margin-bottom:16px;
 }
-.shopGrid .card__media img{ position:absolute; inset:0; width:100%; height:100%; max-width:none; max-height:none; padding:8%; object-fit:contain; }
+.shopGrid .card__media img{ position:absolute; inset:0; width:100%; height:100%; max-width:none; max-height:none; padding:5%; object-fit:contain; }
 .shopGrid .card__wish{
   position:absolute;
   top:14px; right:14px;
@@ -539,7 +539,7 @@ body.shop-page .crumb{ padding-top:88px; }
 .watches-page .shopGrid .card__media,
 .watches-page .pgrid .card__media,
 .shopGrid .card.is-watch .card__media{
-  background:#e9e0d2 url('assets/bg/watches.webp') center 40%/128% 128% no-repeat;
+  background:#fff;
   border-radius:10px;
   overflow:hidden;
   box-shadow:0 10px 26px -14px rgba(58,45,30,.35);
@@ -547,8 +547,8 @@ body.shop-page .crumb{ padding-top:88px; }
 .watches-page .shopGrid .card__media img,
 .watches-page .pgrid .card__media img,
 .shopGrid .card.is-watch .card__media img{
-  padding:8%;
-  object-position:center 70%;
+  padding:5%;
+  object-position:center;
 }
 
 /* ---- perfumes: same idea as the watches podium above, using a second
@@ -564,7 +564,7 @@ body.shop-page .crumb{ padding-top:88px; }
 .perfumes-page .shopGrid .card__media,
 .perfumes-page .pgrid .card__media,
 .shopGrid .card.is-perfume .card__media{
-  background:#efe6d6 url('assets/bg/perfumes.webp') center/cover no-repeat;
+  background:#fff;
   border-radius:10px;
   overflow:hidden;
   box-shadow:0 10px 26px -14px rgba(58,45,30,.35);
