@@ -2723,6 +2723,9 @@ a{ text-decoration:none; color:inherit; }
   /* clear air under the photo so the price can never crowd it */
   margin-bottom:16px;
   overflow:hidden;
+  background:#fff;
+  border-radius:8px;
+  box-shadow:0 8px 22px -14px rgba(58,45,30,.28);
 }
 /* every product is scaled by the SAME rule inside that identical box, so a tall
    bottle and a wide watch read at one consistent size across the rail.
@@ -2771,13 +2774,13 @@ a{ text-decoration:none; color:inherit; }
    picked. .mini__ph isn't square like the other card boxes, but a two-value
    background-size (112% 112%) scales the same on both axes regardless. */
 .mini--watch .mini__ph{
-  background:#e9e0d2 url('assets/bg/watches.webp') center 40%/112% 112% no-repeat;
+  background:#fff;
   border-radius:8px;
 }
 .mini--watch .mini__ph img{
-  padding:8%;
+  padding:6%;
   box-sizing:border-box;
-  object-position:center 70%;
+  object-position:center;
 }
 
 /* perfumes, homepage collection rail: same idea, second stone-scene
@@ -2785,11 +2788,11 @@ a{ text-decoration:none; color:inherit; }
    .perfumes-page's rule in shop.css. No push-down needed; a plain
    cover-fit backdrop already lines up with these bottle+box photos. */
 .mini--perfume .mini__ph{
-  background:#efe6d6 url('assets/bg/perfumes.webp') center/cover no-repeat;
+  background:#fff;
   border-radius:8px;
 }
 .mini--perfume .mini__ph img{
-  padding:8%;
+  padding:5%;
   box-sizing:border-box;
 }
 
