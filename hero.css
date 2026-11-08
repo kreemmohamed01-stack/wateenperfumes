@@ -1920,13 +1920,11 @@ a{ text-decoration:none; color:inherit; }
 
 .grid--products{
   display:grid;
-  grid-template-columns:repeat(3,1fr);   /* 3 + 3 + 2 */
-  gap:40px 30px;
+  grid-template-columns:repeat(4,1fr);   /* 8 best sellers = two full rows of 4 */
+  gap:40px 26px;
 }
-/* last row holds only 2 cards — centre them under the row above */
 @media (min-width:901px){
-  .grid--products .card:nth-child(7){ grid-column:2 / 3; justify-self:end; }
-  .grid--products .card:nth-child(8){ grid-column:3 / 4; justify-self:start; }
+  .best .card__media{ flex:0 0 320px; height:320px; }
 }
 
 .card{
@@ -3482,7 +3480,8 @@ a{ text-decoration:none; color:inherit; }
   .rail, .rail__bar, .rail__count{ padding-left:34px; padding-right:34px; }
   .brands__note{ right:34px; }
 
-  .grid--products{ grid-template-columns:repeat(3,1fr); gap:26px 16px; }
+  .grid--products{ grid-template-columns:repeat(4,1fr); gap:26px 14px; }
+  .best .card__media{ flex:0 0 240px; height:240px; }
   .mini{ flex:0 0 calc((100% - 60px) / 4); }
   .brandchip{ flex:0 0 25%; }
   .brandchip img{ max-width:110px; max-height:50px; }
@@ -3512,12 +3511,19 @@ a{ text-decoration:none; color:inherit; }
   .sizes{ gap:5px; margin-bottom:10px; }
   .size{ padding:4px 9px; font-size:8.5px; border-radius:999px; }
   .card__price{ font-size:12px; letter-spacing:.02em; margin-bottom:10px; }
-  .card__buy{ flex-direction:column; gap:6px; }
+  .card__buy{ flex-direction:row; gap:0; }
   .add{ width:100%; padding:9px 6px; }
   .add__label{ font-size:8px; letter-spacing:.06em; gap:4px; }
   .add__label svg{ width:10px; height:10px; }
-  .wish{ width:100%; height:30px; }
-  .wish svg{ width:14px; height:14px; }
+  /* phone: the heart is a small round button on the photo's corner,
+     not a full-width row under ADD TO CART */
+  .card .card__buy .wish{
+    position:absolute; top:10px; right:8px; z-index:3;
+    width:32px; height:32px; padding:0; border-radius:50%;
+    background:rgba(255,255,255,.92); border:1px solid rgba(58,50,42,.12);
+    box-shadow:0 4px 12px -6px rgba(0,0,0,.25);
+  }
+  .wish svg{ width:15px; height:15px; }
 
   /* ---- categories: 2 across, watches full width ---- */
   .cats{ padding:70px 0 66px; }
@@ -3840,4 +3846,33 @@ html.snap-on .rail__track{ scroll-snap-type:x mandatory; }
 @media (max-width:900px){
   .hero__line--gold{ animation:riseIn 0.95s var(--ease-out) 0.45s forwards; }
   .shead__title em, .story__title em{ animation:none; }
+}
+
+/* laptop/desktop: wider category grid — 3 tall tiles on top, 2 wide below */
+@media (min-width:901px){
+  .cats__grid{ grid-template-columns:repeat(6,1fr); gap:16px; max-width:1180px; }
+  .cats__grid .tile{ grid-column:span 2; aspect-ratio:1 / 1.12; }
+  .cats__grid .tile:nth-child(4),
+  .cats__grid .tile--wide{ grid-column:span 3; aspect-ratio:1.75 / 1; }
+}
+
+/* desktop nav balance: 6 links left, 3 + icons right. The right half starts
+   just past the logo instead of packing to the far edge (which pushed its
+   first links underneath the medallion on 1280–1600px screens). */
+@media (min-width:901px){
+  .nav__cap--right{ justify-content:flex-start; padding-left:calc(117px + 56px + 18px); gap:18px; }
+  .nav__cap--right .nav__pill{ margin-left:auto; }
+  .nav.is-stuck .nav__cap--right{ padding-left:56px; margin-left:0; }
+  .nav.is-stuck .nav__cap--left{ justify-content:flex-start; }
+}
+@media (min-width:901px) and (max-width:1600px){
+  .nav__tag, .nav__tagStar, .nav__div{ display:none; }
+  .nav__cap--left{ padding-left:28px; }
+  .nav__links{ gap:22px; }
+}
+@media (min-width:901px){ .nav__bar{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); } }
+@media (min-width:901px) and (max-width:1400px){
+  .nav__cap--right{ padding-left:calc(117px + 56px + 4px); padding-right:8px; gap:8px; }
+  .nav__cap--right .nav__links{ gap:18px; }
+  .nav__links a{ letter-spacing:.14em; }
 }

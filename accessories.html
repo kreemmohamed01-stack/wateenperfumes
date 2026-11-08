@@ -49,7 +49,7 @@ window.__bootPromise = (function () {
 <link rel="preload" as="image" href="assets/categories/accessories.jpeg" fetchpriority="high">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap"></noscript>
-<link rel="stylesheet" href="hero.css?v=9">
+<link rel="stylesheet" href="hero.css?v=11">
 <link rel="stylesheet" href="category.css">
 <link rel="stylesheet" href="shop.css?v=3">
 <link rel="stylesheet" href="rtl.css">
@@ -88,6 +88,8 @@ window.__bootPromise = (function () {
         <a href="shop.html">SHOP<i></i></a>
         <a href="men.html">MEN<i></i></a>
         <a href="women.html">WOMEN<i></i></a>
+        <a href="unisex.html">UNISEX<i></i></a>
+        <a href="accessories.html">ACCESSORIES<i></i></a>
       </nav>
     </div>
 
@@ -98,8 +100,6 @@ window.__bootPromise = (function () {
 
     <div class="nav__cap nav__cap--right">
       <nav class="nav__links">
-        <a href="unisex.html">UNISEX<i></i></a>
-        <a href="accessories.html">ACCESSORIES<i></i></a>
         <a href="watches.html">WATCHES<i></i></a>
         <a href="all-brands.html">BRANDS<i></i></a>
         <a href="https://wa.me/201027380269" target="_blank" rel="noopener">CONTACT<i></i></a>
@@ -632,7 +632,7 @@ window.__bootPromise = (function () {
 
 <script src="i18n.js?v=2"></script>
 <script src="site-data.js"></script>
-<script src="hero.js?v=6"></script>
+<script src="hero.js?v=7"></script>
 <script>
 // Waits for site-data.js's window.__dataReady first — see the matching note
 // in hero.js. Never rejects and always settles, so this always runs; it
@@ -813,7 +813,7 @@ window.__bootPromise = (function () {
         '<p class="card__brand">' + pBrand(p) + '</p>' +
         '<h3 class="card__name"><a href="product.html?id=' + p.id + '">' + pName(p) + '</a></h3>' +
         '<p class="card__type">' + t(p.type) + '</p>' +
-        '<p class="card__rating">' + p.rating + ' <i>(' + p.reviews + ')</i></p>' +
+        (Number(p.reviews) > 0 ? '<p class=\"card__rating\">' + p.rating + ' <i>(' + p.reviews + ')</i></p>' : '') +
         '<p class="card__price' + (onSale ? ' card__price--sale' : '') + '">' + priceHtml + '</p>' +
         '<div class="card__buy"><button class="add" data-add="' + p.id + '"><span class="add__fill"></span><span class="add__label">' + t('ADD TO CART') + '</span></button></div>' +
       '</article>'

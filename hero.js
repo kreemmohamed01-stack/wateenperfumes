@@ -1150,7 +1150,7 @@
             '<div class="searchm__rowInfo">' +
               '<b>' + pBrand(p) + '</b>' +
               '<i>' + pName(p) + ' &middot; ' + t(p.type) + '</i>' +
-              '<em>' + p.rating + ' (' + p.reviews + ')</em>' +
+              (Number(p.reviews) > 0 ? '<em>' + p.rating + ' (' + p.reviews + ')</em>' : '') +
             '</div>' +
             '<span class="searchm__rowPrice">' + fmt(p.price) + ' EGP</span>' +
             '<button class="searchm__rowAdd" data-id="' + p.id + '">ADD TO CART</button>' +
