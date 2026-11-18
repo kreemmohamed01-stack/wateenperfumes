@@ -57,7 +57,7 @@ window.__bootPromise = (function () {
 <link rel="preload" as="image" href="assets/hero-desktop.webp" fetchpriority="high" media="(min-width: 901px)">
 <link rel="preload" as="image" href="assets/hero-mobile.webp" fetchpriority="high" media="(max-width: 900px)">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap"></noscript>
+<noscript></noscript>
 <link rel="stylesheet" href="hero.css?v=18">
 <link rel="stylesheet" href="rtl.css">
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -100,6 +100,7 @@ window.__bootPromise = (function () {
   }
 }
 </script>
+<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/admin*","/api/*","/checkout*"]}}]},"eagerness":"moderate"}],"prefetch":[{"where":{"href_matches":"/*.html*"},"eagerness":"moderate"}]}</script>
 </head>
 <body>
 
@@ -999,7 +1000,7 @@ window.__bootPromise = (function () {
 
       <div class="story__player" id="video">
         <!-- plays by itself on loop as soon as the page opens (muted is required for autoplay) -->
-        <video id="storyVideo" playsinline webkit-playsinline autoplay muted loop preload="auto" disablepictureinpicture poster="assets/bg/video.webp">
+        <video id="storyVideo" playsinline webkit-playsinline autoplay muted loop preload="metadata" disablepictureinpicture poster="assets/bg/video.webp">
           <source src="assets/wateen.mp4" type="video/mp4">
         </video>
         <span class="story__badge">ICONIC<br>BRANDS<br>TIMELESS<br>SCENTS</span>
