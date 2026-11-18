@@ -120,40 +120,62 @@ window.wmSrcset = function (url) {
   /* ---------- swap the top announcement bar for a live promo-code banner ---------- */
   function renderPromoBanner() {
     var bar = document.querySelector('.announce');
-    if (!bar || !window.FEATURED_COUPON) return;
-
+    if (!bar) return;
+    var st = window.SITE_SETTINGS || {};
+    if (st.announcementEnabled === false && !window.FEATURED_COUPON) return;
     var coupon = window.FEATURED_COUPON;
-    bar.classList.add('is-promo');
-    bar.innerHTML =
-      '<div class="promoBar">' +
-        '<span class="promoBar__star">✦</span>' +
-        '<span class="promoBar__txt">USE CODE FOR ' + coupon.label + '</span>' +
-        '<span class="promoBar__code">' + coupon.code +
-          '<button type="button" class="promoBar__copyBtn" id="promoCopyBtn">COPY</button>' +
-        '</span>' +
-      '</div>';
+    var ar = window.LANG === 'ar';
 
-    var btn = document.getElementById('promoCopyBtn');
-    if (!btn) return;
-    btn.addEventListener('click', function () {
-      var done = function () {
-        btn.classList.add('is-copied');
-        btn.textContent = 'COPIED';
-        setTimeout(function () { btn.classList.remove('is-copied'); btn.textContent = 'COPY'; }, 1600);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(coupon.code).then(done, done);
-      } else {
-        var tmp = document.createElement('textarea');
-        tmp.value = coupon.code;
-        tmp.style.position = 'fixed';
-        tmp.style.opacity = '0';
-        document.body.appendChild(tmp);
-        tmp.select();
-        try { document.execCommand('copy'); } catch (e) {}
-        document.body.removeChild(tmp);
-        done();
-      }
+    // one message at a time, centred, with a small button — arrows (and a
+    // gentle auto-advance) move between them
+    var slides = [];
+    if (coupon && coupon.code) slides.push({
+      text: ar ? ('خصم ' + coupon.label.replace(' OFF', '') + ' بكود ' + coupon.code) : (coupon.label + ' WITH CODE ' + coupon.code),
+      btn: ar ? 'انسخ الكود' : 'COPY CODE', copy: coupon.code
+    });
+    if (st.announcementText) slides.push({ text: st.announcementText, btn: ar ? 'تسوق الآن' : 'SHOP NOW', href: 'shop.html' });
+    slides.push({ text: ar ? 'شحن مجاني على كل الساعات' : 'FREE SHIPPING ON ALL WATCHES', btn: ar ? 'تسوق الساعات' : 'SHOP WATCHES', href: 'watches.html' });
+    slides.push({ text: ar ? 'عطور أصلية 100%' : '100% AUTHENTIC FRAGRANCES', btn: ar ? 'تسوق الآن' : 'SHOP NOW', href: 'shop.html' });
+
+    bar.classList.add('is-promo', 'annx');
+    bar.innerHTML =
+      '<button type="button" class="annx__arrow annx__arrow--prev" aria-label="Previous message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+      '<div class="annx__viewport">' + slides.map(function (sl, i) {
+        var btn = sl.copy
+          ? '<button type="button" class="annx__btn" data-copy="' + sl.copy + '">' + sl.btn + '</button>'
+          : '<a class="annx__btn" href="' + sl.href + '">' + sl.btn + '</a>';
+        return '<div class="annx__slide' + (i === 0 ? ' is-on' : '') + '"><span class="annx__txt">' + sl.text + '</span>' + btn + '</div>';
+      }).join('') + '</div>' +
+      '<button type="button" class="annx__arrow annx__arrow--next" aria-label="Next message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+
+    var els = bar.querySelectorAll('.annx__slide');
+    var cur = 0, timer = null;
+    function go(n, dir) {
+      if (els.length < 2) return;
+      var next = (n + els.length) % els.length;
+      els[cur].classList.remove('is-on', 'from-left', 'from-right');
+      els[next].classList.remove('from-left', 'from-right');
+      els[next].classList.add(dir < 0 ? 'from-left' : 'from-right');
+      void els[next].offsetWidth;
+      els[next].classList.add('is-on');
+      cur = next;
+    }
+    function auto() { clearInterval(timer); timer = setInterval(function () { go(cur + 1, 1); }, 5000); }
+    bar.querySelector('.annx__arrow--prev').addEventListener('click', function () { go(cur - 1, -1); auto(); });
+    bar.querySelector('.annx__arrow--next').addEventListener('click', function () { go(cur + 1, 1); auto(); });
+    bar.addEventListener('mouseenter', function () { clearInterval(timer); });
+    bar.addEventListener('mouseleave', auto);
+    auto();
+
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-copy]');
+      if (!b) return;
+      var code = b.getAttribute('data-copy');
+      var label = b.textContent;
+      try { navigator.clipboard.writeText(code); } catch (err) {}
+      try { localStorage.setItem('wateen_promo', code); } catch (err) {}
+      b.textContent = ar ? 'تم النسخ ✓' : 'COPIED ✓';
+      setTimeout(function () { b.textContent = label; }, 1600);
     });
   }
 

@@ -450,21 +450,14 @@
       const p = video.play();
       if (p && p.catch) p.catch(() => {});
     };
-    // The video is preload="none", so nothing downloads until it's first
-    // played — which now only happens once it scrolls into view, keeping its
-    // ~750KB from competing with the hero image and catalog on first load.
-    // Also pauses off-screen so it never burns battery in the background.
-    if ('IntersectionObserver' in window) {
-      const vo = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) tryPlay();
-          else video.pause();
-        });
-      }, { threshold: 0.25 });
-      vo.observe(player);
-    } else {
-      tryPlay();
-    }
+    // plays by itself from the start, like it always did; retry on the
+    // first touch/scroll for phones that refuse autoplay until an interaction
+    video.muted = true;
+    tryPlay();
+    ['touchstart', 'scroll', 'pointerdown'].forEach(function (ev) {
+      window.addEventListener(ev, function once() { if (video.paused) tryPlay(); window.removeEventListener(ev, once); }, { passive: true });
+    });
+    document.addEventListener('visibilitychange', function () { if (!document.hidden && video.paused) tryPlay(); });
 
     function setSound(on) {
       video.muted = !on;
@@ -892,7 +885,8 @@
     // a card that carries an id directly (shop.html, wishlist.html) skips
     // the name lookup entirely
     var directId = btn.dataset.add;
-    if (directId) { addToCart(directId, 1); flyToCart(btn); return; }
+    var qty = Math.max(1, parseInt(btn.dataset.qty || '1', 10) || 1);
+    if (directId) { addToCart(directId, qty); flyToCart(btn); if (btn.dataset.then === 'checkout') setTimeout(function () { location.href = 'checkout.html'; }, 650); return; }
 
     var card = btn.closest('.card, .pd__info, .wlCard');
     var nameEl = card ? card.querySelector('.card__name, .pd__name') : null;
@@ -946,7 +940,7 @@
     var icon = visibleCartIcon();
     var holder = btn && btn.closest('.card, .pd__info, .wlCard, .pd, main');
     var img = null;
-    if (btn && btn.id === 'pdAdd') img = document.getElementById('pdMainImg');
+    if (btn && (btn.closest('.pd__info') || btn.closest('.pd__sticky'))) img = document.getElementById('pdMainImg');
     if (!img && holder) img = holder.querySelector('.card__media img, .wlCard img, img');
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!icon || !img || reduce || !img.animate) { bumpCart(icon); return; }

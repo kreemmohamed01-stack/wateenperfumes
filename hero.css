@@ -3953,3 +3953,70 @@ html body .add.is-added .add__label svg{ width:14px; height:14px; }
   animation:cartPlus .9s ease-out forwards; }
 @keyframes cartPlus{ 0%{ opacity:0; transform:translate(-50%,6px); } 25%{ opacity:1; } 100%{ opacity:0; transform:translate(-50%,-22px); } }
 @media (prefers-reduced-motion: reduce){ .nav__icon--cart.is-bump, .nav__icon--cart.is-bump *{ animation:none !important; } }
+
+
+/* ════════ announcement bar — studio style: one centred message, a small
+   button, arrows on either side (cream + ink + gold instead of grey) ════════ */
+.announce.annx{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  min-height:50px; padding:0 10px;
+  background:#efe6d8; color:#14110e; border-bottom:1px solid rgba(20,17,14,.08);
+}
+.announce.annx::before, .announce.annx::after{ display:none; }
+.annx__arrow{ display:grid; place-items:center; width:40px; height:40px; flex:0 0 40px; background:none; border:0;
+  color:#14110e; cursor:pointer; opacity:.7; transition:opacity .2s, transform .2s; }
+.annx__arrow:hover{ opacity:1; }
+.annx__arrow--prev:hover{ transform:translateX(-2px); }
+.annx__arrow--next:hover{ transform:translateX(2px); }
+.annx__arrow svg{ width:18px; height:18px; }
+.annx__viewport{ position:relative; flex:1; height:50px; overflow:hidden; }
+.annx__slide{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:18px;
+  opacity:0; transform:translateX(30px); pointer-events:none;
+  transition:opacity .45s ease, transform .45s cubic-bezier(.2,.8,.2,1); }
+.annx__slide.from-left{ transform:translateX(-30px); }
+.annx__slide.is-on{ opacity:1; transform:none; pointer-events:auto; }
+.annx__txt{ font-family:'Jost', system-ui, sans-serif; font-weight:600; font-size:15px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; }
+.annx__btn{ display:inline-flex; align-items:center; min-height:32px; padding:0 14px; white-space:nowrap;
+  font:500 12px/1 'Jost', system-ui, sans-serif; letter-spacing:.08em; text-transform:uppercase;
+  color:#f3e7d3; background:#14110e; border:0; border-radius:4px; cursor:pointer; transition:background-color .25s; }
+.annx__btn:hover{ background:#8f6633; color:#fff; }
+@media (max-width:700px){
+  .announce.annx{ min-height:46px; padding:0 2px; }
+  .annx__viewport{ height:46px; }
+  .annx__arrow{ width:34px; flex-basis:34px; }
+  .annx__slide{ gap:10px; }
+  html body .annx__txt{ font-size:12px; letter-spacing:.03em; white-space:normal; text-align:center; line-height:1.25; }
+  html body .annx__btn{ font-size:11px; padding:0 10px; min-height:30px; }
+}
+
+/* ════════ navbar — studio style: one flat white bar, thin line under it,
+   small centred logo, links left / icons right (no glass capsules, no
+   floating medallion) ════════ */
+@media (min-width:1181px){
+  html body .nav .nav__bar{ max-width:none; padding:0 30px; background:#fff; border-bottom:1px solid rgba(20,17,14,.08); box-shadow:none; }
+  html body .nav .nav__cap{ height:72px; margin:0; padding:0; background:none; border:0; border-radius:0;
+    -webkit-backdrop-filter:none; backdrop-filter:none; box-shadow:none; }
+  html body .nav .nav__cap::after{ display:none; }
+  html body .nav .nav__cap--left{ padding-right:70px; }
+  html body .nav .nav__cap--right{ padding-left:56px; margin-left:0; }
+  html body .nav .nav__medallion{ width:auto; height:auto; background:none; -webkit-backdrop-filter:none; backdrop-filter:none; border:0; box-shadow:none; }
+  html body .nav .nav__medallion:hover{ transform:translate(-50%,-50%); box-shadow:none; }
+  html body .nav .nav__medallionRing{ display:none; }
+  html body .nav .nav__medallion img{ width:72px; height:auto; }
+  html body .nav .nav__links a{ color:#14110e; }
+  html body .nav .nav__links a:hover{ color:#8f6633; }
+  html body .nav .nav__pill{ background:none; border:0; box-shadow:none; -webkit-backdrop-filter:none; backdrop-filter:none; }
+}
+@media (max-width:1180px){
+  html body .nav .nav__mob{ padding:0 6px; background:#fff; border-bottom:1px solid rgba(20,17,14,.08); }
+  html body .nav .nav__mobTop{ min-height:66px; }
+  html body .nav .nav__mobLogo{ top:50%; }
+  html body .nav .nav__mobLogo img{ height:54px; width:auto; }
+  html body .nav .nav__burger, html body .nav .nav__pill--mob{ margin-top:0 !important; background:none; border:0; border-radius:0; box-shadow:none;
+    -webkit-backdrop-filter:none; backdrop-filter:none; }
+  html body .nav.is-stuck .nav__mobTop{ min-height:66px; }
+  html body .nav.is-stuck .nav__mobLogo img{ height:54px; }
+}
+/* home: the bar sits right under the announcement strip */
+body:not([class]) .nav:not(.is-stuck), body.home .nav:not(.is-stuck){ top:50px; }
+@media (max-width:700px){ body:not([class]) .nav:not(.is-stuck){ top:46px; } }

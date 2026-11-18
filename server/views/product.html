@@ -50,8 +50,8 @@ window.__bootPromise = (function () {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Jost:wght@200;300;400;500;600&display=swap"></noscript>
-<link rel="stylesheet" href="hero.css?v=13">
-<link rel="stylesheet" href="product.css?v=4">
+<link rel="stylesheet" href="hero.css?v=14">
+<link rel="stylesheet" href="product.css?v=5">
 <link rel="stylesheet" href="rtl.css">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
@@ -386,16 +386,63 @@ window.__bootPromise = (function () {
         <!-- injected -->
       </div>
 
+      <p class="pd__taxNote">Taxes included &middot; Shipping calculated at checkout</p>
+      <p class="pd__live" id="pdLive"><i></i><span>In stock &mdash; ready to ship</span></p>
+
+      <div class="pd__notesMini" id="pdNotesMini" hidden>
+        <p class="pd__miniLabel">SCENT PROFILE</p>
+        <div class="pd__noteChips" id="pdNoteChips"></div>
+      </div>
+
+      <div class="pd__promo" id="pdPromo" hidden>
+        <span class="pd__promoIco">%</span>
+        <span class="pd__promoTxt"><b id="pdPromoLabel">10% OFF</b> with code <code id="pdPromoCode">OFF10</code></span>
+        <button type="button" class="pd__promoCopy" id="pdPromoCopy">COPY</button>
+      </div>
+
       <div class="pd__buy">
+        <div class="pd__qty" role="group" aria-label="Quantity">
+          <button type="button" class="pd__qtyBtn" data-q="-1" aria-label="Decrease quantity">&minus;</button>
+          <span class="pd__qtyVal" id="pdQty">1</span>
+          <button type="button" class="pd__qtyBtn" data-q="1" aria-label="Increase quantity">+</button>
+        </div>
         <button class="add" id="pdAdd">
           <span class="add__fill"></span>
-          <span class="add__label">ADD TO CART</span>
+          <span class="add__label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 8h14l-1.2 12H6.2Z" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" stroke-linecap="round"/></svg>ADD TO CART</span>
         </button>
         <button class="pd__wish" aria-label="Add to wishlist">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
             <path d="M12 20.4 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z" stroke-linejoin="round"/>
           </svg>
         </button>
+      </div>
+      <button class="add pd__buyNow" id="pdBuyNow" data-then="checkout">
+        <span class="add__label">BUY IT NOW</span>
+      </button>
+      <a class="pd__wa" id="pdWa" href="https://wa.me/201027380269" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 15l-1.4 5 5.1-1.3A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3a8.2 8.2 0 1 1 6.9 3.8Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3a.5.5 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5.1 5.1 0 0 0 1.1 2.7 11.6 11.6 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .2-1.2c-.1-.1-.3-.2-.5-.3Z"/></svg>
+        <span>ORDER ON WHATSAPP</span>
+      </a>
+
+      <ul class="pd__assure">
+        <li><span class="pd__aIco pd__aIco--gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7" stroke-linejoin="round"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg></span><span><b>Delivered in 2&ndash;5 business days</b><i>Prepared within 1&ndash;2 days, to every governorate</i></span></li>
+        <li><span class="pd__aIco pd__aIco--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/></svg></span><span><b>Cash on delivery or InstaPay</b><i>Inspect your package before you pay</i></span></li>
+        <li><span class="pd__aIco pd__aIco--ink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 20 6v6c0 4.6-3.2 8-8 9-4.8-1-8-4.4-8-9V6Z" stroke-linejoin="round"/><path d="m8.5 12 2.4 2.4 4.6-4.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><b>100% original, guaranteed</b><i>Sourced from the official houses</i></span></li>
+      </ul>
+
+      <div class="pd__acc">
+        <details>
+          <summary>Shipping &amp; Delivery</summary>
+          <p>We prepare your order within 1&ndash;2 business days and deliver in 2&ndash;5 business days depending on your governorate. Shipping is calculated at checkout from your governorate before you confirm. Our courier calls you on your number to arrange the delivery time. <a href="shipping-policy.html">Full shipping policy</a></p>
+        </details>
+        <details>
+          <summary>Returns &amp; Exchange</summary>
+          <p>If your product has a manufacturing defect or a genuine issue, request a return within 14 days of delivery. Photos or a short video of the issue may be requested. <a href="returns.html">Full returns policy</a></p>
+        </details>
+        <details>
+          <summary>Authenticity</summary>
+          <p>Every bottle at Wateen is 100% original, sourced from the official fragrance houses and checked before it ships. Inspect your package on delivery before accepting it.</p>
+        </details>
       </div>
 
       <div class="pd__trust">
@@ -718,7 +765,7 @@ window.__bootPromise = (function () {
 
 
 <script src="i18n.js?v=3"></script>
-<script src="site-data.js?v=3"></script>
+<script src="site-data.js?v=4"></script>
 <script>
 // Waits for site-data.js's window.__dataReady first — see the matching note
 // in hero.js. Never rejects and always settles, so this always runs; it
@@ -964,6 +1011,14 @@ window.__bootPromise = (function () {
     setText('pdNoteTop', notes.top ? tNotes(notes.top) : '');
     setText('pdNoteHeart', notes.heart ? tNotes(notes.heart) : '');
     setText('pdNoteBase', notes.base ? tNotes(notes.base) : '');
+    var chips = document.getElementById('pdNoteChips');
+    if (chips && (notes.top || notes.heart || notes.base)) {
+      var lbl = { top: isAr() ? 'افتتاحية' : 'Top', heart: isAr() ? 'قلب' : 'Heart', base: isAr() ? 'قاعدة' : 'Base' };
+      chips.innerHTML = ['top', 'heart', 'base'].filter(function (k) { return notes[k]; }).map(function (k) {
+        return '<span class="pd__chip pd__chip--' + k + '"><em>' + lbl[k] + '</em>' + tNotes(notes[k]) + '</span>';
+      }).join('');
+      document.getElementById('pdNotesMini').hidden = false;
+    }
   }
   renderCopy(product);
 
@@ -1020,6 +1075,73 @@ window.__bootPromise = (function () {
       stockEl.innerHTML = '<i></i>' + t('In Stock') + ' &mdash; ' + avail + ' ' + t('available');
     }
   }
+
+  // ---- buy box extras: quantity, buy now, WhatsApp, live stock, promo ----
+  (function buyBox() {
+    var add = document.getElementById('pdAdd');
+    var now = document.getElementById('pdBuyNow');
+    var qtyEl = document.getElementById('pdQty');
+    var maxQ = Number(product.stock) > 0 ? Math.min(10, Number(product.stock)) : 10;
+    var q = 1;
+    function setQ(v) {
+      q = Math.max(1, Math.min(maxQ, v));
+      if (qtyEl) qtyEl.textContent = q;
+      [add, now].forEach(function (b) { if (b) { b.dataset.add = product.id; b.dataset.qty = q; } });
+    }
+    document.querySelectorAll('.pd__qtyBtn').forEach(function (b) {
+      b.addEventListener('click', function () { setQ(q + Number(b.dataset.q)); });
+    });
+    setQ(1);
+
+    var wa = document.getElementById('pdWa');
+    if (wa) {
+      var msg = 'Hello Wateen! I would like to order:\n' + product.name + ' - ' + product.brand +
+        '\nPrice: EGP ' + Number(product.price).toLocaleString('en-US') +
+        '\n' + location.origin + '/product.html?id=' + encodeURIComponent(product.id);
+      wa.href = 'https://wa.me/201027380269?text=' + encodeURIComponent(msg);
+    }
+
+    var live = document.getElementById('pdLive');
+    if (live) {
+      var avail = Number(product.stock);
+      var span = live.querySelector('span');
+      if (product.stock !== undefined && product.stock !== null && avail <= 0) {
+        live.classList.add('is-out'); span.textContent = t('Out of Stock');
+        [add, now].forEach(function (b) { if (b) { b.disabled = true; } });
+      } else if (product.isLowStock && avail > 0) {
+        live.classList.add('is-low'); span.textContent = (isAr() ? 'متبقي ' + avail + ' فقط' : 'Only ' + avail + ' left - order soon');
+      } else {
+        span.textContent = isAr() ? 'متوفر - جاهز للشحن' : 'In stock - ready to ship';
+      }
+    }
+
+    var promo = document.getElementById('pdPromo');
+    var c = window.FEATURED_COUPON;
+    if (promo && c && c.code) {
+      document.getElementById('pdPromoLabel').textContent = c.label || '';
+      document.getElementById('pdPromoCode').textContent = c.code;
+      promo.hidden = false;
+      var cp = document.getElementById('pdPromoCopy');
+      cp.addEventListener('click', function () {
+        try { navigator.clipboard.writeText(c.code); } catch (e) {}
+        try { localStorage.setItem('wateen_promo', c.code); } catch (e) {}
+        cp.textContent = 'COPIED ✓'; setTimeout(function () { cp.textContent = 'COPY'; }, 1600);
+      });
+    }
+
+    // phones: a slim bar with price + add-to-cart once the main button scrolls away
+    var bar = document.createElement('div');
+    bar.className = 'pd__sticky';
+    bar.innerHTML = '<img src="' + wmThumb(product.img) + '" alt="">' +
+      '<span class="pd__stickyTxt"><b>' + pName(product) + '</b><i>EGP ' + Number(product.price).toLocaleString('en-US') + '</i></span>' +
+      '<button class="add" data-add="' + product.id + '"><span class="add__label">' + t('ADD TO CART') + '</span></button>';
+    document.body.appendChild(bar);
+    if (add && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { bar.classList.toggle('is-on', !e.isIntersecting && e.boundingClientRect.top < 0); });
+      }).observe(add);
+    }
+  })();
 
   // ---- related products: everything else in the catalog, same category first ----
   var related = CAT.filter(function (p) { return p.id !== product.id; })
@@ -1335,7 +1457,7 @@ window.__bootPromise = (function () {
 })();
 });
 </script>
-<script src="hero.js?v=9"></script>
+<script src="hero.js?v=10"></script>
 <script src="track.js?v=2" defer></script>
 </body>
 </html>
