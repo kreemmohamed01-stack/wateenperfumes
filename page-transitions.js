@@ -102,14 +102,6 @@
     // positioning to body's (possibly wider) box
     root.appendChild(intro);
 
-    var skip = document.createElement('button');
-    skip.type = 'button';
-    skip.className = 'wmIntro__skip';
-    skip.textContent = 'SKIP';
-    skip.setAttribute('aria-label', 'Skip intro');
-    skip.addEventListener('click', closeIntro);
-    intro.appendChild(skip);
-
     var video = intro.querySelector('video');
     var started = false;
     setTimeout(closeIntro, MAX_SHOW_MS);
