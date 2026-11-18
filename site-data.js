@@ -3,13 +3,21 @@
    use srcset so phones download the small one and only large/hi-DPI
    screens fetch the 900px original. Remote (Cloudinary) images are left
    as they are. */
+var CLD = /^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)(?!w_)/;
 window.wmThumb = function (url) {
-  return /^(\/)?assets\/(products|watches)\/[^/]+$/.test(url || '')
-    ? String(url).replace(/(assets\/(?:products|watches)\/)/, '$1sm/') : url;
+  url = url || '';
+  if (CLD.test(url)) return url.replace(CLD, '$1w_400,c_limit,f_auto,q_auto/');
+  return /^(\/)?assets\/(products|watches)\/[^/]+$/.test(url)
+    ? url.replace(/(assets\/(?:products|watches)\/)/, '$1sm/') : url;
+};
+window.wmLarge = function (url) {
+  return CLD.test(url || '') ? url.replace(CLD, '$1w_1200,c_limit,f_auto,q_auto/') : url;
 };
 window.wmSrcset = function (url) {
   var t = window.wmThumb(url);
-  return t === url ? '' : ' srcset="' + t + ' 400w, ' + url + ' 900w"';
+  if (t === url) return '';
+  var big = CLD.test(url || '') ? url.replace(CLD, '$1w_900,c_limit,f_auto,q_auto/') : url;
+  return ' srcset="' + t + ' 400w, ' + big + ' 900w"';
 };
 
 /* ════════════════════════════════════════════════
@@ -193,3 +201,28 @@ window.wmSrcset = function (url) {
   });
   Promise.all([window.__dataReady, domReady]).then(applyAll);
 })();
+
+
+/* ---------- footer newsletter: save the email, reveal the welcome code ---------- */
+document.addEventListener('submit', function (e) {
+  var form = e.target;
+  if (!form || !form.classList || !form.classList.contains('news')) return;
+  e.preventDefault();
+  var input = form.querySelector('input[type=email]');
+  var email = input ? input.value.trim() : '';
+  if (!email) return;
+  var btn = form.querySelector('button'); if (btn) btn.disabled = true;
+  fetch('/api/public/newsletter', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email }) })
+    .then(function (r) { return r.ok; }).catch(function () { return false; })
+    .then(function (ok) {
+      if (btn) btn.disabled = false;
+      var msg = form.parentNode.querySelector('.news__msg');
+      if (!msg) { msg = document.createElement('p'); msg.className = 'news__msg'; msg.style.cssText = 'margin:12px 0 0;font-size:13px;line-height:1.6'; form.parentNode.insertBefore(msg, form.nextSibling); }
+      if (ok) {
+        msg.innerHTML = 'Welcome! Use code <b style="letter-spacing:.12em">OFF10</b> at checkout for 10% off.';
+        if (input) input.value = '';
+      } else {
+        msg.textContent = 'Please enter a valid email and try again.';
+      }
+    });
+}, true);

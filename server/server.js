@@ -55,6 +55,14 @@ app.get('/api/public/coupons/featured', (req, res, next) => couponRoutes.feature
 app.post('/api/public/reviews', (req, res, next) => reviewRoutes.submitPublic(req, res, next));
 // browser pixel events mirrored to Meta's Conversions API (see meta-pixel.js)
 app.post('/api/public/meta-event', metaCapi.relayHandler);
+// footer newsletter: no mailing list yet, so each sign-up lands in the
+// dashboard's notifications (type "newsletter") for the team to follow up
+app.post('/api/public/newsletter', async (req, res) => {
+  const email = String((req.body && req.body.email) || '').trim().toLowerCase().slice(0, 200);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Please enter a valid email.' });
+  try { await require('./lib/notify').notify('newsletter', 'New newsletter sign-up', email); } catch (e) { /* never block the visitor */ }
+  res.json({ ok: true });
+});
 
 // sitemap.xml is generated live from the DB (products/brands change over
 // time), so it's served through the API rather than as a static file. On
