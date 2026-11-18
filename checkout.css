@@ -1356,3 +1356,8 @@ body.co-page .drawer{ display:none !important; }
   .coItem__media{ width:58px; height:66px; }
   .coFoot__inner{ grid-template-columns:1fr; }
 }
+
+/* place order: same clean studio button as the rest of the site */
+.coPlace{ border-radius:0 !important; box-shadow:none !important; transition:background-color .28s cubic-bezier(.4,0,.2,1), transform .12s ease !important; }
+.coPlace:hover{ background:#3b352f !important; transform:none !important; box-shadow:none !important; }
+.coPlace:active{ transform:scale(.97) !important; }

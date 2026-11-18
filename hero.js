@@ -892,7 +892,7 @@
     // a card that carries an id directly (shop.html, wishlist.html) skips
     // the name lookup entirely
     var directId = btn.dataset.add;
-    if (directId) { addToCart(directId, 1); openCart(); return; }
+    if (directId) { addToCart(directId, 1); flyToCart(btn); return; }
 
     var card = btn.closest('.card, .pd__info, .wlCard');
     var nameEl = card ? card.querySelector('.card__name, .pd__name') : null;
@@ -904,8 +904,97 @@
     })[0] : null;
     if (product) addToCart(product.id, 1);
     else if (CATALOG[0]) addToCart(CATALOG[0].id, 1); // fallback demo product
-    openCart();
+    flyToCart(btn);
   });
+
+  /* ─────────── add-to-cart: the product flies into the bag ───────────
+     The drawer no longer pops open on every add — the photo lifts off the
+     card, spins in 3D along an arc into the cart icon, the icon bounces and
+     its count pops. The drawer only opens when the cart icon is tapped. */
+  function visibleCartIcon() {
+    var ids = ['cartBtn', 'cartBtnMob'];
+    for (var i = 0; i < ids.length; i++) {
+      var el = document.getElementById(ids[i]);
+      if (el && el.getClientRects().length && el.getBoundingClientRect().width) return el;
+    }
+    return null;
+  }
+
+  function bumpCart(icon) {
+    if (!icon) return;
+    icon.classList.remove('is-bump'); void icon.offsetWidth; icon.classList.add('is-bump');
+    setTimeout(function () { icon.classList.remove('is-bump'); }, 700);
+    var plus = document.createElement('span');
+    plus.className = 'cartPlus'; plus.textContent = '+1';
+    icon.appendChild(plus);
+    setTimeout(function () { if (plus.parentNode) plus.parentNode.removeChild(plus); }, 900);
+  }
+
+  function addedFeedback(btn) {
+    if (!btn || btn.classList.contains('is-added')) return;
+    var label = btn.querySelector('.add__label') || btn;
+    var was = label.innerHTML;
+    btn.classList.add('is-added');
+    label.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.5l4.2 4.2L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>' + t('ADDED');
+    setTimeout(function () { label.innerHTML = was; btn.classList.remove('is-added'); }, 1500);
+  }
+
+  function flyToCart(btn) {
+    addedFeedback(btn);
+    var navEl = document.getElementById('nav');
+    if (navEl) navEl.classList.remove('is-hidden');      // make sure the bag is on screen
+    var icon = visibleCartIcon();
+    var holder = btn && btn.closest('.card, .pd__info, .wlCard, .pd, main');
+    var img = null;
+    if (btn && btn.id === 'pdAdd') img = document.getElementById('pdMainImg');
+    if (!img && holder) img = holder.querySelector('.card__media img, .wlCard img, img');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!icon || !img || reduce || !img.animate) { bumpCart(icon); return; }
+
+    var from = img.getBoundingClientRect();
+    var to = icon.getBoundingClientRect();
+    if (!from.width) { bumpCart(icon); return; }
+    var size = Math.min(from.width, from.height, 260);
+    var sx = from.left + from.width / 2, sy = from.top + from.height / 2;
+    var ex = to.left + to.width / 2, ey = to.top + to.height / 2;
+    var dx = ex - sx, dy = ey - sy;
+    var lift = Math.min(160, Math.abs(dx) * 0.35 + 90);   // how high the arc rises
+
+    var stage = document.createElement('div');
+    stage.className = 'flyStage';
+    stage.style.cssText = 'left:' + (sx - size / 2) + 'px;top:' + (sy - size / 2) + 'px;width:' + size + 'px;height:' + size + 'px';
+    var ghost = img.cloneNode(false);
+    ghost.removeAttribute('id'); ghost.removeAttribute('loading'); ghost.removeAttribute('srcset');
+    ghost.src = img.currentSrc || img.src;
+    ghost.className = 'flyItem';
+    var shadow = document.createElement('span'); shadow.className = 'flyGlow';
+    stage.appendChild(shadow); stage.appendChild(ghost);
+    document.body.appendChild(stage);
+
+    var D = 950;
+    // position: lift up, then arc into the bag
+    stage.animate([
+      { transform: 'translate(0,0)', offset: 0 },
+      { transform: 'translate(' + dx * 0.12 + 'px,' + (-lift * 0.55) + 'px)', offset: 0.22 },
+      { transform: 'translate(' + dx * 0.55 + 'px,' + (dy * 0.35 - lift) + 'px)', offset: 0.55 },
+      { transform: 'translate(' + dx + 'px,' + dy + 'px)', offset: 1 }
+    ], { duration: D, easing: 'cubic-bezier(.55,.06,.35,1)', fill: 'forwards' });
+    // the product itself: tilts toward you, spins in 3D and shrinks into the bag
+    ghost.animate([
+      { transform: 'perspective(700px) rotateX(0deg) rotateY(0deg) scale(1)', opacity: 1, filter: 'drop-shadow(0 10px 14px rgba(40,28,16,.25))', offset: 0 },
+      { transform: 'perspective(700px) rotateX(14deg) rotateY(-28deg) scale(1.08)', opacity: 1, filter: 'drop-shadow(0 30px 30px rgba(40,28,16,.35))', offset: 0.22 },
+      { transform: 'perspective(700px) rotateX(8deg) rotateY(200deg) scale(.55)', opacity: 1, offset: 0.62 },
+      { transform: 'perspective(700px) rotateX(0deg) rotateY(360deg) scale(.08)', opacity: .2, filter: 'drop-shadow(0 2px 3px rgba(40,28,16,.2))', offset: 1 }
+    ], { duration: D, easing: 'cubic-bezier(.45,0,.3,1)', fill: 'forwards' });
+    shadow.animate([{ opacity: 0, transform: 'scale(.6)' }, { opacity: .9, transform: 'scale(1.1)', offset: .25 }, { opacity: 0, transform: 'scale(.2)' }],
+      { duration: D, easing: 'ease-out', fill: 'forwards' });
+
+    setTimeout(function () {
+      bumpCart(icon);
+      if (stage.parentNode) stage.parentNode.removeChild(stage);
+    }, D - 40);
+  }
+  window.flyToCart = flyToCart;
 
   renderCart();
 

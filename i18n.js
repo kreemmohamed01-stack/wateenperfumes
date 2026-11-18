@@ -95,6 +95,7 @@
     'The Details': 'التفاصيل',
     'reviews': 'تقييم',
     'Free Shipping': 'شحن مجاني',
+    'ADDED': 'تمت الإضافة',
     'Free on all watches': 'مجاني على كل الساعات',
     'Easy Returns': 'استرجاع سهل',
     'Within 14 days': 'خلال 14 يوم',
