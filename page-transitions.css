@@ -1,3 +1,4 @@
+/* NOTE: this file is INLINED (minified) into every page as <style id="ptCss">. After editing it, re-inline it into the HTML pages. */
 /* ════════════════════════════════════════════════
    WATEEN PERFUMES — SITE-WIDE PAGE TRANSITIONS (CSS)
    Pairs with page-transitions.js. Body starts very
@@ -203,3 +204,15 @@ html.pt-ready.pt-in::after{
   -webkit-appearance: none;
   opacity: 0 !important;
 }
+
+/* skip button on the intro */
+.wmIntro__skip{
+  position:absolute; right:18px; bottom:max(22px, env(safe-area-inset-bottom));
+  z-index:2; min-width:72px; min-height:40px; padding:0 18px;
+  font:500 11px/1 'Jost', system-ui, sans-serif; letter-spacing:.22em;
+  color:#3a2d1e; background:rgba(255,255,255,.72);
+  border:1px solid rgba(143,102,51,.35); border-radius:999px;
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  cursor:pointer;
+}
+.wmIntro__skip:hover{ background:#fff; }

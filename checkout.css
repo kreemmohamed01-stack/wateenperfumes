@@ -919,8 +919,9 @@ body.co-page .drawer{ display:none !important; }
 .coFoot__logo{ height:74px; width:auto; }
 
 .coFoot__col{ display:flex; flex-direction:column; }
-.coFoot__col h4,
-.coFoot__news h4{
+.coFoot__col h3, .coFoot__col h4,
+.coFoot__news h3, .coFoot__news h4{
+  font-family:inherit; line-height:inherit;
   margin:0 0 16px;
   font-size:10px; letter-spacing:.22em; font-weight:600;
   color:var(--ink);

@@ -59,6 +59,9 @@ app.post('/api/public/meta-event', metaCapi.relayHandler);
 // sitemap.xml is generated live from the DB (products/brands change over
 // time), so it's served through the API rather than as a static file. On
 // Vercel, vercel.json rewrites /sitemap.xml to this same function.
+// Product pages are rendered on the server so every product has its own
+// title, description, canonical, <h1> and Product schema (see product-page.js).
+app.get(['/product.html', '/api/product-page'], require('./routes/product-page').productPageHandler);
 app.get('/sitemap.xml', sitemapHandler);
 app.get('/api/sitemap.xml', sitemapHandler);
 // Meta Commerce Manager product feed (scheduled data feed URL); vercel.json

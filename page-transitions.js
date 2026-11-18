@@ -66,12 +66,16 @@
      Browsers only allow sound without a tap when the visitor has played
      media on this site before; otherwise it plays muted. */
   var INTRO_SRC = '/assets/intro.mp4';
-  var START_TIMEOUT_MS = 2500;
-  var MAX_SHOW_MS = 8000; // hard cap if playback stalls mid-way on a weak connection
+  var START_TIMEOUT_MS = 1500;
+  var MAX_SHOW_MS = 3500; // hard cap if playback stalls mid-way on a weak connection
   var intro = null;
 
   function wantsIntro() {
     if (fast) return false;
+    // only on the home page: someone landing on a product, category or
+    // checkout page (from an ad or from Google) goes straight to it
+    var path = location.pathname.replace(/\/+$/, '');
+    if (path !== '' && path !== '/index.html') return false;
     try {
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
       if (navigator.connection && navigator.connection.saveData) return false;
@@ -97,6 +101,14 @@
     // the page loads, which would hide the intro and re-anchor its fixed
     // positioning to body's (possibly wider) box
     root.appendChild(intro);
+
+    var skip = document.createElement('button');
+    skip.type = 'button';
+    skip.className = 'wmIntro__skip';
+    skip.textContent = 'SKIP';
+    skip.setAttribute('aria-label', 'Skip intro');
+    skip.addEventListener('click', closeIntro);
+    intro.appendChild(skip);
 
     var video = intro.querySelector('video');
     var started = false;

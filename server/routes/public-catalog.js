@@ -269,13 +269,19 @@ router.get('/bootstrap', async (req, res, next) => {
 });
 
 
+async function loadProductBySlug(slug) {
+  const row = await db.prepare(`SELECT * FROM products WHERE slug = ? AND status = 'published'`).get(slug);
+  if (!row) return null;
+  const relations = await loadAllProductRelations([row.id]);
+  const full = assembleProduct(row, relations.variantsByProduct, relations.imagesByProduct, relations.categoriesByProduct, relations.brandsById);
+  return toLegacyShape(full, await settingsMap());
+}
+
 router.get('/catalog/:slug', async (req, res, next) => {
   try {
-    const row = await db.prepare(`SELECT * FROM products WHERE slug = ? AND status = 'published'`).get(req.params.slug);
-    if (!row) return res.status(404).json({ error: 'Product not found.' });
-    const relations = await loadAllProductRelations([row.id]);
-    const full = assembleProduct(row, relations.variantsByProduct, relations.imagesByProduct, relations.categoriesByProduct, relations.brandsById);
-    res.json(toLegacyShape(full, await settingsMap()));
+    const product = await loadProductBySlug(req.params.slug);
+    if (!product) return res.status(404).json({ error: 'Product not found.' });
+    res.json(product);
   } catch (e) { next(e); }
 });
 
@@ -368,6 +374,7 @@ async function sitemapHandler(req, res, next) {
 module.exports.sitemapHandler = sitemapHandler;
 module.exports.buildCatalog = buildCatalog;
 module.exports.settingsMap = settingsMap;
+module.exports.loadProductBySlug = loadProductBySlug;
 
 // ── Meta (Facebook/Instagram) product catalog feed ──
 // Commerce Manager pulls this on a schedule to build the catalog used by

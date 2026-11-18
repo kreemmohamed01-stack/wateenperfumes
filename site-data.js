@@ -1,3 +1,17 @@
+/* ---------- product image sizes ----------
+   Every local product/watch photo has a 400px copy in <folder>/sm/. Cards
+   use srcset so phones download the small one and only large/hi-DPI
+   screens fetch the 900px original. Remote (Cloudinary) images are left
+   as they are. */
+window.wmThumb = function (url) {
+  return /^(\/)?assets\/(products|watches)\/[^/]+$/.test(url || '')
+    ? String(url).replace(/(assets\/(?:products|watches)\/)/, '$1sm/') : url;
+};
+window.wmSrcset = function (url) {
+  var t = window.wmThumb(url);
+  return t === url ? '' : ' srcset="' + t + ' 400w, ' + url + ' 900w"';
+};
+
 /* ════════════════════════════════════════════════
    WATEEN PERFUMES — LIVE SITE DATA LOADER
    Loads the real catalog, store settings, and the

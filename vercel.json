@@ -1,6 +1,9 @@
 {
   "version": 2,
   "buildCommand": null,
+  "functions": {
+    "api/index.js": { "includeFiles": "server/views/**" }
+  },
   "redirects": [
     {
       "source": "/",
@@ -17,6 +20,7 @@
   ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/product.html", "destination": "/api" },
     { "source": "/sitemap.xml", "destination": "/api" },
     { "source": "/meta-catalog.xml", "destination": "/api" }
   ],
@@ -25,12 +29,6 @@
       "source": "/assets/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
-    },
-    {
-      "source": "/assets/(products|watches)/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
       ]
     },
     {

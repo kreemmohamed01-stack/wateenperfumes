@@ -264,80 +264,20 @@
   }
 
 
-  /* ─────────── price roll-up counter ───────────
-     Each price spins through random numbers for ~1.2s,
-     then settles on its real value. Runs once per element. */
-
-  const rolls = document.querySelectorAll('.roll');
+  /* ─────────── prices ───────────
+     Prices are written straight in as their real value — no spinning
+     counter, so a screenshot can never catch a wrong or zero price. */
 
   function runRoll(el) {
     const target = parseInt(el.dataset.value, 10);
     if (isNaN(target)) return;
-
-    // an element can be observed twice (once from the page-load snapshot, once
-    // via __wireRolls after its value is filled in), and two concurrent
-    // animations on the same node fight over textContent — whichever finishes
-    // last wins, which can leave a stale number on screen. Only ever run once.
-    if (el.dataset.rolled === '1') return;
     el.dataset.rolled = '1';
-
-    const fmt = (n) => n.toLocaleString('en-US');
-
-    if (reduce) { el.textContent = fmt(target); return; }
-
-    const spinMs = 1200;          // scramble phase
-    const settleMs = 600;         // ease into the real number
-    const digits = String(target).length;
-    const start = performance.now();
-
-    function frame(now) {
-      const t = now - start;
-
-      if (t < spinMs) {
-        // random number of the same magnitude
-        const lo = Math.pow(10, Math.max(digits - 1, 0));
-        const hi = Math.pow(10, digits) - 1;
-        el.textContent = fmt(Math.floor(lo + Math.random() * (hi - lo)));
-        requestAnimationFrame(frame);
-      } else if (t < spinMs + settleMs) {
-        // ease from a near value up to the target
-        const p = (t - spinMs) / settleMs;
-        const eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = fmt(Math.round(target * (0.82 + 0.18 * eased)));
-        requestAnimationFrame(frame);
-      } else {
-        el.textContent = fmt(target);
-      }
-    }
-    requestAnimationFrame(frame);
+    el.textContent = target.toLocaleString('en-US');
   }
-
-  if ('IntersectionObserver' in window) {
-    const ro = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          runRoll(e.target);
-          ro.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.6 });
-    rolls.forEach((el) => ro.observe(el));
-
-    // querySelectorAll above is a static snapshot taken at parse time, so
-    // .roll elements injected later (e.g. the best-sellers grid, rendered
-    // from CATALOG data after this runs) never get observed and stay
-    // frozen at their placeholder "0" forever. Expose a hook so any
-    // later-injected markup can opt its own .roll spans into the same
-    // animation instead of duplicating this logic.
-    window.__wireRolls = function (root) {
-      (root || document).querySelectorAll('.roll').forEach((el) => ro.observe(el));
-    };
-  } else {
-    rolls.forEach(runRoll);
-    window.__wireRolls = function (root) {
-      (root || document).querySelectorAll('.roll').forEach(runRoll);
-    };
-  }
+  document.querySelectorAll('.roll').forEach(runRoll);
+  window.__wireRolls = function (root) {
+    (root || document).querySelectorAll('.roll').forEach(runRoll);
+  };
 
 
   /* ─────────── size chips ─────────── */
@@ -594,9 +534,9 @@
       return (
         '<article class="card" style="--d:' + (i % 4) + '" data-id="' + p.id + '">' +
           '<div class="card__media">' +
-            '<span class="card__badge">' + t('BEST SELLER') + '</span>' +
+            '' +
             cornerBadge +
-            '<img src="' + p.img + '" alt="' + pName(p) + '" loading="lazy">' +
+            '<img src="' + wmThumb(p.img) + '"' + wmSrcset(p.img) + ' sizes="(max-width:700px) 46vw, (max-width:1180px) 30vw, 340px" alt="' + pName(p) + '" loading="lazy">' +
           '</div>' +
           '<p class="card__brand">' + pBrand(p) + '</p>' +
           '<h3 class="card__name">' + pName(p) + '</h3>' +
@@ -732,7 +672,7 @@
       if (!p) return '';
       return (
         '<div class="cartd__item" data-id="' + p.id + '">' +
-          '<div class="cartd__itemImg"><img src="' + p.img + '" alt="' + pName(p) + '"></div>' +
+          '<div class="cartd__itemImg"><img src="' + wmThumb(p.img) + '" alt="' + pName(p) + '"></div>' +
           '<div class="cartd__itemInfo">' +
             '<b>' + pBrand(p) + '</b>' +
             '<i>' + pName(p) + '</i>' +
@@ -1146,11 +1086,11 @@
       list.map(function (p) {
         return (
           '<div class="searchm__row" data-id="' + p.id + '" style="cursor:pointer">' +
-            '<div class="searchm__rowImg"><img src="' + p.img + '" alt="' + pName(p) + '" loading="lazy" decoding="async"></div>' +
+            '<div class="searchm__rowImg"><img src="' + wmThumb(p.img) + '" alt="' + pName(p) + '" loading="lazy" decoding="async"></div>' +
             '<div class="searchm__rowInfo">' +
               '<b>' + pBrand(p) + '</b>' +
               '<i>' + pName(p) + ' &middot; ' + t(p.type) + '</i>' +
-              (Number(p.reviews) > 0 ? '<em>' + p.rating + ' (' + p.reviews + ')</em>' : '') +
+              (false ? '<em>' + p.rating + ' (' + p.reviews + ')</em>' : '') +
             '</div>' +
             '<span class="searchm__rowPrice">' + fmt(p.price) + ' EGP</span>' +
             '<button class="searchm__rowAdd" data-id="' + p.id + '">ADD TO CART</button>' +

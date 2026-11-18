@@ -3271,8 +3271,9 @@ a{ text-decoration:none; color:inherit; }
 }
 
 .foot__col{ display:flex; flex-direction:column; }
-.foot__col h4,
-.foot__news h4{
+.foot__col h3, .foot__col h4,
+.foot__news h3, .foot__news h4{
+  font-family:inherit; line-height:inherit;
   margin:0 0 18px;
   font-size:10.5px; letter-spacing:.28em; font-weight:500;
   color:var(--ink);
@@ -3875,4 +3876,32 @@ html.snap-on .rail__track{ scroll-snap-type:x mandatory; }
   .nav__cap--right{ padding-left:calc(117px + 56px + 4px); padding-right:8px; gap:8px; }
   .nav__cap--right .nav__links{ gap:18px; }
   .nav__links a{ letter-spacing:.14em; }
+}
+
+/* ════════ mobile readability & tap targets ════════
+   Small labels were as low as 6–9px on phones. Nothing readable goes below
+   12px here, and everything tappable gets at least a ~36–40px hit area.
+   "html body" prefix so it wins over shop.css / product.css too. */
+@media (max-width:700px){
+  html body :is(.promoBar__txt, .promoBar__code, .card__brand, .card__type, .card__badge,
+    .add__label, .col__eyebrow, .mini b, .mini em, .mini i, .tile__desc, .shead__eyebrow,
+    .shead__sub, .story__eyebrow, .foot__tag, .foot__brandsTitle, .hero__eyebrowText,
+    .btn__label, .ghost__label, .rail__count, .brands__eyebrow, .brands__sub, .sale__left,
+    .sale__note, .story__badge, .pd__brand, .pd__type, .pd__relatedTitle, .shopSort,
+    .shopHead__sub, .shopFilters__clear, .shopFilters__head, .shopFiltersToggle,
+    .shopResults__count, .backBtn, .tile__cta i, .feat i, .feat b, .trust__txt i, .trust__txt b,
+    .pd__trust i, .pd__trust b, .madeby__name){
+    font-size:12px; letter-spacing:.06em;
+  }
+  html body :is(.story__text, .col__sub, .foot p, .shopHead__note, .brands__sub){ font-size:13px; line-height:1.6; }
+  html body footer :is(h3,h4){ font-size:12px; }
+
+  /* tap targets */
+  html body :is(.nav__icon){ min-width:40px; min-height:40px; display:inline-grid; place-items:center; }
+  html body .langBtn{ min-height:36px; min-width:44px; }
+  html body .promoBar__copyBtn{ min-height:32px; padding:0 12px; }
+  html body .card__wish{ width:36px; height:36px; }
+  html body .backBtn{ display:inline-flex; align-items:center; min-height:36px; }
+  html body footer a, html body .foot a{ display:inline-block; padding:8px 0; }
+  html body .foot__social a{ padding:0; }
 }
