@@ -841,3 +841,7 @@ body.product-page .crumb{ padding-top:88px; }
 .pd__assure li > span:last-child, .pd__acc p, .pd__acc summary{ text-align:left; }
 html[dir="rtl"] .pd__assure li > span:last-child, html[dir="rtl"] .pd__acc p, html[dir="rtl"] .pd__acc summary{ text-align:right; }
 .pd__assure li{ justify-content:flex-start; }
+/* sticky bar: the button must not stretch (a general phone rule makes .add 100% wide) */
+html body .pd__sticky .add{ width:auto !important; flex:0 0 auto !important; padding:0 20px; white-space:nowrap; }
+html body .pd__stickyTxt{ overflow:hidden; }
+@media (max-width:900px){ body.product-page{ padding-bottom:calc(72px + env(safe-area-inset-bottom)); } }

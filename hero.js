@@ -1295,3 +1295,14 @@
     });
   });
 })();
+
+/* home categories: reveal each tile as it scrolls in */
+(function () {
+  var tiles = document.querySelectorAll('.cats .tile');
+  if (!tiles.length) return;
+  if (!('IntersectionObserver' in window)) { tiles.forEach(function (t) { t.classList.add('is-in'); }); return; }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  tiles.forEach(function (t) { io.observe(t); });
+})();

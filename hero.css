@@ -4020,3 +4020,73 @@ html body .add.is-added .add__label svg{ width:14px; height:14px; }
 /* home: the bar sits right under the announcement strip */
 body:not([class]) .nav:not(.is-stuck), body.home .nav:not(.is-stuck){ top:50px; }
 @media (max-width:700px){ body:not([class]) .nav:not(.is-stuck){ top:46px; } }
+
+/* ════════ navbar v2 — no white bar: transparent over the hero with a
+   bigger logo; once scrolled it turns into a soft cream glass bar ════════ */
+@media (min-width:1181px){
+  html body .nav .nav__bar{ background:transparent; border-bottom:1px solid transparent; transition:background-color .35s, border-color .35s, backdrop-filter .35s; }
+  html body .nav .nav__cap{ height:96px; }
+  html body .nav .nav__medallion img{ width:128px; }
+  html body .nav.is-stuck .nav__bar,
+  html body:is(.shop-page,.cat-page,.product-page,.policy-page,.wish-page) .nav .nav__bar{
+    background:rgba(243,236,226,.86); border-bottom-color:rgba(143,102,51,.18);
+    -webkit-backdrop-filter:blur(14px) saturate(140%); backdrop-filter:blur(14px) saturate(140%); }
+  html body .nav.is-stuck .nav__cap{ height:80px; }
+  html body .nav.is-stuck .nav__medallion img{ width:96px; }
+}
+@media (max-width:1180px){
+  html body .nav .nav__mob{ background:transparent; border-bottom:1px solid transparent; transition:background-color .35s; }
+  html body .nav .nav__mobTop{ min-height:84px; }
+  html body .nav .nav__mobLogo img{ height:76px; }
+  html body .nav.is-stuck .nav__mob,
+  html body:is(.shop-page,.cat-page,.product-page,.policy-page,.wish-page) .nav .nav__mob{
+    background:rgba(243,236,226,.9); border-bottom-color:rgba(143,102,51,.18);
+    -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+  html body .nav.is-stuck .nav__mobTop{ min-height:72px; }
+  html body .nav.is-stuck .nav__mobLogo img{ height:64px; }
+}
+
+/* ════════ home categories — studio "collections" style: edge-to-edge
+   tiles, name bottom-left with a small white SHOP NOW button; the photo
+   slowly zooms on hover and the button swaps colour ════════ */
+html body .cats .cats__grid{ max-width:none; gap:3px; }
+html body .cats .tile{ border-radius:0; aspect-ratio:3 / 4; background:#1a1510; }
+html body .cats .tile:hover{ transform:none; box-shadow:none; }
+html body .cats .tile__img{ transition:transform 1.4s cubic-bezier(.2,.7,.2,1), filter .6s ease; }
+html body .cats .tile:hover .tile__img{ transform:scale(1.07); filter:brightness(.92); }
+html body .cats .tile__shade{ background:linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.55) 100%); }
+html body .cats .tile__body{ left:22px; right:22px; bottom:22px; display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
+html body .cats .tile__name{ font-family:'Jost', system-ui, sans-serif; font-weight:500; font-size:17px; letter-spacing:.08em; color:#fff; }
+html body .cats .tile__desc, html body .cats .tile__go{ display:none; }
+html body .cats .tile__row{ margin:0; }
+html body .cats .tile__cta{ display:inline-flex !important; opacity:1 !important; transform:none !important; max-width:none !important;
+  align-items:center; min-height:36px; padding:0 16px; background:#fff; color:#14110e; border:1px solid #fff;
+  transition:background-color .3s, color .3s; }
+html body .cats .tile__cta i{ font-style:normal; font-size:11.5px; letter-spacing:.12em; opacity:1 !important; transform:none !important; color:inherit; }
+html body .cats .tile:hover .tile__cta{ background:#14110e; color:#fff; border-color:#14110e; }
+/* scroll reveal: tiles rise in one after another */
+html body .cats .tile{ opacity:0; transform:translateY(40px); transition:opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); transition-delay:calc(var(--d,0) * 110ms); }
+html body .cats .tile.is-in{ opacity:1; transform:none; }
+@media (min-width:901px){
+  html body .cats .cats__grid{ grid-template-columns:repeat(6,1fr); padding:0 3px; }
+  html body .cats .cats__grid .tile{ grid-column:span 2; aspect-ratio:3 / 4; }
+  html body .cats .cats__grid .tile:nth-child(4),
+  html body .cats .cats__grid .tile--wide{ grid-column:span 3; aspect-ratio:16 / 10; }
+}
+@media (max-width:900px){
+  html body .cats .cats__grid{ grid-template-columns:1fr 1fr; gap:3px; margin:0 -16px; }
+  html body .cats .tile--wide{ grid-column:1 / -1; aspect-ratio:16 / 10; }
+  html body .cats .tile__body{ left:14px; right:14px; bottom:14px; gap:9px; }
+  html body .cats .tile__name{ font-size:14px; }
+  html body .cats .tile__cta{ min-height:32px; padding:0 12px; }
+  html body .cats .tile__cta i{ font-size:11px; }
+}
+html body .cats .cats__grid{ width:100vw; margin-left:calc(50% - 50vw) !important; margin-right:0 !important; padding:0 3px; box-sizing:border-box; }
+html body .cats{ overflow-x:clip; }
+html body .cats .tile__cta{ border-radius:0 !important; }
+@media (max-width:1180px){
+  html body .nav.is-stuck .nav__burger, html body .nav.is-stuck .nav__pill--mob,
+  html body .nav .nav__burger, html body .nav .nav__pill--mob{
+    background:none !important; border:0 !important; border-radius:0 !important; box-shadow:none !important;
+    -webkit-backdrop-filter:none !important; backdrop-filter:none !important; }
+}
