@@ -845,3 +845,43 @@ html[dir="rtl"] .pd__assure li > span:last-child, html[dir="rtl"] .pd__acc p, ht
 html body .pd__sticky .add{ width:auto !important; flex:0 0 auto !important; padding:0 20px; white-space:nowrap; }
 html body .pd__stickyTxt{ overflow:hidden; }
 @media (max-width:900px){ body.product-page{ padding-bottom:calc(72px + env(safe-area-inset-bottom)); } }
+
+/* ════════ buy box v2 — studio buttons (square, 1px line, colour swap on hover,
+   small press), monochrome ink/white palette instead of gold ════════ */
+.pd__info{ --pd-gold:#14110e; --pd-gold-l:#ffffff; }
+html body .pd__info :is(.pd__promoCopy, .pd__buyNow, .pd__wa, .pd__qtyBtn, .pd__wish, .add){
+  border-radius:0 !important; box-shadow:none !important;
+  transition:background-color .28s cubic-bezier(.4,0,.2,1), color .28s cubic-bezier(.4,0,.2,1),
+             border-color .28s cubic-bezier(.4,0,.2,1), transform .12s ease !important; }
+html body .pd__info :is(.pd__promoCopy, .pd__buyNow, .pd__wa, .pd__qtyBtn, .pd__wish, .add):active{ transform:scale(.97) !important; }
+/* add to cart: solid ink → white */
+html body .pd__info .pd__buy .add{ background:#14110e; border:1px solid #14110e; color:#fff; }
+html body .pd__info .pd__buy .add:hover{ background:#fff; color:#14110e; }
+html body .pd__info .pd__buy .add:hover .add__label{ color:#14110e; }
+/* buy it now: outline → solid ink */
+html body .pd__info .pd__buyNow{ background:#fff !important; border:1px solid #14110e !important; color:#14110e !important; }
+html body .pd__info .pd__buyNow .add__label{ color:#14110e; }
+html body .pd__info .pd__buyNow:hover{ background:#14110e !important; }
+html body .pd__info .pd__buyNow:hover .add__label{ color:#fff; }
+/* whatsapp: grey line → ink */
+html body .pd__info .pd__wa{ color:#14110e; background:#f4f2ef; border:1px solid #f4f2ef; }
+html body .pd__info .pd__wa:hover{ background:#14110e; border-color:#14110e; color:#fff; }
+html body .pd__info .pd__wish{ border:1px solid #14110e; background:#fff; color:#14110e; }
+html body .pd__info .pd__wish:hover{ background:#14110e; color:#fff; border-color:#14110e; }
+html body .pd__info .pd__qtyBtn:hover{ background:#14110e; color:#fff; }
+/* promo card: monochrome */
+.pd__promo{ background:#14110e; border-color:#14110e; color:#fff; }
+.pd__promoIco{ background:#fff; color:#14110e; }
+.pd__promoTxt b{ color:#fff; }
+.pd__promoTxt code{ border-color:rgba(255,255,255,.5); }
+html body .pd__promoCopy{ color:#14110e; background:#fff; border:1px solid #fff; }
+html body .pd__promoCopy:hover{ background:transparent; color:#fff; }
+.pd__chip--top em{ background:#d9d4cd; color:#14110e; }
+.pd__chip--heart em{ background:#7a706a; }
+.pd__chip--base em{ background:#14110e; }
+.pd__aIco--gold{ color:#14110e; background:#efedea; }
+/* sticky bar button */
+html body .pd__sticky .add{ border-radius:0; background:#14110e; border:1px solid #14110e; color:#fff; transition:background-color .28s, color .28s, transform .12s; }
+html body .pd__sticky .add:hover{ background:#fff; }
+html body .pd__sticky .add:hover .add__label{ color:#14110e; }
+html body .pd__sticky .add:active{ transform:scale(.97); }

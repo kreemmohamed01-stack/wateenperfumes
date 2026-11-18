@@ -4099,3 +4099,9 @@ html body .foot .foot__social a{ display:grid !important; place-items:center; wi
   transition:transform .25s cubic-bezier(.3,1.4,.5,1), box-shadow .25s; }
 html body .foot .foot__social a svg{ width:20px; height:20px; display:block; margin:0; }
 html body .foot .foot__social a:hover{ transform:translateY(-3px) scale(1.06); box-shadow:0 14px 24px -12px rgba(40,28,16,.55); }
+
+/* announcement COPY CODE / SHOP buttons — studio style, no gold */
+html body .annx__btn{ border-radius:0; background:#14110e; color:#fff; border:1px solid #14110e;
+  transition:background-color .28s cubic-bezier(.4,0,.2,1), color .28s cubic-bezier(.4,0,.2,1), transform .12s ease; }
+html body .annx__btn:hover{ background:transparent; color:#14110e; }
+html body .annx__btn:active{ transform:scale(.97); }
